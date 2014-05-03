@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		045B2303191556C000C8781D /* ACTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 045B2302191556C000C8781D /* ACTextView.m */; };
 		0480A7D51912B4E00048880A /* NSString+ACExpands.m in Sources */ = {isa = PBXBuildFile; fileRef = 0480A7D41912B4E00048880A /* NSString+ACExpands.m */; };
 		0480A7D81912B5300048880A /* UIView+ACExpands.m in Sources */ = {isa = PBXBuildFile; fileRef = 0480A7D71912B5300048880A /* UIView+ACExpands.m */; };
 		0480A7DB1912B59C0048880A /* UIImageView+ACExpands.m in Sources */ = {isa = PBXBuildFile; fileRef = 0480A7DA1912B59C0048880A /* UIImageView+ACExpands.m */; };
@@ -58,7 +59,6 @@
 		04853AD919116F7E000853EB /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AA619116F7E000853EB /* SVModalWebViewController.m */; };
 		04853ADA19116F7E000853EB /* SVWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AA919116F7E000853EB /* SVWebViewController.m */; };
 		04853ADB19116F7E000853EB /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AAC19116F7E000853EB /* TTTAttributedLabel.m */; };
-		04853AED1912ADE2000853EB /* ACTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AEC1912ADE2000853EB /* ACTextView.m */; };
 		04853AF01912AF7E000853EB /* ACTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AEF1912AF7E000853EB /* ACTextField.m */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +86,8 @@
 
 /* Begin PBXFileReference section */
 		045B230019154DDD00C8781D /* ACViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACViews.h; sourceTree = "<group>"; };
+		045B2301191556C000C8781D /* ACTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTextView.h; sourceTree = "<group>"; };
+		045B2302191556C000C8781D /* ACTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTextView.m; sourceTree = "<group>"; };
 		0480A7D31912B4E00048880A /* NSString+ACExpands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ACExpands.h"; sourceTree = "<group>"; };
 		0480A7D41912B4E00048880A /* NSString+ACExpands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ACExpands.m"; sourceTree = "<group>"; };
 		0480A7D61912B5300048880A /* UIView+ACExpands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ACExpands.h"; sourceTree = "<group>"; };
@@ -197,8 +199,6 @@
 		04853AA919116F7E000853EB /* SVWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewController.m; sourceTree = "<group>"; };
 		04853AAB19116F7E000853EB /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		04853AAC19116F7E000853EB /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
-		04853AEB1912ADE2000853EB /* ACTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTextView.h; sourceTree = "<group>"; };
-		04853AEC1912ADE2000853EB /* ACTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTextView.m; sourceTree = "<group>"; };
 		04853AEE1912AF7E000853EB /* ACTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTextField.h; sourceTree = "<group>"; };
 		04853AEF1912AF7E000853EB /* ACTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTextField.m; sourceTree = "<group>"; };
 		04853AF11912B22B000853EB /* ACControls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACControls.h; sourceTree = "<group>"; };
@@ -230,6 +230,8 @@
 		0480A7ED1912D8BE0048880A /* ACViews */ = {
 			isa = PBXGroup;
 			children = (
+				045B2301191556C000C8781D /* ACTextView.h */,
+				045B2302191556C000C8781D /* ACTextView.m */,
 				0480A7EE1912D8D40048880A /* ACTableViewCell.h */,
 				0480A7EF1912D8D40048880A /* ACTableViewCell.m */,
 				045B230019154DDD00C8781D /* ACViews.h */,
@@ -534,8 +536,6 @@
 			isa = PBXGroup;
 			children = (
 				04853AF11912B22B000853EB /* ACControls.h */,
-				04853AEB1912ADE2000853EB /* ACTextView.h */,
-				04853AEC1912ADE2000853EB /* ACTextView.m */,
 				04853AEE1912AF7E000853EB /* ACTextField.h */,
 				04853AEF1912AF7E000853EB /* ACTextField.m */,
 			);
@@ -665,8 +665,8 @@
 				04853ABC19116F7E000853EB /* AFHTTPRequestOperation.m in Sources */,
 				04853AD919116F7E000853EB /* SVModalWebViewController.m in Sources */,
 				0480A7DB1912B59C0048880A /* UIImageView+ACExpands.m in Sources */,
-				04853AED1912ADE2000853EB /* ACTextView.m in Sources */,
 				0480A7F01912D8D40048880A /* ACTableViewCell.m in Sources */,
+				045B2303191556C000C8781D /* ACTextView.m in Sources */,
 				04853AC319116F7E000853EB /* AFURLResponseSerialization.m in Sources */,
 				04853AC619116F7E000853EB /* GTMBase64.m in Sources */,
 			);

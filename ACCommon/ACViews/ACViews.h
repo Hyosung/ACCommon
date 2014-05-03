@@ -9,6 +9,7 @@
 #ifndef ACCommon_ACViews_h
 #define ACCommon_ACViews_h
 
+#import "ACTextView.h"
 #import "ACTableViewCell.h"
 
 #endif

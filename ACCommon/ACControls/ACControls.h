@@ -9,7 +9,6 @@
 #ifndef ACCommon_ACControls_h
 #define ACCommon_ACControls_h
 
-#import "ACTextView.h"
 #import "ACTextField.h"
 
 #endif
