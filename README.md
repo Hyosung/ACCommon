@@ -1,6 +1,6 @@
 ACViews
 ------
-ACViews中是一些常用的UIView的子类，其中有（ACTableViewCell,ACTextView）
+ACViews中是一些常用的UIView的子类，其中有（**ACTableViewCell**,**ACTextView**）
 
 ### ACTableViewCell中添加如下新属性
     @property (nonatomic) BOOL showingSeparator;//是否显示分隔线，默认YES
@@ -13,7 +13,7 @@ ACViews中是一些常用的UIView的子类，其中有（ACTableViewCell,ACText
 
 ACControls
 ------
-ACControls中是一些常用的UIControls的子类，其中有（ACTextField）
+ACControls中是一些常用的UIControls的子类，其中有（**ACTextField**）
 ### ACTextField中添加如下新属性
     @property (nonatomic, strong) UIColor *placeholderTextColor;//占位字符串颜色
 
