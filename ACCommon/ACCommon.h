@@ -6,8 +6,47 @@
 //  Copyright (c) 2014年 Alone Coding. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#ifndef ACCommon_ACCommon_h
+#define ACCommon_ACCommon_h
 
-@interface ACCommon : NSObject
+/*
+ 预编译
+ */
+#import "ACPrecompiled.h"
 
-@end
+/*
+ 宏定义
+ */
+#import "ACDefines.h"
+
+/*
+ 系统框架
+ */
+#import "ACCommonSF.h"
+
+/*
+ 第三方框架或类
+ */
+#import "ACExternals.h"
+
+/*
+ 扩展的类别
+ */
+#import "ACExpands.h"
+
+/*
+ 常用工具类
+ */
+#import "ACUtils.h"
+
+/*
+ 自定义Control
+ */
+#import "ACControls.h"
+
+/*
+ 自定义View
+ */
+#import "ACViews.h"
+
+#endif
