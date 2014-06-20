@@ -70,7 +70,7 @@
             break;
             
         default:
-            NSAssert(NO, @"Unsupported content mode: %d",contentMode);
+            NSAssert(NO, @"Unsupported content mode: %ld",(long)contentMode);
             break;
     }
     
@@ -278,6 +278,34 @@
     }
     
     return transform;
+}
+
+- (UIImage *)gradientImage {
+    //Get the components of color of the maskColor
+    CGFloat red = 0.0;
+    CGFloat green = 0.0;
+    CGFloat blue = 0.0;
+    CGFloat alpha = 0.8;
+    //Create the gradient as an image, and then set it as the color of the mask view.
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT), NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //Create the gradient
+    size_t locationsCount = 2;
+    CGFloat locations[2] = {0.0f, 1.0f};
+    CGFloat colors[8] = {0.0f, 0.0f, 0.0f, 0.0f, red, green, blue, alpha};
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, colors, locations, locationsCount);
+    CGColorSpaceRelease(colorSpace);
+    //Draw the gradient
+    CGPoint center = CGPointMake(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+    float radius = MIN(SCREEN_WIDTH , SCREEN_HEIGHT);
+    CGContextDrawRadialGradient(context, gradient, center, 0, center, radius, kCGGradientDrawsAfterEndLocation);
+    CGGradientRelease(gradient);
+    //Get the gradient image
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    //Set the background
+    return image;
 }
 
 #pragma mark - Save Image To Photos Album

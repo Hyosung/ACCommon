@@ -32,6 +32,8 @@
 
 - (UIImage *)rotatedByDegrees:(CGFloat)degrees;
 
+- (UIImage *)gradientImage;
+
 #pragma mark - Save Image To PhotosAlbum
 
 - (void)savePhotosAlbum;

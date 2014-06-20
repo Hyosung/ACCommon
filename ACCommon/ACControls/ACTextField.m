@@ -25,7 +25,9 @@
 	if (!self.text && self.placeholder) {
         
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0
-        self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder attributes:@{NSForegroundColorAttributeName: placeholderTextColor,NSFontAttributeName: self.font}];
+        self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder
+                                                                     attributes:@{NSForegroundColorAttributeName: placeholderTextColor,
+                                                                                  NSFontAttributeName: self.font}];
 #else
 		[self setNeedsDisplay];
 #endif

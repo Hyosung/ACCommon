@@ -261,4 +261,21 @@
     return height;
 }
 
+//引至ASIHTTPRequst #import <MobileCoreServices/MobileCoreServices.h>
+- (NSString*)fileMIMEType:(NSString*) file {
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:file]) {
+		return nil;
+	}
+    
+	// Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[file pathExtension], NULL);
+    CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    if (!MIMEType) {
+		return @"application/octet-stream";
+	}
+    return (__bridge NSString *)MIMEType;
+}
+
 @end

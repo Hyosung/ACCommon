@@ -11,7 +11,7 @@
 
 @implementation NSObject (Property)
 
-+ (NSDictionary *)propertyDictionary{
+- (NSDictionary *)propertyDictionary{
     NSMutableDictionary *propertyDic = [NSMutableDictionary dictionary];
     
     //属性个数

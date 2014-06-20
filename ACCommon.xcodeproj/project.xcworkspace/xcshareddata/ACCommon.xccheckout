@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CE054F50-3A7F-40EC-B61B-E6FC46F6CAD9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ACCommon</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>66BE0F37-EA9B-4723-AAD2-68014552295F</key>
+		<string>https://github.com/Hyosung/ACCommon.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ACCommon.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>66BE0F37-EA9B-4723-AAD2-68014552295F</key>
+		<string>../..</string>
+		<key>85D51E64-5105-4DCF-9AB9-AB67D11DD3EE</key>
+		<string>../../ACCommon</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/Hyosung/ACCommon.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>66BE0F37-EA9B-4723-AAD2-68014552295F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>66BE0F37-EA9B-4723-AAD2-68014552295F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ACCommon</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>85D51E64-5105-4DCF-9AB9-AB67D11DD3EE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ACCommon</string>
+		</dict>
+	</array>
+</dict>
+</plist>

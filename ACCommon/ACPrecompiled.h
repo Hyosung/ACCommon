@@ -15,19 +15,20 @@
 
 #define __USE_ACCommon__ (1)
 
-#define __USE_PullingRefreshTableView__ (1)
-#define __USE_SVWebViewController__     (1)
-#define __USE_TTTAttributedLabel__      (1)
-#define __USE_ChineseToPinyin__         (1)
-#define __USE_ASIHttpRequest__          (0)
-#define __USE_SVProgressHUD__           (1)
-#define __USE_AFNetworking__            (1)
-#define __USE_Reachability__            (0)
-#define __USE_SoundManager__            (1)
-#define __USE_SDWebImage__              (1)
 #define __USE_iCarousel__               (0)
+#define __USE_SDWebImage__              (1)
+#define __USE_SoundManager__            (1)
+#define __USE_Reachability__            (0)
+#define __USE_AFNetworking__            (1)
+#define __USE_SVProgressHUD__           (1)
+#define __USE_ASIHTTPRequest__          (1)
+#define __USE_ChineseToPinyin__         (1)
+#define __USE_TTTAttributedLabel__      (1)
+#define __USE_SVWebViewController__     (1)
+#define __USE_PullingRefreshTableView__ (1)
 
 #define __USE_QuartzCore__ (1)
 #define __USE_objc_runtime__ (1)
+#define __USE_objc_message__ (1)
 
 #endif

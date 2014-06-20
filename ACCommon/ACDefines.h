@@ -235,6 +235,14 @@ dispatch_once(&once##__token, ^{
 //OC对象强转（只针对OC对象）
 #define OC_OBJ_CONVERT(_type,_name,_obj,_tag) OBJ_CONVERT(_type *,_name,[_obj viewWithTag:(_tag)])
 
+//方法调用，不存在不会出错
+#define AC_FUNCTION_CALL(_obj, _fun, ...) \
+do { \
+if((_obj) && [_obj respondsToSelector:@selector(_fun)]) { \
+objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
+} \
+} while(0);
+
 #pragma mark - degrees/radian functions
 /*
  旋转的单位采用弧度(radians),而不是角度（degress）。以下两个函数，你可以在弧度和角度之间切换。
@@ -281,7 +289,7 @@ dispatch_once(&once##__token, ^{
 #ifdef DEBUG
 #define ACLog(fmt, ...) NSLog((@"[Time %s] [Function %s] [Name i雲] [Line %d] " fmt),__TIME__, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
-#define ACLog(...) while{}(0);
+#define ACLog(...) do{ }while(0);
 #endif
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000

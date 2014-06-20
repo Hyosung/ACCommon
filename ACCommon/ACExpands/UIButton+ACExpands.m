@@ -22,14 +22,15 @@
     UIImage *placeholderImage = [ACUtils drawPlaceholderWithSize:self.frame.size];
     
     __weak typeof(self) weakSelf = self;
-    [self setImageWithURL:URL forState:state placeholderImage:placeholderImage
-                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                    
-                    if (image && !error) {
-                        UIImage *newImage = [ACUtils zoomImageWithSize:weakSelf.frame.size image:image];
-                        [weakSelf setImage:newImage forState:state];
-                    }
-                }];
+    [self setImageWithURL:URL forState:state
+         placeholderImage:placeholderImage
+                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
+    {
+        if (image && !error) {
+            UIImage *newImage = [ACUtils zoomImageWithSize:weakSelf.frame.size image:image];
+            [weakSelf setImage:newImage forState:state];
+        }
+    }];
 }
 
 - (void)setACBackgroundImageURLString:(NSString *) anURLString {
@@ -41,14 +42,16 @@
     UIImage *placeholderImage = [ACUtils drawPlaceholderWithSize:self.frame.size];
     
     __weak typeof(self) weakSelf = self;
-    [self setBackgroundImageWithURL:URL forState:state placeholderImage:placeholderImage
-                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                              
-                              if (image && !error) {
-                                  UIImage *newImage = [ACUtils zoomImageWithSize:weakSelf.frame.size image:image];
-                                  [weakSelf setBackgroundImage:newImage forState:state];
-                              }
-                          }];
+    [self setBackgroundImageWithURL:URL
+                           forState:state
+                   placeholderImage:placeholderImage
+                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
+     {
+          if (image && !error) {
+              UIImage *newImage = [ACUtils zoomImageWithSize:weakSelf.frame.size image:image];
+              [weakSelf setBackgroundImage:newImage forState:state];
+          }
+     }];
 }
 #endif
 

@@ -21,7 +21,7 @@
 #import "ChineseToPinyin.h"
 #endif
 
-#if defined(__USE_ASIHttpRequest__) && __USE_ASIHttpRequest__
+#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "ASIHTTPRequestDelegate.h"

@@ -13,5 +13,5 @@
 /*
  将对象中的属性封装到字典中
  */
-+ (NSDictionary *)propertyDictionary;
+- (NSDictionary *)propertyDictionary;
 @end

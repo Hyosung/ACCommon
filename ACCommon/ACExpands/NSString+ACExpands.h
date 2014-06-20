@@ -74,4 +74,11 @@
  */
 - (CGFloat)computeHeightWithFont:(UIFont *) font width:(CGFloat) width;
 
+#pragma mark - MIME
+
+/**
+ 返回指定路径下文件的MIME
+ */
+- (NSString*)fileMIMEType:(NSString*) file;
+
 @end
