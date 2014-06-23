@@ -283,18 +283,12 @@ inline NSString * UUID() {
 + (UIImage *)resizedImageWithImage:(UIImage *)image size:(CGSize)size {
     UIImage *newImage = nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
-    CGFloat newWidth = MIN(image.size.width, size.width);
-    CGFloat newHeight = [ACUtilitys reckonWithSize:image.size width:newWidth];
-    if (newHeight > size.height) {
-        newWidth = [ACUtilitys reckonWithSize:image.size height:size.height];
-        newHeight = size.height;
-    }
-    newHeight = MIN(newHeight, size.height);
+    CGSize newSize = [ACUtilitys reckonWithSize:image.size andNewSize:size];
     [image drawInRect:CGRectMake(
-                                 size.width / 2 - newWidth / 2,
-                                 size.height / 2 - newHeight / 2,
-                                 newWidth,
-                                 newHeight)];
+                                 size.width / 2 - newSize.width / 2,
+                                 size.height / 2 - newSize.height / 2,
+                                 newSize.width,
+                                 newSize.height)];
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
@@ -303,29 +297,34 @@ inline NSString * UUID() {
 + (UIImage *)resizedFixedImageWithImage:(UIImage *)image size:(CGSize)size {
     
     UIImage *newImage = nil;
-    CGFloat newWidth = MIN(image.size.width, size.width);
-    CGFloat newHeight = [ACUtilitys reckonWithSize:image.size width:newWidth];
-    if (newHeight > size.height) {
-        newWidth = [ACUtilitys reckonWithSize:image.size height:size.height];
-        newHeight = size.height;
-    }
-    newHeight = MIN(newHeight, size.height);
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(newWidth, newHeight), NO, [UIScreen mainScreen].scale);
+    CGSize newSize = [ACUtilitys reckonWithSize:image.size andNewSize:size];
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, [UIScreen mainScreen].scale);
     
     [image drawInRect:CGRectMake(0.0,
                                  0.0,
-                                 newWidth,
-                                 newHeight)];
+                                 newSize.width,
+                                 newSize.height)];
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
 }
 
-+ (UIImage *)resizedImageWithImage:(UIImage *)image orHeight:(CGFloat)height {
++ (CGSize)reckonWithSize:(CGSize) oldSize andNewSize:(CGSize) newSize {
+    CGFloat newWidth = MIN(oldSize.width, newSize.width);
+    CGFloat newHeight = [ACUtilitys reckonWithSize:oldSize width:newWidth];
+    if (newHeight > newSize.height) {
+        newWidth = [ACUtilitys reckonWithSize:oldSize height:newSize.height];
+        newHeight = newSize.height;
+    }
+    newHeight = MIN(newHeight, oldSize.height);
+    return CGSizeMake(newWidth, newHeight);
+}
+
++ (UIImage *)resizedImageWithImage:(UIImage *)image toHeight:(CGFloat)height {
     return [ACUtilitys resizedImageWithImage:image isHeight:YES number:height];
 }
 
-+ (UIImage *)resizedImageWithImage:(UIImage *)image orWidth:(CGFloat)width {
++ (UIImage *)resizedImageWithImage:(UIImage *)image toWidth:(CGFloat)width {
     return [ACUtilitys resizedImageWithImage:image isHeight:NO number:width];
 }
 

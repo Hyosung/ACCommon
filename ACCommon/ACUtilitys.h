@@ -130,12 +130,16 @@ extern inline NSString * UUID();
  知道高度，重置图片大小
  */
 + (UIImage *)resizedImageWithImage:(UIImage *)image
-                          orHeight:(CGFloat)height;
+                          toHeight:(CGFloat)height;
 /*
  知道宽度，重置图片大小
  */
 + (UIImage *)resizedImageWithImage:(UIImage *)image
-                           orWidth:(CGFloat)width;
+                           toWidth:(CGFloat)width;
+/**
+ 传入原来的size与要转换的size，计算出新的size
+ */
++ (CGSize)reckonWithSize:(CGSize) oldSize andNewSize:(CGSize) newSize;
 
 /*
  根据高度计算对应的宽度
