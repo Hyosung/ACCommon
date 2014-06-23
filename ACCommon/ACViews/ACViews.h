@@ -11,5 +11,6 @@
 
 #import "ACTextView.h"
 #import "ACTableViewCell.h"
+#import "ACLargerImageView.h"
 
 #endif

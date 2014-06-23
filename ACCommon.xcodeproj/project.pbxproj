@@ -74,6 +74,7 @@
 		DD705C481957F85F007DAE8C /* SVWebViewControllerActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C3A1957F85F007DAE8C /* SVWebViewControllerActivityChrome.m */; };
 		DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C401957F85F007DAE8C /* SVWebViewControllerActivitySafari.m */; };
 		DD705C4A1957F85F007DAE8C /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */; };
+		DD705C4D1957FF63007DAE8C /* ACLargerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C4C1957FF63007DAE8C /* ACLargerImageView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -263,6 +264,8 @@
 		DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivity.m; sourceTree = "<group>"; };
 		DD705C441957F85F007DAE8C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		DD705C451957F85F007DAE8C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
+		DD705C4B1957FF63007DAE8C /* ACLargerImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACLargerImageView.h; sourceTree = "<group>"; };
+		DD705C4C1957FF63007DAE8C /* ACLargerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACLargerImageView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,6 +299,8 @@
 				0480A7EE1912D8D40048880A /* ACTableViewCell.h */,
 				0480A7EF1912D8D40048880A /* ACTableViewCell.m */,
 				045B230019154DDD00C8781D /* ACViews.h */,
+				DD705C4B1957FF63007DAE8C /* ACLargerImageView.h */,
+				DD705C4C1957FF63007DAE8C /* ACLargerImageView.m */,
 			);
 			path = ACViews;
 			sourceTree = "<group>";
@@ -830,6 +835,7 @@
 				04853AF01912AF7E000853EB /* ACTextField.m in Sources */,
 				04853ABC19116F7E000853EB /* AFHTTPRequestOperation.m in Sources */,
 				0480A7F01912D8D40048880A /* ACTableViewCell.m in Sources */,
+				DD705C4D1957FF63007DAE8C /* ACLargerImageView.m in Sources */,
 				048EAAA7192676DD0030B406 /* ACAnimation.m in Sources */,
 				DD705C121957CEE6007DAE8C /* UIAlertView+ACAdditions.m in Sources */,
 				DD705C141957CEE6007DAE8C /* UIImage+ACAdditions.m in Sources */,

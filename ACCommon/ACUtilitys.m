@@ -10,6 +10,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
+#import <sys/utsname.h>
 
 @interface ACUtilitys() {
 #if defined(__USE_Reachability__) && __USE_Reachability__
@@ -48,6 +49,66 @@ inline NSString * UUID() {
     CFRelease(UUID);
     CFRelease(UUIDStr);
     return uuidStr;
+}
+
++ (NSString *)currentDeviceName {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    //    printf("sysname:%s\n",systemInfo.sysname);
+    //    printf("nodename:%s\n",systemInfo.nodename);
+    //    printf("release:%s\n",systemInfo.release);
+    //    printf("version:%s\n",systemInfo.version);
+    //    printf("machine:%s\n",systemInfo.machine);
+    char *machines = strtok(systemInfo.machine, ",");
+    if (machines != NULL) {
+        NSString *deviceString = [NSString stringWithCString:&machines[0] encoding:NSUTF8StringEncoding];
+        return deviceString;
+    }
+    
+    //    NSString *deviceString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    return nil;
+}
+
++ (UIViewController *)currentRootViewController {
+    
+    UIViewController *result;
+    
+    // Try to find the root view controller programmically
+    
+    // Find the top window (that is not an alert view or other window)
+    
+    UIWindow *topWindow = [[UIApplication sharedApplication] keyWindow];
+    
+    if (topWindow.windowLevel != UIWindowLevelNormal) {
+        
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        
+        for(topWindow in windows) {
+            
+            if (topWindow.windowLevel == UIWindowLevelNormal) {
+                break;
+            }
+        }
+    }
+    
+    UIView *rootView = [[topWindow subviews] firstObject];
+    
+    id nextResponder = [rootView nextResponder];
+    
+    if ([nextResponder isKindOfClass:[UIViewController class]]) {
+        
+        result = nextResponder;
+    }
+    else if ([topWindow respondsToSelector:@selector(rootViewController)] && topWindow.rootViewController != nil) {
+        
+        result = topWindow.rootViewController;
+    }
+    else {
+        
+        NSAssert(NO, @"ShareKit: Could not find a root view controller.  You can assign one manually by calling [[SHK currentHelper] setRootViewController:YOURROOTVIEWCONTROLLER].");
+    }
+    
+    return result;
 }
 
 + (UIImage *)imageNamed:(NSString *) name orType:(NSString *) ext {
@@ -224,10 +285,35 @@ inline NSString * UUID() {
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
     CGFloat newWidth = MIN(image.size.width, size.width);
     CGFloat newHeight = [ACUtilitys reckonWithSize:image.size width:newWidth];
+    if (newHeight > size.height) {
+        newWidth = [ACUtilitys reckonWithSize:image.size height:size.height];
+        newHeight = size.height;
+    }
     newHeight = MIN(newHeight, size.height);
     [image drawInRect:CGRectMake(
                                  size.width / 2 - newWidth / 2,
                                  size.height / 2 - newHeight / 2,
+                                 newWidth,
+                                 newHeight)];
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
++ (UIImage *)resizedFixedImageWithImage:(UIImage *)image size:(CGSize)size {
+    
+    UIImage *newImage = nil;
+    CGFloat newWidth = MIN(image.size.width, size.width);
+    CGFloat newHeight = [ACUtilitys reckonWithSize:image.size width:newWidth];
+    if (newHeight > size.height) {
+        newWidth = [ACUtilitys reckonWithSize:image.size height:size.height];
+        newHeight = size.height;
+    }
+    newHeight = MIN(newHeight, size.height);
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(newWidth, newHeight), NO, [UIScreen mainScreen].scale);
+    
+    [image drawInRect:CGRectMake(0.0,
+                                 0.0,
                                  newWidth,
                                  newHeight)];
     newImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -247,11 +333,12 @@ inline NSString * UUID() {
                  isHeight:(BOOL) flag
                    number:(CGFloat) number {
     CGFloat newNumber = 0.0f;
-    CGFloat scale = size.height / size.width;
+    CGFloat scale1 = size.height / size.width;
+    CGFloat scale2 = size.width / size.height;
     if (!flag) {
-        newNumber = scale * number;
+        newNumber = scale1 * number;
     }else{
-        newNumber = number / scale;
+        newNumber = scale2 * number;
     }
     return newNumber;
 }

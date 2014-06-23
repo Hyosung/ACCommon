@@ -46,6 +46,16 @@ extern inline NSString * UUID();
 + (BOOL)isEnable3G;
 #endif
 
+/**
+ 获取当前设备的名称如iPhone/iPod/iPad
+ */
++ (NSString *)currentDeviceName;
+
+/**
+ 当前根视图控制器
+ */
++ (UIViewController *)currentRootViewController;
+
 /*
  无缓存取图
  */
@@ -103,12 +113,19 @@ extern inline NSString * UUID();
                           isHeight:(BOOL)flag
                             number:(CGFloat)number;
 
-/*
- 重置图片的大小，图片不变形，只压缩
+/**
+ 重置图片的大小，图片不变形，只压缩,图片居中绘制
  @size 图片大小
  */
 + (UIImage *)resizedImageWithImage:(UIImage *)image
                               size:(CGSize)size;
+
+/**
+ 重置图片的大小，图片不变形，只压缩
+ @size 图片大小
+ */
++ (UIImage *)resizedFixedImageWithImage:(UIImage *)image
+                                   size:(CGSize)size;
 /*
  知道高度，重置图片大小
  */
