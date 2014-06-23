@@ -216,10 +216,17 @@ static const NSUInteger kDomainSection = 1;
 
 + (void)dismiss
 {
-	if ([sharedDialog respondsToSelector:@selector(presentingViewController)])
+#if	__IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
+    if ([sharedDialog respondsToSelector:@selector(presentingViewController)])
+		[[sharedDialog presentingViewController] dismissViewControllerAnimated:YES completion:NULL];
+	else
+		[[sharedDialog parentViewController] dismissViewControllerAnimated:YES completion:NULL];
+#else
+    if ([sharedDialog respondsToSelector:@selector(presentingViewController)])
 		[[sharedDialog presentingViewController] dismissModalViewControllerAnimated:YES];
-	else 
+	else
 		[[sharedDialog parentViewController] dismissModalViewControllerAnimated:YES];
+#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -236,10 +243,17 @@ static const NSUInteger kDomainSection = 1;
 	if (self == sharedDialog) {
 		[[self class] dismiss];
 	} else {
-		if ([self respondsToSelector:@selector(presentingViewController)])
-			[[self presentingViewController] dismissModalViewControllerAnimated:YES];
-		else
-			[[self parentViewController] dismissModalViewControllerAnimated:YES];
+#if	__IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
+        if ([self respondsToSelector:@selector(presentingViewController)])
+            [[self presentingViewController] dismissViewControllerAnimated:YES completion:NULL];
+        else
+            [[self parentViewController] dismissViewControllerAnimated:YES completion:NULL];
+#else
+        if ([self respondsToSelector:@selector(presentingViewController)])
+            [[self presentingViewController] dismissModalViewControllerAnimated:YES];
+        else
+            [[self parentViewController] dismissModalViewControllerAnimated:YES];
+#endif
 	}
 }
 
@@ -315,7 +329,12 @@ static const NSUInteger kDomainSection = 1;
 	}
 #endif
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
+	[[self presentingController] presentViewController:self animated:YES completion:NULL];
+#else
+    
 	[[self presentingController] presentModalViewController:self animated:YES];
+#endif
 }
 
 #pragma mark button callbacks

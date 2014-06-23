@@ -4866,7 +4866,11 @@ static NSOperationQueue *sharedQueue = nil;
   
 	// RFC 2612 says max-age must override any Expires header
 	if (maxAge) {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
+		return [[NSDate date] dateByAddingTimeInterval:maxAge];
+#else
 		return [[NSDate date] addTimeInterval:maxAge];
+#endif
 	} else {
 		NSString *expires = [responseHeaders objectForKey:@"Expires"];
 		if (expires) {

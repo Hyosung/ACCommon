@@ -6,17 +6,11 @@
 //
 //  https://github.com/samvermette/SVWebViewController
 
-#import <UIKit/UIKit.h>
-#import <MessageUI/MessageUI.h>
-
 #import "SVModalWebViewController.h"
 
 @interface SVWebViewController : UIViewController
 
 - (id)initWithAddress:(NSString*)urlString;
 - (id)initWithURL:(NSURL*)URL;
-- (void)doneButtonClicked:(id)sender;
-
-@property (nonatomic, readwrite) SVWebViewControllerAvailableActions availableActions;
 
 @end

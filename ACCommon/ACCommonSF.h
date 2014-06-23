@@ -23,4 +23,8 @@
 #import <objc/runtime.h>
 #endif
 
+#if defined(__USE_objc_message__) && __USE_objc_message__ 
+#import <objc/message.h>
+#endif
+
 #endif
