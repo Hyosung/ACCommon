@@ -235,6 +235,9 @@ dispatch_once(&once##__token, ^{
 //OC对象强转（只针对OC对象）
 #define OC_OBJ_CONVERT(_type,_name,_obj,_tag) OBJ_CONVERT(_type *,_name,[_obj viewWithTag:(_tag)])
 
+//C转为NSValue
+#define C_CONVERT_OC(_cobj) ({__typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj);[NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof(__NSX_PASTE__(_a,L)))];})
+
 //方法调用，不存在不会出错
 #define AC_FUNCTION_CALL(_obj, _fun, ...) \
 do { \
@@ -258,17 +261,17 @@ objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
                  blue:((float)((rgbValue & 0x0000FF) >> 0 )) / 255.0 \
                 alpha:alpha]
 
-#define COLORRGBA(r,g,b,a) \
-[UIColor colorWithRed:(r) / 255.0f                              \
-                green:(g) / 255.0f                              \
-                 blue:(b) / 255.0f                              \
+#define COLORRGBA(r,g,b,a)         \
+[UIColor colorWithRed:(r) / 255.0f \
+                green:(g) / 255.0f \
+                 blue:(b) / 255.0f \
                 alpha:(a)]
 
 #define COLORRGB(r,g,b) COLORRGBA(r,g,b,1.0)
 
 #define COLORHEX(hex) COLORHEXA(hex,1.0)
 
-#define APP_TMP(_path) [NSString stringWithFormat:@"%@/%@",NSTemporaryDirectory(),_path]
+#define APP_TMP_ADDTO(_path) [NSString stringWithFormat:@"%@/%@",NSTemporaryDirectory(),_path]
 
 #define APP_CACHES   [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 #define APP_LIBRARY  [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0]
