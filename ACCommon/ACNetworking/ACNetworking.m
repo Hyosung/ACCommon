@@ -162,7 +162,7 @@ static AFHTTPRequestOperationManager *afOperation = nil;
     __weak ASIHTTPRequest *request = [ACNetworking requestWithURLString:URLString method:@"GET" params:nil];
     [request setAllowResumeForFileDownloads:YES];
     [request setDownloadDestinationPath:[APP_CACHES stringByAppendingString:@"ACDownload"]];
-    [request setTemporaryFileDownloadPath:APP_TMP(@"ACTemp")];
+    [request setTemporaryFileDownloadPath:APP_TMP_ADDTO(@"ACTemp")];
     [request setCompletionBlock:^{
         if (completeCallback) {
             NSError __autoreleasing *error = nil;

@@ -235,8 +235,18 @@ dispatch_once(&once##__token, ^{
 //OC对象强转（只针对OC对象）
 #define OC_OBJ_CONVERT(_type,_name,_obj,_tag) OBJ_CONVERT(_type *,_name,[_obj viewWithTag:(_tag)])
 
-//C转为NSValue
-#define C_CONVERT_OC(_cobj) ({__typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj);[NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof(__NSX_PASTE__(_a,L)))];})
+//基础类型的类型编码字符
+#define _C_ENCODE @"cCsSiIlLqQfdbB"
+#define __C_BASE_TYPE__(_value) ( [_C_ENCODE rangeOfString:[NSString stringWithCString:@encode(__typeof__(_value)) encoding:NSUTF8StringEncoding] options:NSRegularExpressionSearch].location != NSNotFound )
+
+//C基础类型转NSNumber
+#define CBT_CONVERT_OC(_cvalue) ({ __typeof__(_cvalue) __NSX_PASTE__(_a,L) = (_cvalue); __C_BASE_TYPE__(__NSX_PASTE__(_a,L)) ? @(__NSX_PASTE__(_a,L)) : [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
+
+//C类型转NSValue
+#define C_CONVERT_OC(_cobj) ({__typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj); [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
+
+//处理字符串
+#define DEAL_WITH_STRING(_str) ({((_str) && (![_str isKindOfClass:[NSNull class]])) ? (_str) : @"";})
 
 //方法调用，不存在不会出错
 #define AC_FUNCTION_CALL(_obj, _fun, ...) \

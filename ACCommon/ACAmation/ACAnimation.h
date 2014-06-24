@@ -92,7 +92,10 @@
 //抛物线
 + (void)animationCurve:(UIView *) view;
 
-
+//发光的动画
++ (void)animationShine:(UIView *) view
+   andHighlightedImage:(UIImage *) highlightedImage
+          andMaskImage:(UIImage *) maskImage;
 
 #pragma mark - Private API
 

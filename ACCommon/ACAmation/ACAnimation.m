@@ -566,6 +566,34 @@
     [view.layer addAnimation:group forKey:@"position"];
 }
 
++ (void)animationShine:(UIView *) view
+   andHighlightedImage:(UIImage *) highlightedImage
+          andMaskImage:(UIImage *) maskImage {
+    CGFloat width = view.frame.size.width;
+    CGFloat height = view.frame.size.height;
+    
+    CALayer *shineLayer = [CALayer layer];
+    shineLayer.contents = (id)[highlightedImage CGImage];
+    shineLayer.frame = CGRectMake(0, 1, width, height);
+    
+    CALayer *mask = [CALayer layer];
+    mask.backgroundColor = [[UIColor clearColor] CGColor];
+    mask.contents = (id)[maskImage CGImage];
+    mask.contentsGravity = kCAGravityCenter;
+    mask.frame = CGRectMake(-width, 0, width * 1.25, height);
+    
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"position.x"];
+    anim.byValue = @(width * 2);
+    anim.repeatCount = HUGE_VALF;
+    anim.duration = 3.0f;
+    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    
+    [view.layer addSublayer:shineLayer];
+    shineLayer.mask = mask;
+    
+    [mask addAnimation:anim forKey:@"shine"];
+}
+
 
 #pragma mark - Private API
 
