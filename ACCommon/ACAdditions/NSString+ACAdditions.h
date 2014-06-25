@@ -42,6 +42,9 @@
 - (BOOL)validateCarType;
 - (BOOL)validateLandline;
 - (BOOL)validateUserName;
+- (BOOL)validateURLString;
+- (BOOL)validateCharacters;
+- (BOOL)validateDoubleByte;
 - (BOOL)validateFloatNumber;
 - (BOOL)validateIdentityCard;
 

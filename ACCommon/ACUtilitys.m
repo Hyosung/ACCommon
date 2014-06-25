@@ -10,7 +10,11 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
 #import <sys/utsname.h>
+
+@import ImageIO;
 
 @interface ACUtilitys() {
 #if defined(__USE_Reachability__) && __USE_Reachability__
@@ -165,7 +169,7 @@ inline NSString * UUID() {
     return image;
 }*/
 
-+ (UIImage *)imageSynthesisWithImages:(NSArray *)images andSize:(CGSize)size {
++ (UIImage *)imagesSynthesisWithImages:(NSArray *)images andSize:(CGSize)size {
     UIImage *newImage = nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
     [images enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -180,6 +184,98 @@ inline NSString * UUID() {
     UIGraphicsEndImageContext();
     return newImage;
 }
+
++ (NSArray *)gifParseWithGifData:(NSData *)gifData {
+    
+    if (!gifData) {
+        return nil;
+    }
+    
+    //加载gif
+    CGImageSourceRef gif = CGImageSourceCreateWithData((__bridge CFDataRef)gifData, nil);
+
+    //获取gif的各种属性
+    CFDictionaryRef gifprops = CGImageSourceCopyPropertiesAtIndex(gif, 0, NULL);
+
+    //获取gif中静态图片的数量
+    size_t count = CGImageSourceGetCount(gif);
+
+//    CFDictionaryRef gifDic = CFDictionaryGetValue(gifprops, kCGImagePropertyGIFDictionary);
+//
+//    CFDictionaryRef delay = CFDictionaryGetValue(gifDic, kCGImagePropertyGIFDelayTime);
+//
+//    [gifDic objectForKey:(NSString *)kCGImagePropertyGIFDelayTime];
+//
+//    NSNumber * w = CFDictionaryGetValue(gifprops, @"PixelWidth");
+//
+//    NSNumber * h =CFDictionaryGetValue(gifprops, @"PixelHeight");
+//
+//    float totalDuration = delay.doubleValue * count;
+//
+//    float pixelWidth = w.intValue;
+//
+//    float pixelHeight = h.intValue;
+
+    //将gif解析成UIImage类型对象，并加进images数组中
+    NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
+
+    for(size_t index = 0; index < count; index++) {
+        CGImageRef ref = CGImageSourceCreateImageAtIndex(gif, index, nil);
+
+        UIImage *img = [UIImage imageWithCGImage:ref];
+
+        if (img) {
+            
+            [images addObject:img];
+        }
+
+        CFRelease(ref);
+    }
+
+    CFRelease(gifprops);
+    CFRelease(gif);
+    
+    return images;
+}
+
+//用来辨别设备所使用网络的运营商
++ (NSString*)checkCarrier {
+    
+    NSString *ret = @"";
+    
+    CTTelephonyNetworkInfo *info = [[CTTelephonyNetworkInfo alloc] init];
+    
+    CTCarrier *carrier = [info subscriberCellularProvider];
+    
+    if (carrier == nil) {
+        
+        return ret;
+    }
+    
+    NSString *code = [carrier mobileNetworkCode];
+    
+    if ([code isEqualToString:@""]) {
+        
+        return ret;
+    }
+    
+    if ([code isEqualToString:@"00"] || [code isEqualToString:@"02"] || [code isEqualToString:@"07"]) {
+        
+        ret = @"移动";
+    }
+    
+    if ([code isEqualToString:@"01"]|| [code isEqualToString:@"06"] ) {
+        ret = @"联通";
+    }
+    
+    if ([code isEqualToString:@"03"]|| [code isEqualToString:@"05"] ) {
+        ret = @"电信";
+    }
+    
+    return ret;
+}
+
+
 
 /*+ (void)savePhotosAlbum:(UIImage *)image {
     UIImageWriteToSavedPhotosAlbum(image, self, @selector(imageSavedToPhotosAlbum:didFinishSavingWithError:contextInfo:), nil);

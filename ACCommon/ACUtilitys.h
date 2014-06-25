@@ -80,7 +80,19 @@ extern inline NSString * UUID();
  @size 合成图片的大小
  @return 合成的图片
  */
-+ (UIImage *)imageSynthesisWithImages:(NSArray *) images andSize:(CGSize) size;
++ (UIImage *)imagesSynthesisWithImages:(NSArray *) images andSize:(CGSize) size;
+
+/**
+ gif图片解析
+ */
++ (NSArray *)gifParseWithGifData:(NSData *) gifData;
+
++ (NSString*)checkCarrier;
+
+/**
+ 将图片合成gif
+ */
+//+ (NSString *)imagesSynthesisGif:(NSArray *) images;
 
 /*
  保存图片到相册
