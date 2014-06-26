@@ -256,6 +256,8 @@ objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
 } \
 } while(0);
 
+#define AC_STATIC_INLINE static inline
+
 #pragma mark - degrees/radian functions
 /*
  旋转的单位采用弧度(radians),而不是角度（degress）。以下两个函数，你可以在弧度和角度之间切换。

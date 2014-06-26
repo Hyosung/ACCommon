@@ -58,6 +58,9 @@
 		048EAAE219268A040030B406 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAAB519268A040030B406 /* ASIHTTPRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		048EAAE319268A040030B406 /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAAB919268A040030B406 /* ASIInputStream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		048EAAE419268A040030B406 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAABB19268A040030B406 /* ASINetworkQueue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DD218860195BCB1F0054395C /* ACBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD21885F195BCB1F0054395C /* ACBaseController.m */; };
+		DD218863195BCB310054395C /* ACBaseTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD218862195BCB310054395C /* ACBaseTableController.m */; };
+		DD218866195BCB6A0054395C /* ACBaseCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD218865195BCB6A0054395C /* ACBaseCollectionController.m */; };
 		DD705C0D1957CEE6007DAE8C /* NSData+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */; };
 		DD705C0E1957CEE6007DAE8C /* NSDate+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFC1957CEE6007DAE8C /* NSDate+ACAdditions.m */; };
 		DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFE1957CEE6007DAE8C /* NSDictionary+ACAdditions.m */; };
@@ -215,6 +218,12 @@
 		048EAABA19268A040030B406 /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASINetworkQueue.h; sourceTree = "<group>"; };
 		048EAABB19268A040030B406 /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASINetworkQueue.m; sourceTree = "<group>"; };
 		048EAABC19268A040030B406 /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
+		DD21885E195BCB1F0054395C /* ACBaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACBaseController.h; sourceTree = "<group>"; };
+		DD21885F195BCB1F0054395C /* ACBaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACBaseController.m; sourceTree = "<group>"; };
+		DD218861195BCB310054395C /* ACBaseTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACBaseTableController.h; sourceTree = "<group>"; };
+		DD218862195BCB310054395C /* ACBaseTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACBaseTableController.m; sourceTree = "<group>"; };
+		DD218864195BCB6A0054395C /* ACBaseCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACBaseCollectionController.h; sourceTree = "<group>"; };
+		DD218865195BCB6A0054395C /* ACBaseCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACBaseCollectionController.m; sourceTree = "<group>"; };
 		DD705BF81957CEE6007DAE8C /* ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAdditions.h; sourceTree = "<group>"; };
 		DD705BF91957CEE6007DAE8C /* NSData+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ACAdditions.h"; sourceTree = "<group>"; };
 		DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ACAdditions.m"; sourceTree = "<group>"; };
@@ -337,6 +346,7 @@
 		04853891191157E0000853EB /* ACCommon */ = {
 			isa = PBXGroup;
 			children = (
+				DD21885D195BCB010054395C /* ACBaseController */,
 				DD705BF71957CEE6007DAE8C /* ACAdditions */,
 				048EAAA4192676AD0030B406 /* ACAnimation */,
 				048EAAA0192671040030B406 /* ACNetworking */,
@@ -617,6 +627,19 @@
 			path = ASIHTTPRequest;
 			sourceTree = "<group>";
 		};
+		DD21885D195BCB010054395C /* ACBaseController */ = {
+			isa = PBXGroup;
+			children = (
+				DD21885E195BCB1F0054395C /* ACBaseController.h */,
+				DD21885F195BCB1F0054395C /* ACBaseController.m */,
+				DD218861195BCB310054395C /* ACBaseTableController.h */,
+				DD218862195BCB310054395C /* ACBaseTableController.m */,
+				DD218864195BCB6A0054395C /* ACBaseCollectionController.h */,
+				DD218865195BCB6A0054395C /* ACBaseCollectionController.m */,
+			);
+			path = ACBaseController;
+			sourceTree = "<group>";
+		};
 		DD705BF71957CEE6007DAE8C /* ACAdditions */ = {
 			isa = PBXGroup;
 			children = (
@@ -797,6 +820,7 @@
 				DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */,
 				04853AD019116F7E000853EB /* UIImageView+WebCache.m in Sources */,
 				04853AD519116F7E000853EB /* SDWebImageManager.m in Sources */,
+				DD218860195BCB1F0054395C /* ACBaseController.m in Sources */,
 				04853AD119116F7E000853EB /* SDWebImageDownloader.m in Sources */,
 				DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */,
 				04853AD219116F7E000853EB /* SDWebImageDownloaderOperation.m in Sources */,
@@ -804,6 +828,7 @@
 				DD705C161957CEE6007DAE8C /* UIView+ACAdditions.m in Sources */,
 				DD705C111957CEE6007DAE8C /* NSString+ACAdditions.m in Sources */,
 				04853AD319116F7E000853EB /* SDWebImageCompat.m in Sources */,
+				DD218863195BCB310054395C /* ACBaseTableController.m in Sources */,
 				04853AD719116F7E000853EB /* SoundManager.m in Sources */,
 				04853AC519116F7E000853EB /* ChineseToPinyin.m in Sources */,
 				04853ACD19116F7E000853EB /* UIImage+GIF.m in Sources */,
@@ -821,6 +846,7 @@
 				DD705C101957CEE6007DAE8C /* NSObject+ACAdditions.m in Sources */,
 				DD705C0D1957CEE6007DAE8C /* NSData+ACAdditions.m in Sources */,
 				DD705C4A1957F85F007DAE8C /* SVWebViewControllerActivity.m in Sources */,
+				DD218866195BCB6A0054395C /* ACBaseCollectionController.m in Sources */,
 				048EAAE119268A040030B406 /* ASIFormDataRequest.m in Sources */,
 				04853ADB19116F7E000853EB /* TTTAttributedLabel.m in Sources */,
 				04853AD619116F7E000853EB /* SDWebImagePrefetcher.m in Sources */,
