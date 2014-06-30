@@ -251,4 +251,11 @@
     return (__bridge NSString *)MIMEType;
 }
 
+#pragma mark - NSString To UIImage
+
+- (UIImage *)stringConvertedImage {
+    NSData *data = [GTMBase64 decodeString:self];
+    return [UIImage imageWithData:data];
+}
+
 @end

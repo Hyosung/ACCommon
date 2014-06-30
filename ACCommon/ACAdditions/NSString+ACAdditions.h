@@ -84,4 +84,7 @@
  */
 - (NSString*)fileMIMEType:(NSString*) file;
 
+#pragma mark - NSString To UIImage
+- (UIImage *)stringConvertedImage;
+
 @end

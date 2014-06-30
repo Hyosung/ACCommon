@@ -10,6 +10,7 @@
 
 #import <Accelerate/Accelerate.h>
 #import <float.h>
+#import "GTMBase64.h"
 
 @implementation UIImage (ACAdditions)
 
@@ -550,6 +551,28 @@
     UIGraphicsEndImageContext();
     
     return outputImage;
+}
+
+#pragma mark - UIImage To NSString
+- (NSString *)imageConvertedString {
+    NSDictionary *systeminfo = [NSDictionary dictionaryWithContentsOfFile:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"systeminfo"]];
+    float o = 0.1;
+	if (systeminfo){//如果有系统设置信息
+		if ([systeminfo[@"imagesize"] isEqualToString:@"大"]) {
+			o = 0.7;
+		}
+		if ([systeminfo[@"imagesize"] isEqualToString:@"中"]) {
+			o = 0.5;
+		}
+		if ([systeminfo[@"imagesize"] isEqualToString:@"小"]) {
+			o = 0.2;
+		}
+	}
+    
+	NSData *data = UIImageJPEGRepresentation(self, o);
+	NSString *dataString = [GTMBase64 stringByEncodingData:data];
+	
+	return dataString;
 }
 
 
