@@ -246,7 +246,8 @@ dispatch_once(&once##__token, ^{
 #define C_CONVERT_OC(_cobj) ({__typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj); [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
 
 //处理字符串
-#define DEAL_WITH_STRING(_str) ({((_str) && (![_str isKindOfClass:[NSNull class]])) ? (_str) : @"";})
+#define DEAL_WITH_STRING(_str) ({ ((_str) && (![(_str) isKindOfClass:[NSNull class]])) ? (_str) : @""; })
+#define STRING_NULL_MSG(_str, _msg) ({ [DEAL_WITH_STRING(_str) isEqualToString:@""] ? (_msg) : (_str); })
 
 //方法调用，不存在不会出错
 #define AC_FUNCTION_CALL(_obj, _fun, ...) \

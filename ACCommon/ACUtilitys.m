@@ -13,6 +13,7 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <sys/utsname.h>
+#import <sys/sysctl.h>
 
 @import ImageIO;
 
@@ -47,12 +48,118 @@ ACIMP_SINGLETON(ACUtilitys)
 
 inline NSString * UUID() {
     
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
+    return [[NSUUID UUID] UUIDString];
+#else
+    
     CFUUIDRef UUID = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef UUIDStr = CFUUIDCreateString(kCFAllocatorDefault, UUID);
     NSString *uuidStr = (__bridge NSString *)(UUIDStr);
     CFRelease(UUID);
     CFRelease(UUIDStr);
     return uuidStr;
+#endif
+}
+
++ (NSString *)platform {
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);///-----get device struct info
+    
+    NSString *platform = [NSString stringWithUTF8String:machine];
+    
+    free(machine);
+    return STRING_NULL_MSG([ACUtilitys deviceModels][platform], @"未知设备");
+}
+
++ (NSDictionary *)deviceModels {
+    static NSDictionary *info = nil;
+    
+    AC_EXEONCE_BEGIN(models)
+    NSArray *modelArray = @[
+                            @"i386", @"x86_64",
+                            
+                            @"iPhone1,1",
+                            @"iPhone1,2",
+                            @"iPhone2,1",
+                            @"iPhone3,1",
+                            @"iPhone3,2",
+                            @"iPhone3,3",
+                            @"iPhone4,1",
+                            @"iPhone5,1",
+                            @"iPhone5,2",
+                            @"iPhone5,3",
+                            @"iPhone5,4",
+                            @"iPhone6,1",
+                            @"iPhone6,2",
+                            
+                            @"iPod1,1",
+                            @"iPod2,1",
+                            @"iPod3,1",
+                            @"iPod4,1",
+                            @"iPod5,1",
+                            
+                            @"iPad1,1",
+                            @"iPad2,1",
+                            @"iPad2,2",
+                            @"iPad2,3",
+                            @"iPad2,4",
+                            @"iPad3,1",
+                            @"iPad3,2",
+                            @"iPad3,3",
+                            @"iPad3,4",
+                            @"iPad3,5",
+                            @"iPad3,6",
+                            
+                            @"iPad2,5",
+                            @"iPad2,6",
+                            @"iPad2,7",
+                            ];
+    NSArray *modelNameArray = @[
+                                @"iPhone Simulator", @"iPhone Simulator",
+                                
+                                @"iPhone 2G",
+                                @"iPhone 3G",
+                                @"iPhone 3GS",
+                                @"iPhone 4(GSM)",
+                                @"iPhone 4(GSM Rev A)",
+                                @"iPhone 4(CDMA)",
+                                @"iPhone 4S",
+                                @"iPhone 5(GSM)",
+                                @"iPhone 5(GSM+CDMA)",
+                                @"iPhone 5c(GSM)",
+                                @"iPhone 5c(Global)",
+                                @"iphone 5s(GSM)",
+                                @"iphone 5s(Global)",
+                                
+                                @"iPod Touch 1G",
+                                @"iPod Touch 2G",
+                                @"iPod Touch 3G",
+                                @"iPod Touch 4G",
+                                @"iPod Touch 5G",
+                                
+                                @"iPad",
+                                @"iPad 2(WiFi)",
+                                @"iPad 2(GSM)",
+                                @"iPad 2(CDMA)",
+                                @"iPad 2(WiFi + New Chip)",
+                                @"iPad 3(WiFi)",
+                                @"iPad 3(GSM+CDMA)",
+                                @"iPad 3(GSM)",
+                                @"iPad 4(WiFi)",
+                                @"iPad 4(GSM)",
+                                @"iPad 4(GSM+CDMA)",
+                                
+                                @"iPad mini (WiFi)",
+                                @"iPad mini (GSM)",
+                                @"ipad mini (GSM+CDMA)"
+                                ];
+    
+    info = [NSDictionary dictionaryWithObjects:modelNameArray forKeys:modelArray];
+    AC_EXEONCE_END
+    
+    return info;
 }
 
 + (NSString *)currentDeviceName {
