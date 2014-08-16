@@ -51,6 +51,8 @@ extern inline NSString * UUID();
  */
 + (NSString *)currentDeviceName;
 
++ (NSString *)platform;
+
 /**
  当前根视图控制器
  */
@@ -215,7 +217,6 @@ extern inline NSString * UUID();
 + (UIImage *)drawGradientColor:(CGRect)p_clipRect
                        options:(CGGradientDrawingOptions)p_options
                         colors:(NSArray *)p_colors;
-
 
 /**
  计算文本size 只针对单行
