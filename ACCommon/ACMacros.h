@@ -245,6 +245,16 @@ dispatch_once(&once##__token, ^{
 //C类型转NSValue
 #define C_CONVERT_OC(_cobj) ({__typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj); [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
 
+//空的判断
+#define isEmptyObject(_object) (( _object ) == nil || [( _object ) isKindOfClass:[NSNull class]]) //不包括NSNull
+#define isEmptyList(_list) ({  if (( _list ) != nil && ![( _list ) isKindOfClass:[NSNull class]])\
+NSAssert(([( _list ) isKindOfClass:[NSArray class]]\
+|| [( _list ) isKindOfClass:[NSDictionary class]]), @"传入对象必须是NSArray/NSDictionary,或其子类");\
+(( _list ) == nil || [( _list ) isKindOfClass:[NSNull class]] || [( _list ) count] <= 0); })
+#define isEmptyString(_string) ({ if (( _string ) != nil && ![( _string ) isKindOfClass:[NSNull class]])\
+NSAssert([( _string ) isKindOfClass:[NSString class]], @"传入对象必须是NSString,或其子类"); \
+(( _string ) == nil || [( _string ) isKindOfClass:[NSNull class]] || [( _string ) isEqualToString:@""]); })
+
 //处理字符串
 #define DEAL_WITH_STRING(_str) ({ ((_str) && (![(_str) isKindOfClass:[NSNull class]])) ? (_str) : @""; })
 #define STRING_NULL_MSG(_str, _msg) ({ [DEAL_WITH_STRING(_str) isEqualToString:@""] ? (_msg) : (_str); })
