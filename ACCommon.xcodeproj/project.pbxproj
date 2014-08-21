@@ -78,6 +78,7 @@
 		DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C401957F85F007DAE8C /* SVWebViewControllerActivitySafari.m */; };
 		DD705C4A1957F85F007DAE8C /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */; };
 		DD705C4D1957FF63007DAE8C /* ACLargerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C4C1957FF63007DAE8C /* ACLargerImageView.m */; };
+		DDFE274219A5D395003C25E5 /* 代码片段收藏.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -275,6 +276,7 @@
 		DD705C451957F85F007DAE8C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		DD705C4B1957FF63007DAE8C /* ACLargerImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACLargerImageView.h; sourceTree = "<group>"; };
 		DD705C4C1957FF63007DAE8C /* ACLargerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACLargerImageView.m; sourceTree = "<group>"; };
+		DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "代码片段收藏.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -367,6 +369,7 @@
 		04853892191157E0000853EB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */,
 				04853893191157E0000853EB /* ACCommon-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -798,6 +801,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				048538AA191157E2000853EB /* InfoPlist.strings in Resources */,
+				DDFE274219A5D395003C25E5 /* 代码片段收藏.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
