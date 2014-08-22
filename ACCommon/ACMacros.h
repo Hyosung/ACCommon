@@ -247,10 +247,7 @@ dispatch_once(&once##__token, ^{
 
 //空的判断
 #define isEmptyObject(_object) (( _object ) == nil || [( _object ) isKindOfClass:[NSNull class]]) //不包括NSNull
-#define isEmptyList(_list) ({  if (( _list ) != nil && ![( _list ) isKindOfClass:[NSNull class]])\
-NSAssert(([( _list ) isKindOfClass:[NSArray class]]\
-|| [( _list ) isKindOfClass:[NSDictionary class]]), @"传入对象必须是NSArray/NSDictionary,或其子类");\
-(( _list ) == nil || [( _list ) isKindOfClass:[NSNull class]] || [( _list ) count] <= 0); })
+#define isEmptyList(_list) ({ !(( _list ) && ![( _list ) isKindOfClass:[NSNull class]] && ([( _list ) isKindOfClass:[NSArray class]] || [( _list ) isKindOfClass:[NSDictionary class]]) && [( _list ) count] > 0); })
 #define isEmptyString(_string) ({ if (( _string ) != nil && ![( _string ) isKindOfClass:[NSNull class]])\
 NSAssert([( _string ) isKindOfClass:[NSString class]], @"传入对象必须是NSString,或其子类"); \
 (( _string ) == nil || [( _string ) isKindOfClass:[NSNull class]] || [( _string ) isEqualToString:@""]); })
