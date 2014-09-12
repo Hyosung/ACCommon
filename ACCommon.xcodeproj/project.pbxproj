@@ -62,8 +62,6 @@
 		DD218863195BCB310054395C /* ACBaseTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD218862195BCB310054395C /* ACBaseTableController.m */; };
 		DD218866195BCB6A0054395C /* ACBaseCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD218865195BCB6A0054395C /* ACBaseCollectionController.m */; };
 		DD6830A719C2993F002CD5B2 /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = DD68308119C2993E002CD5B2 /* Appirater.m */; };
-		DD6830A819C2993F002CD5B2 /* CHANGELOG.md in Sources */ = {isa = PBXBuildFile; fileRef = DD68308719C2993E002CD5B2 /* CHANGELOG.md */; };
-		DD6830A919C2993F002CD5B2 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = DD68309C19C2993F002CD5B2 /* README.md */; };
 		DD705C0D1957CEE6007DAE8C /* NSData+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */; };
 		DD705C0E1957CEE6007DAE8C /* NSDate+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFC1957CEE6007DAE8C /* NSDate+ACAdditions.m */; };
 		DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFE1957CEE6007DAE8C /* NSDictionary+ACAdditions.m */; };
@@ -234,7 +232,6 @@
 		DD68308319C2993E002CD5B2 /* AppiraterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiraterDelegate.h; sourceTree = "<group>"; };
 		DD68308519C2993E002CD5B2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD68308619C2993E002CD5B2 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
-		DD68308719C2993E002CD5B2 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		DD68308819C2993E002CD5B2 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD68308919C2993E002CD5B2 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD68308A19C2993E002CD5B2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
@@ -255,7 +252,6 @@
 		DD68309919C2993F002CD5B2 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD68309A19C2993F002CD5B2 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/AppiraterLocalizable.strings"; sourceTree = "<group>"; };
 		DD68309B19C2993F002CD5B2 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
-		DD68309C19C2993F002CD5B2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DD68309D19C2993F002CD5B2 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD68309E19C2993F002CD5B2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD68309F19C2993F002CD5B2 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
@@ -693,8 +689,6 @@
 				DD68308219C2993E002CD5B2 /* Appirater.podspec */,
 				DD68308319C2993E002CD5B2 /* AppiraterDelegate.h */,
 				DD68308419C2993E002CD5B2 /* AppiraterLocalizable.strings */,
-				DD68308719C2993E002CD5B2 /* CHANGELOG.md */,
-				DD68309C19C2993F002CD5B2 /* README.md */,
 			);
 			path = "appirater-master";
 			sourceTree = "<group>";
@@ -905,7 +899,6 @@
 				04853AD019116F7E000853EB /* UIImageView+WebCache.m in Sources */,
 				04853AD519116F7E000853EB /* SDWebImageManager.m in Sources */,
 				DD218860195BCB1F0054395C /* ACBaseController.m in Sources */,
-				DD6830A819C2993F002CD5B2 /* CHANGELOG.md in Sources */,
 				04853AD119116F7E000853EB /* SDWebImageDownloader.m in Sources */,
 				DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */,
 				04853AD219116F7E000853EB /* SDWebImageDownloaderOperation.m in Sources */,
@@ -956,7 +949,6 @@
 				048EAAE319268A040030B406 /* ASIInputStream.m in Sources */,
 				04853AC319116F7E000853EB /* AFURLResponseSerialization.m in Sources */,
 				048EAAE019268A040030B406 /* ASIDownloadCache.m in Sources */,
-				DD6830A919C2993F002CD5B2 /* README.md in Sources */,
 				DD705C0E1957CEE6007DAE8C /* NSDate+ACAdditions.m in Sources */,
 				04853AC619116F7E000853EB /* GTMBase64.m in Sources */,
 			);

@@ -880,7 +880,7 @@ inline NSString * UUID() {
             NSDictionary *releaseInfo = infoArray[0];
             NSString *lastVersion = releaseInfo[@"version"];
            
-            if ([lastVersion compare:currentVersion] == NSOrderedAscending) {
+            if ([lastVersion compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
                 NSString *trackViewURL = releaseInfo[@"trackViewUrl"];
                 NSString *releaseNotes = releaseInfo[@"releaseNotes"];
                
@@ -919,7 +919,7 @@ inline NSString * UUID() {
             NSDictionary *releaseInfo = infoArray[0];
             NSString *lastVersion = releaseInfo[@"version"];
             
-            if ([lastVersion compare:currentVersion] == NSOrderedAscending) {
+            if ([lastVersion compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
                 NSString *trackViewURL = releaseInfo[@"trackViewUrl"];
                 NSString *releaseNotes = releaseInfo[@"releaseNotes"];
                 
