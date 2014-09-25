@@ -25,6 +25,8 @@
 
 #import "NSDate+ACAdditions.h"
 
+#import "NSDateFormatter+ACAdditions.h"
+
 #import "UIImage+ACAdditions.h"
 
 #import "UIColor+ACAdditions.h"
@@ -36,5 +38,7 @@
 #import "UIAlertView+ACAdditions.h"
 
 #import "UIImageView+ACAdditions.h"
+
+#import "UIViewController+ACAdditions.h"
 
 #endif

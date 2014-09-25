@@ -90,18 +90,32 @@
 
 #pragma mark - 时间分段取出
 
-- (NSString *)era;
-- (NSString *)year;
-- (NSString *)month;
-- (NSString *)month_MM;
-- (NSString *)day;
-- (NSString *)day_dd;
-- (NSString *)hour;
-- (NSString *)hour_hh;
-- (NSString *)minute;
-- (NSString *)minute_mm;
-- (NSString *)second;
-- (NSString *)second_ss;
-- (NSString *)week;
+@property (readonly) NSInteger yearNumber;
+@property (readonly) NSInteger monthNumber;
+@property (readonly) NSInteger dayNumber;
+@property (readonly) NSInteger hourNumber;
+@property (readonly) NSInteger minuteNumber;
+@property (readonly) NSInteger secondNumber;
+@property (readonly) NSInteger weekNumber;
+
+@property (readonly) NSString *weekString;
+
+- (NSString *)timeIntervalDescription;
+- (NSString *)minuteDescription;
+- (NSString *)formattedTime;
+- (NSString *)formattedDateDescription;
+
+- (NSString *)year NS_DEPRECATED_IOS(2_0, 7_0, "Use yearNumber");
+- (NSString *)month NS_DEPRECATED_IOS(2_0, 7_0, "Use monthNumber");
+- (NSString *)month_MM NS_DEPRECATED_IOS(2_0, 7_0, "Use monthNumber");
+- (NSString *)day NS_DEPRECATED_IOS(2_0, 7_0, "Use dayNumber");
+- (NSString *)day_dd NS_DEPRECATED_IOS(2_0, 7_0, "Use dayNumber");
+- (NSString *)hour NS_DEPRECATED_IOS(2_0, 7_0, "Use hourNumber");
+- (NSString *)hour_hh NS_DEPRECATED_IOS(2_0, 7_0, "Use hourNumber");
+- (NSString *)minute NS_DEPRECATED_IOS(2_0, 7_0, "Use minuteNumber");
+- (NSString *)minute_mm NS_DEPRECATED_IOS(2_0, 7_0, "Use minuteNumber");
+- (NSString *)second NS_DEPRECATED_IOS(2_0, 7_0, "Use secondNumber");
+- (NSString *)second_ss NS_DEPRECATED_IOS(2_0, 7_0, "Use secondNumber");
+- (NSString *)week NS_DEPRECATED_IOS(2_0, 7_0, "Use weekString");
 
 @end
