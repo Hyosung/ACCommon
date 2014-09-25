@@ -61,7 +61,9 @@
 		DD218860195BCB1F0054395C /* ACBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD21885F195BCB1F0054395C /* ACBaseController.m */; };
 		DD218863195BCB310054395C /* ACBaseTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD218862195BCB310054395C /* ACBaseTableController.m */; };
 		DD218866195BCB6A0054395C /* ACBaseCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD218865195BCB6A0054395C /* ACBaseCollectionController.m */; };
+		DD56F99819D3C3C400837961 /* NSDateFormatter+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD56F99719D3C3C400837961 /* NSDateFormatter+ACAdditions.m */; };
 		DD6830A719C2993F002CD5B2 /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = DD68308119C2993E002CD5B2 /* Appirater.m */; };
+		DD69ABEC19D3B89300A0FBF3 /* UIViewController+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD69ABEB19D3B89300A0FBF3 /* UIViewController+ACAdditions.m */; };
 		DD705C0D1957CEE6007DAE8C /* NSData+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */; };
 		DD705C0E1957CEE6007DAE8C /* NSDate+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFC1957CEE6007DAE8C /* NSDate+ACAdditions.m */; };
 		DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFE1957CEE6007DAE8C /* NSDictionary+ACAdditions.m */; };
@@ -226,6 +228,8 @@
 		DD218862195BCB310054395C /* ACBaseTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACBaseTableController.m; sourceTree = "<group>"; };
 		DD218864195BCB6A0054395C /* ACBaseCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACBaseCollectionController.h; sourceTree = "<group>"; };
 		DD218865195BCB6A0054395C /* ACBaseCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACBaseCollectionController.m; sourceTree = "<group>"; };
+		DD56F99619D3C3C400837961 /* NSDateFormatter+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+ACAdditions.h"; sourceTree = "<group>"; };
+		DD56F99719D3C3C400837961 /* NSDateFormatter+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+ACAdditions.m"; sourceTree = "<group>"; };
 		DD68308019C2993E002CD5B2 /* Appirater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Appirater.h; sourceTree = "<group>"; };
 		DD68308119C2993E002CD5B2 /* Appirater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appirater.m; sourceTree = "<group>"; };
 		DD68308219C2993E002CD5B2 /* Appirater.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Appirater.podspec; sourceTree = "<group>"; };
@@ -262,6 +266,8 @@
 		DD6830A419C2993F002CD5B2 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		DD6830A519C2993F002CD5B2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/AppiraterLocalizable.strings"; sourceTree = "<group>"; };
 		DD6830A619C2993F002CD5B2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/AppiraterLocalizable.strings"; sourceTree = "<group>"; };
+		DD69ABEA19D3B89300A0FBF3 /* UIViewController+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ACAdditions.h"; sourceTree = "<group>"; };
+		DD69ABEB19D3B89300A0FBF3 /* UIViewController+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ACAdditions.m"; sourceTree = "<group>"; };
 		DD705BF81957CEE6007DAE8C /* ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAdditions.h; sourceTree = "<group>"; };
 		DD705BF91957CEE6007DAE8C /* NSData+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ACAdditions.h"; sourceTree = "<group>"; };
 		DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ACAdditions.m"; sourceTree = "<group>"; };
@@ -719,6 +725,10 @@
 				DD705C0C1957CEE6007DAE8C /* UIView+ACAdditions.m */,
 				DD705C241957F076007DAE8C /* UIColor+ACAdditions.h */,
 				DD705C251957F076007DAE8C /* UIColor+ACAdditions.m */,
+				DD69ABEA19D3B89300A0FBF3 /* UIViewController+ACAdditions.h */,
+				DD69ABEB19D3B89300A0FBF3 /* UIViewController+ACAdditions.m */,
+				DD56F99619D3C3C400837961 /* NSDateFormatter+ACAdditions.h */,
+				DD56F99719D3C3C400837961 /* NSDateFormatter+ACAdditions.m */,
 			);
 			path = ACAdditions;
 			sourceTree = "<group>";
@@ -888,6 +898,7 @@
 			files = (
 				048EAAA3192671C20030B406 /* ACNetworking.m in Sources */,
 				04853AD419116F7E000853EB /* SDWebImageDecoder.m in Sources */,
+				DD56F99819D3C3C400837961 /* NSDateFormatter+ACAdditions.m in Sources */,
 				04853AC419116F7E000853EB /* AFURLSessionManager.m in Sources */,
 				04853AC119116F7E000853EB /* AFURLConnectionOperation.m in Sources */,
 				04853ABE19116F7E000853EB /* AFHTTPSessionManager.m in Sources */,
@@ -940,6 +951,7 @@
 				DD6830A719C2993F002CD5B2 /* Appirater.m in Sources */,
 				04853ABC19116F7E000853EB /* AFHTTPRequestOperation.m in Sources */,
 				0480A7F01912D8D40048880A /* ACTableViewCell.m in Sources */,
+				DD69ABEC19D3B89300A0FBF3 /* UIViewController+ACAdditions.m in Sources */,
 				DD705C4D1957FF63007DAE8C /* ACLargerImageView.m in Sources */,
 				048EAAA7192676DD0030B406 /* ACAnimation.m in Sources */,
 				DD705C121957CEE6007DAE8C /* UIAlertView+ACAdditions.m in Sources */,
