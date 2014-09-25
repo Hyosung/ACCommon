@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-1.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #ifndef ACCommon_ACAdditions_h
@@ -18,6 +18,8 @@
 #import "NSData+ACAdditions.h"
 
 #import "NSString+ACAdditions.h"
+
+#import "NSArray+ACAdditions.h"
 
 #import "NSDictionary+ACAdditions.h"
 

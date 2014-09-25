@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-2.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "UIImageView+ACAdditions.h"
@@ -72,15 +72,15 @@ static char * kACLongPressGestureBlockKey = "kACLongPressGestureBlockKey";
 - (void)setACImageURLString:(NSString *)anURLString {
     NSURL *URL = [NSURL URLWithString:anURLString];
     UIImage *placeholderImage = [ACUtilitys drawPlaceholderWithSize:self.size];
-    __weak typeof(self) weakSelf = self;
+    __weak __typeof(&*self) weakSelf = self;
     [self setImageWithURL:URL
          placeholderImage:placeholderImage
                 completed:^(UIImage *image,NSError *error,SDImageCacheType cacheType)
     {
         if (image && !error) {
-            
-            UIImage *newImage = [ACUtilitys zoomImageWithSize:weakSelf.size image:image];
-            weakSelf.image = newImage;
+            __strong __typeof(&*weakSelf) strongSelf = weakSelf;
+            UIImage *newImage = [ACUtilitys zoomImageWithSize:strongSelf.size image:image];
+            strongSelf.image = newImage;
         }
     }];
 }

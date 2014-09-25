@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by i云 on 14-6-23.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "ACLargerImageView.h"
@@ -219,7 +219,6 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView == self.contentView) {
         NSInteger tempIndex = scrollView.contentOffset.x / self.width;
-        
         if (tempIndex != _currentSelectIndex) {
             [self revertPreviousView];
             _currentSelectIndex = tempIndex;
@@ -235,7 +234,6 @@
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     
     UIView *currentView = [scrollView viewWithTag:400];
-    
     CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) / 2 : 0.0;
     CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ? (scrollView.bounds.size.height - scrollView.contentSize.height) / 2 : 0.0;
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042BE6401995D8F30029B9A8 /* NSArray+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 042BE63F1995D8F30029B9A8 /* NSArray+ACAdditions.m */; };
 		045B2303191556C000C8781D /* ACTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 045B2302191556C000C8781D /* ACTextView.m */; };
 		0480A7F01912D8D40048880A /* ACTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0480A7EF1912D8D40048880A /* ACTableViewCell.m */; };
 		04853890191157E0000853EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0485388F191157E0000853EB /* Foundation.framework */; };
@@ -100,6 +101,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		042BE63E1995D8F30029B9A8 /* NSArray+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ACAdditions.h"; sourceTree = "<group>"; };
+		042BE63F1995D8F30029B9A8 /* NSArray+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+ACAdditions.m"; sourceTree = "<group>"; };
 		045B230019154DDD00C8781D /* ACViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACViews.h; sourceTree = "<group>"; };
 		045B2301191556C000C8781D /* ACTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTextView.h; sourceTree = "<group>"; };
 		045B2302191556C000C8781D /* ACTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTextView.m; sourceTree = "<group>"; };
@@ -120,7 +123,6 @@
 		04853A2F191164EC000853EB /* ACPrefixs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACPrefixs.h; sourceTree = "<group>"; };
 		04853A30191165C6000853EB /* ACUtilitys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUtilitys.h; sourceTree = "<group>"; };
 		04853A31191165C6000853EB /* ACUtilitys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUtilitys.m; sourceTree = "<group>"; };
-		04853A5619116F7E000853EB /* ACExternals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACExternals.h; sourceTree = "<group>"; };
 		04853A5819116F7E000853EB /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		04853A5919116F7E000853EB /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		04853A5A19116F7E000853EB /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 		048EAABA19268A040030B406 /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASINetworkQueue.h; sourceTree = "<group>"; };
 		048EAABB19268A040030B406 /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASINetworkQueue.m; sourceTree = "<group>"; };
 		048EAABC19268A040030B406 /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
+		04FC36321995FA41006F581E /* ACExternals-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ACExternals-Header.h"; sourceTree = "<group>"; };
 		DD705BF81957CEE6007DAE8C /* ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAdditions.h; sourceTree = "<group>"; };
 		DD705BF91957CEE6007DAE8C /* NSData+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ACAdditions.h"; sourceTree = "<group>"; };
 		DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ACAdditions.m"; sourceTree = "<group>"; };
@@ -384,7 +387,6 @@
 			isa = PBXGroup;
 			children = (
 				DD705C271957F85F007DAE8C /* SVWebViewController */,
-				04853A5619116F7E000853EB /* ACExternals.h */,
 				048EAAA819268A040030B406 /* ASIHTTPRequest */,
 				04853A5719116F7E000853EB /* AFNetworking */,
 				04853A6B19116F7E000853EB /* ChineseToPinyin */,
@@ -395,6 +397,7 @@
 				04853A9B19116F7E000853EB /* SoundManager */,
 				04853A9F19116F7E000853EB /* SVProgressHUD */,
 				04853AAA19116F7E000853EB /* TTTAttributedLabel */,
+				04FC36321995FA41006F581E /* ACExternals-Header.h */,
 			);
 			path = ACExternals;
 			sourceTree = "<group>";
@@ -643,6 +646,8 @@
 				DD705C0C1957CEE6007DAE8C /* UIView+ACAdditions.m */,
 				DD705C241957F076007DAE8C /* UIColor+ACAdditions.h */,
 				DD705C251957F076007DAE8C /* UIColor+ACAdditions.m */,
+				042BE63E1995D8F30029B9A8 /* NSArray+ACAdditions.h */,
+				042BE63F1995D8F30029B9A8 /* NSArray+ACAdditions.m */,
 			);
 			path = ACAdditions;
 			sourceTree = "<group>";
@@ -741,7 +746,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Alone Coding";
+				ORGANIZATIONNAME = "Crazy Stone";
 			};
 			buildConfigurationList = 04853887191157DF000853EB /* Build configuration list for PBXProject "ACCommon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -797,6 +802,7 @@
 				DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */,
 				04853AD019116F7E000853EB /* UIImageView+WebCache.m in Sources */,
 				04853AD519116F7E000853EB /* SDWebImageManager.m in Sources */,
+				042BE6401995D8F30029B9A8 /* NSArray+ACAdditions.m in Sources */,
 				04853AD119116F7E000853EB /* SDWebImageDownloader.m in Sources */,
 				DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */,
 				04853AD219116F7E000853EB /* SDWebImageDownloaderOperation.m in Sources */,

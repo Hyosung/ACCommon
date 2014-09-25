@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-2.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "NSData+ACAdditions.h"
@@ -83,6 +83,18 @@
     NSData *data = [GTMBase64 decodeData:self];
     NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return base64String;
+}
+
+
+#pragma mark - JSON
+
+- (id)JSON {
+    return [self JSON:nil];
+}
+
+- (id)JSON:(NSError *__autoreleasing *)error {
+    id result = [NSJSONSerialization JSONObjectWithData:self options:NSJSONReadingAllowFragments error:error];
+    return result;
 }
 
 @end

@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-2.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -80,5 +80,9 @@
  返回指定路径下文件的MIME
  */
 - (NSString*)fileMIMEType:(NSString*) file;
+
+#pragma mark - JSON
+- (id)JSON;
+- (id)JSON:(NSError **) error;
 
 @end

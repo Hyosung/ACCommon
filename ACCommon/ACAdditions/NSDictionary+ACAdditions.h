@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by i云 on 14-4-20.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,4 +13,5 @@
 #pragma mark - JSONString
 
 - (NSString *)JSONString;
+- (NSData *)JSONData;
 @end

@@ -3,13 +3,16 @@
 //  ACCommon
 //
 //  Created by i云 on 14-4-20.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "NSDictionary+ACAdditions.h"
 
 @implementation NSDictionary (ACAdditions)
 - (NSString *)JSONString {
+    
+    if (![NSJSONSerialization isValidJSONObject:self]) return nil;
+    
     NSData *data = [NSJSONSerialization dataWithJSONObject:self
                                                    options:NSJSONWritingPrettyPrinted
                                                      error:nil];
@@ -17,4 +20,12 @@
                                                  encoding:NSUTF8StringEncoding];
     return JSONString;
 }
+
+- (NSData *)JSONData {
+    if (![NSJSONSerialization isValidJSONObject:self]) return nil;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:nil];
+    return data;
+}
+
 @end

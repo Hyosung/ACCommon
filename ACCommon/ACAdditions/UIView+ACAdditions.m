@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-2.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "UIView+ACAdditions.h"
@@ -116,7 +116,33 @@
 
 - (void)saveSnapshotToPhotosAlbum {
     UIImage *image = [self snapshot];
-    [image savePhotosAlbum];
+    [self saveImageToPhotosAlbum:image];
+}
+
+
+- (void)saveImageToPhotosAlbum:(UIImage *) image {
+    
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(imageSavedToPhotosAlbum:didFinishSavingWithError:contextInfo:), nil);
+}
+
+- (void)imageSavedToPhotosAlbum:(UIImage *)image
+       didFinishSavingWithError:(NSError *)error
+                    contextInfo:(void *) contextInfo {
+    NSString *message;
+    NSString *title;
+    if (!error) {
+        title = @"成功提示";
+        message = @"成功保存到相册";
+    } else {
+        title = @"失败提示";
+        message = [error description];
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"知道了"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

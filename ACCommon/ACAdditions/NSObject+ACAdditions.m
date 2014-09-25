@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 13-12-8.
-//  Copyright (c) 2013年 Alone Coding. All rights reserved.
+//  Copyright (c) 2013年 Crazy Stone. All rights reserved.
 //
 
 #import "NSObject+ACAdditions.h"

@@ -1,17 +1,22 @@
 //
-//  ACExternals.h
+//  ACExternals-Header.h
 //  ACCommon
 //
-//  Created by 曉星 on 14-5-1.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Created by 曉星 on 14-8-9.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
-#ifndef ACCommon_ACExternals_h
-#define ACCommon_ACExternals_h
+#ifndef ACCommon_ACExternals_Header_h
+#define ACCommon_ACExternals_Header_h
+
 
 /*
  外部框架或外部类
  */
+
+#if __AC_DEFINED__(__USE_AFNetworking__)
+
+#endif
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 #import "AFNetworking.h"
@@ -61,5 +66,6 @@
 #if defined(__USE_iCarousel__) && __USE_iCarousel__
 #import "iCarousel.h"
 #endif
+
 
 #endif

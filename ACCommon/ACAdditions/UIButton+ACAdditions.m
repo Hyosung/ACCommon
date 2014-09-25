@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-2.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "UIButton+ACAdditions.h"
@@ -21,14 +21,15 @@
     NSURL *URL = [NSURL URLWithString:anURLString];
     UIImage *placeholderImage = [ACUtilitys drawPlaceholderWithSize:self.frame.size];
     
-    __weak typeof(self) weakSelf = self;
+    __weak __typeof(&*self) weakSelf = self;
     [self setImageWithURL:URL forState:state
          placeholderImage:placeholderImage
                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
     {
         if (image && !error) {
-            UIImage *newImage = [ACUtilitys zoomImageWithSize:weakSelf.frame.size image:image];
-            [weakSelf setImage:newImage forState:state];
+            __strong __typeof(&*weakSelf) strongSelf = weakSelf;
+            UIImage *newImage = [ACUtilitys zoomImageWithSize:strongSelf.frame.size image:image];
+            [strongSelf setImage:newImage forState:state];
         }
     }];
 }
@@ -41,15 +42,16 @@
     NSURL *URL = [NSURL URLWithString:anURLString];
     UIImage *placeholderImage = [ACUtilitys drawPlaceholderWithSize:self.frame.size];
     
-    __weak typeof(self) weakSelf = self;
+    __weak __typeof(&*self) weakSelf = self;
     [self setBackgroundImageWithURL:URL
                            forState:state
                    placeholderImage:placeholderImage
                           completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
      {
-          if (image && !error) {
-              UIImage *newImage = [ACUtilitys zoomImageWithSize:weakSelf.frame.size image:image];
-              [weakSelf setBackgroundImage:newImage forState:state];
+         if (image && !error) {
+             __strong __typeof(&*weakSelf) strongSelf = weakSelf;
+              UIImage *newImage = [ACUtilitys zoomImageWithSize:strongSelf.frame.size image:image];
+              [strongSelf setBackgroundImage:newImage forState:state];
           }
      }];
 }

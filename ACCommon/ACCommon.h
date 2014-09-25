@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-1.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #ifndef ACCommon_ACCommon_h
@@ -27,7 +27,7 @@
 /*
  第三方框架或类
  */
-#import "ACExternals.h"
+#import "ACExternals-Header.h"
 
 /*
  扩展的类别

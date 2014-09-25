@@ -3,7 +3,7 @@
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-2.
-//  Copyright (c) 2014年 Alone Coding. All rights reserved.
+//  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
 #import "NSString+ACAdditions.h"
@@ -19,8 +19,12 @@
     const char *str = [self UTF8String];
     unsigned char r[CC_MD5_DIGEST_LENGTH];
     CC_MD5(str, (CC_LONG)strlen(str), r);
-    NSString *md5Str = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15]];
-    return md5Str;
+    
+    NSMutableString *md5Ciphertext = [NSMutableString stringWithString:@""];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [md5Ciphertext appendFormat:@"%02x",r[i]];
+    }
+    return [md5Ciphertext copy];
 }
 
 #pragma mark - Base64
@@ -121,7 +125,7 @@
 
 //车牌号验证
 - (BOOL)validateCarNo {
-    NSString *carRegex = @"^[\u4e00-\u9fa5]{1}[a-zA-Z]{1}[a-zA-Z_0-9]{4}[a-zA-Z_0-9_\u4e00-\u9fa5]$";
+    NSString *carRegex = @"^[\\u4e00-\\u9fa5]{1}[a-zA-Z]{1}[a-zA-Z_0-9]{4}[a-zA-Z_0-9_\\u4e00-\\u9fa5]$";
     NSError *error = NULL;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:carRegex
                                                                            options:NSRegularExpressionCaseInsensitive
@@ -134,7 +138,7 @@
 
 //车型
 - (BOOL)validateCarType {
-    NSString *carTypeRegex = @"^[\u4E00-\u9FFF]+$";
+    NSString *carTypeRegex = @"^[\\u4E00-\\u9FFF]+$";
     NSError *error = NULL;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:carTypeRegex
                                                                            options:NSRegularExpressionCaseInsensitive
@@ -276,6 +280,17 @@
 		return @"application/octet-stream";
 	}
     return (__bridge NSString *)MIMEType;
+}
+
+#pragma mark - JSON
+- (id)JSON {
+    return [self JSON:nil];
+}
+
+- (id)JSON:(NSError *__autoreleasing *)error {
+    NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
+    id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:error];
+    return result;
 }
 
 @end
