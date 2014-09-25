@@ -14,9 +14,9 @@
  外部框架或外部类
  */
 
-#if __AC_DEFINED__(__USE_AFNetworking__)
-
-#endif
+//#if __AC_DEFINED__(__USE_AFNetworking__)
+//
+//#endif
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 #import "AFNetworking.h"

@@ -42,6 +42,9 @@
 - (BOOL)validateCarType;
 - (BOOL)validateLandline;
 - (BOOL)validateUserName;
+- (BOOL)validateURLString;
+- (BOOL)validateCharacters;
+- (BOOL)validateDoubleByte;
 - (BOOL)validateFloatNumber;
 - (BOOL)validateIdentityCard;
 
@@ -84,5 +87,9 @@
 #pragma mark - JSON
 - (id)JSON;
 - (id)JSON:(NSError **) error;
+
+#pragma mark - NSString To UIImage
+- (UIImage *)stringConvertedImage;
+
 
 @end

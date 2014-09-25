@@ -11,6 +11,12 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "GTMBase64.h"
 
+@interface NSString (Private)
+
+- (BOOL)regularWithPattern:(NSString *) pattern;
+
+@end
+
 @implementation NSString (ACAdditions)
 
 #pragma mark - md5
@@ -47,6 +53,21 @@
 
 #pragma mark - String Validate
 
+- (BOOL)regularWithPattern:(NSString *)pattern {
+    if (!pattern && ![pattern validateNotNull]) {
+        return NO;
+    }
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                             error:&error];
+    NSMatchingOptions options = NSMatchingAnchored | NSMatchingReportProgress | NSMatchingReportCompletion;
+    NSInteger number = [regex numberOfMatchesInString:self
+                                              options:options
+                                                range:NSMakeRange(0, self.length)];
+    return (number == 1);
+}
+
 //验证是否不是空得
 - (BOOL)validateNotNull {
     
@@ -61,105 +82,64 @@
 }
 
 - (BOOL)validateNumber {
-    NSString *numberRegex = @"^[0-9]+$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:numberRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+    
+    return [self regularWithPattern:@"^[0-9]+$"];
 }
 
 - (BOOL)validateFloatNumber {
     
-    NSString *numberRegex = @"^0\\.[0-9]{0,1}$|^[0-9]+$|^[1-9][0-9]*\\.[0-9]{0,1}$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:numberRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+    return [self regularWithPattern:@"^([-+]?([1-9]\\d*\\.\\d*))|([-+]?0\\.\\d*[1-9]\\d*)$"];
 }
 
 - (BOOL)validateEmail {
-    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:emailRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+
+    return [self regularWithPattern:@"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"];
 }
 
 - (BOOL)validateLandline {
-    NSString *phoneRegex = @"^(0[1-9]{2})-\\d{8,10}$|^(0[1-9]{3}-(\\d{7,10}))$|^(0[1-9]{2})\\d{8,10}$|^(0[1-9]{3}(\\d{7,10}))$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:phoneRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+ 
+    return [self regularWithPattern:@"^(0[1-9]{2})-\\d{8,10}$|^(0[1-9]{3}-(\\d{7,10}))$|^(0[1-9]{2})\\d{8,10}$|^(0[1-9]{3}(\\d{7,10}))$"];
 }
 
 //手机号码验证
 - (BOOL)validateMobile {
     //手机号以13， 15，18开头，八个 \d 数字字符
-    NSString *phoneRegex = @"^((13[0-9])|(147)|(15[^4,\\D])|(18[0,0-9]))\\d{8}$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:phoneRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+  
+    return [self regularWithPattern:@"^((13[0-9])|(14[57])|(15[^4\\D])|(17[0678])|(18[0-9]))\\d{8}$"];
 }
 
 //车牌号验证
 - (BOOL)validateCarNo {
-    NSString *carRegex = @"^[\\u4e00-\\u9fa5]{1}[a-zA-Z]{1}[a-zA-Z_0-9]{4}[a-zA-Z_0-9_\\u4e00-\\u9fa5]$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:carRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+ 
+    return [self regularWithPattern:@"^[\u4e00-\u9fa5]{1}[a-zA-Z]{1}[a-zA-Z_0-9]{4}[a-zA-Z_0-9_\u4e00-\u9fa5]$"];
 }
 
 //车型
 - (BOOL)validateCarType {
-    NSString *carTypeRegex = @"^[\\u4E00-\\u9FFF]+$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:carTypeRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+
+    return [self regularWithPattern:@"^[\u4E00-\u9FFF]+$"];
 }
 
 //用户名
 - (BOOL)validateUserName {
-    NSString *userNameRegex = @"^[A-Za-z0-9]{6,20}+$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:userNameRegex
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+   
+    return [self regularWithPattern:@"^[A-Za-z0-9]{6,20}+$"];
+}
+
+//是否是汉字
+- (BOOL)validateCharacters {
+   
+    return [self regularWithPattern:@"[\u4e00-\u9fa5]+"];
+}
+
+//匹配双字节字符（包括汉字）
+- (BOOL)validateDoubleByte {
+    return [self regularWithPattern:@"[^\\x00-\\xff]+"];
+}
+
+- (BOOL)validateURLString {
+
+    return [self regularWithPattern:@"([a-zA-z]+://[^\\s]*)?"];
 }
 
 //身份证号
@@ -167,15 +147,8 @@
     if (self.length <= 0) {
         return NO;
     }
-    NSString *regex2 = @"^(\\d{14}|\\d{17})(\\d|[xX])$";
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regex2
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:&error];
-    NSInteger number = [regex numberOfMatchesInString:self
-                                              options:NSMatchingAnchored
-                                                range:NSMakeRange(0, self.length)];
-    return (number == 1);
+ 
+    return [self regularWithPattern:@"^(\\d{14}|\\d{17})(\\d|[xX])$"];
 }
 
 #pragma mark - String Drawing
@@ -291,6 +264,13 @@
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
     id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:error];
     return result;
+}
+
+#pragma mark - NSString To UIImage
+
+- (UIImage *)stringConvertedImage {
+    NSData *data = [GTMBase64 decodeString:self];
+    return [UIImage imageWithData:data];
 }
 
 @end

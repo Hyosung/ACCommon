@@ -51,4 +51,7 @@
 
 #pragma mark - 设置图片圆角
 - (UIImage *)roundedCornerImageWithCornerRadius:(CGFloat)cornerRadius;
+
+#pragma mark - UIImage To NSString
+- (NSString *)imageConvertedString;
 @end
