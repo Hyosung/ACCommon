@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ACLargerImageView : UIView
-+ (instancetype)largeImageViewWithImageURLStrings:(NSArray *) URLStrings;
++ (instancetype)largeImageViewWithImageURLs:(NSArray *) imgURLs;
 
 @property (nonatomic) NSInteger currentSelectIndex;
 

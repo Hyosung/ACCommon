@@ -8,21 +8,68 @@
 
 #import "ACLargerImageView.h"
 
-@interface ACLargerImageView () <UIScrollViewDelegate, UIActionSheetDelegate>
+static NSString *kLargerImageViewReuseIdentifier = @"kLargerImageViewReuseIdentifier";
+
+@interface ACLargerCell : UICollectionViewCell <UIScrollViewDelegate>
+
+@property (nonatomic, strong) UIScrollView *cellScrollView;
+@property (nonatomic, strong) UIImageView *cellImageView;
+
+@end
+
+@implementation ACLargerCell
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.cellScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds))];
+        self.cellScrollView.bounces = NO;
+        self.cellScrollView.delegate = self;
+        self.cellScrollView.minimumZoomScale = 1.0;
+        self.cellScrollView.maximumZoomScale = 3.0;
+        self.cellScrollView.multipleTouchEnabled = YES;
+        self.cellScrollView.showsVerticalScrollIndicator = NO;
+        self.cellScrollView.showsHorizontalScrollIndicator = NO;
+        
+        self.cellImageView = [[UIImageView alloc] initWithFrame:self.cellScrollView.bounds];
+        self.cellImageView.contentMode = UIViewContentModeCenter;
+        
+        [self.cellScrollView addSubview:self.cellImageView];
+        [self.contentView addSubview:self.cellScrollView];
+    }
+    return self;
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return self.cellImageView;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    
+    UIView *currentView = self.cellImageView;
+    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) / 2 : 0.0;
+    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ? (scrollView.bounds.size.height - scrollView.contentSize.height) / 2 : 0.0;
+    
+    currentView.center = CGPointMake(scrollView.contentSize.width / 2 + offsetX, scrollView.contentSize.height / 2 + offsetY);
+}
+
+@end
+
+@interface ACLargerImageView () <UIActionSheetDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleGesture;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
-@property (nonatomic, strong) UIScrollView *contentView;
-@property (nonatomic, strong) NSArray *URLStrings;
+@property (nonatomic, strong) UICollectionView *contentView;
+@property (nonatomic, strong) NSArray *imgURLs;
 
 @end
 
 @implementation ACLargerImageView
 
-+ (instancetype)largeImageViewWithImageURLStrings:(NSArray *)URLStrings {
-    __autoreleasing ACLargerImageView *slImageView = [[ACLargerImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, SCREEN_WIDTH, SCREEN_HEIGHT) andURLStrings:URLStrings];
++ (instancetype)largeImageViewWithImageURLs:(NSArray *)imgURLs {
+    __autoreleasing ACLargerImageView *slImageView = [[ACLargerImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth([UIScreen mainScreen].bounds), CGRectGetHeight([UIScreen mainScreen].bounds)) andURLStrings:imgURLs];
     return slImageView;
 }
 
@@ -30,10 +77,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor blackColor];
-        self.URLStrings = URLStrings;
+        self.imgURLs = URLStrings;
+        
         [self setupView];
         [self setupGesture];
-        [self loadURLStrings];
+        [self selectContentItem];
     }
     return self;
 }
@@ -43,30 +91,27 @@
 }
 
 - (void)doubleEvent:(UITapGestureRecognizer *) gesture {
-    UIScrollView *scrollView = (UIScrollView *)[self.contentView viewWithTag:500 + _currentSelectIndex];
     
-    if (scrollView) {
-        UIImageView *imageView = [scrollView.subviews firstObject];
-        if (imageView) {
-            
-            CGPoint point = [gesture locationInView:imageView];
-            
-            CGRect rect = CGRectMake((SCREEN_WIDTH - imageView.image.size.width) / 2.0,
-                                     (SCREEN_HEIGHT - imageView.image.size.height) / 2.0,
-                                     imageView.image.size.width,
-                                     imageView.image.size.height);
-            
-            if (CGRectContainsPoint(rect, point)) {
-                
-                CGFloat scale = scrollView.minimumZoomScale;
-                if (scrollView.zoomScale < scrollView.maximumZoomScale) {
-                    scale = scrollView.maximumZoomScale;
-                }
-                
-                CGRect zoomRect = [self zoomRectForScale:scale withCenter:point andZoomView:imageView];
-                [scrollView zoomToRect:zoomRect animated:YES];
-            }
+    ACLargerCell *cell = (ACLargerCell *)[self.contentView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_currentSelectIndex inSection:0]];
+    
+    CGPoint point = [gesture locationInView:cell.cellImageView];
+    
+    CGRect rect = CGRectMake(
+                             (CGRectGetWidth([UIScreen mainScreen].bounds) - cell.cellImageView.image.size.width) / 2.0,
+                             (CGRectGetHeight([UIScreen mainScreen].bounds) - cell.cellImageView.image.size.height) / 2.0,
+                             cell.cellImageView.image.size.width,
+                             cell.cellImageView.image.size.height
+                             );
+    
+    if (CGRectContainsPoint(rect, point)) {
+        
+        CGFloat scale = cell.cellScrollView.minimumZoomScale;
+        if (cell.cellScrollView.zoomScale < cell.cellScrollView.maximumZoomScale) {
+            scale = cell.cellScrollView.maximumZoomScale;
         }
+        
+        CGRect zoomRect = [self zoomRectForScale:scale withCenter:point andZoomView:cell.cellImageView];
+        [cell.cellScrollView zoomToRect:zoomRect animated:YES];
     }
 }
 
@@ -93,7 +138,8 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (!buttonIndex) {
-        UIImageView *imageView = [[self.contentView viewWithTag:500 + _currentSelectIndex].subviews firstObject];
+        ACLargerCell *cell = (ACLargerCell *)[self.contentView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_currentSelectIndex inSection:0]];
+        UIImageView *imageView = cell.cellImageView;
         if (imageView.image) {
             [imageView.image savePhotosAlbum];
         }
@@ -126,56 +172,28 @@
 }
 
 - (void)setupView {
-    UIScrollView *contentView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.itemSize = self.bounds.size;
+    flowLayout.minimumInteritemSpacing = 0.0;
+    flowLayout.minimumLineSpacing = 0.0;
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    
+    UICollectionView *contentView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:flowLayout];
     contentView.delegate = self;
+    contentView.dataSource = self;
     contentView.bouncesZoom = NO;
     contentView.pagingEnabled = YES;
     contentView.showsVerticalScrollIndicator = NO;
     contentView.showsHorizontalScrollIndicator = NO;
     [self addSubview:contentView];
     self.contentView = contentView;
-}
-
-- (void)loadURLStrings {
-    if (self.URLStrings && [self.URLStrings count]) {
-        for (NSInteger i = 0; i < [self.URLStrings count]; i++) {
-            UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.width * i, 0.0, self.width, self.height)];
-            scrollView.tag = 500 + i;
-            scrollView.bounces = NO;
-            scrollView.delegate = self;
-            scrollView.minimumZoomScale = 1.0;
-            scrollView.maximumZoomScale = 3.0;
-            scrollView.multipleTouchEnabled = YES;
-            scrollView.showsVerticalScrollIndicator = NO;
-            scrollView.showsHorizontalScrollIndicator = NO;
-            
-            UIImageView *contentItemView = [[UIImageView alloc] initWithFrame:scrollView.bounds];
-            contentItemView.contentMode = UIViewContentModeCenter;
-            contentItemView.tag = 400;
-            
-            __weak UIImageView *weakRef = contentItemView;
-            [contentItemView setImageWithURL:[NSURL URLWithString:self.URLStrings[i]]
-                                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
-             {
-                 if (!error && image) {
-                     
-                     UIImage *newImage = [ACUtilitys resizedFixedImageWithImage:image size:weakRef.frame.size];
-                     weakRef.image = newImage;
-                 }
-             }];
-            
-            [scrollView addSubview:contentItemView];
-            
-            [self.contentView addSubview:scrollView];
-        }
-        
-        self.contentView.contentSize = CGSizeMake(self.width * [self.URLStrings count], 0.0);
-        [self selectContentItem];
-    }
+    
+    [self.contentView registerClass:[ACLargerCell class] forCellWithReuseIdentifier:kLargerImageViewReuseIdentifier];
 }
 
 - (void)revertPreviousView {
-    UIScrollView *scrollView = (UIScrollView *)[self.contentView viewWithTag:500 + _currentSelectIndex];
+    ACLargerCell *cell = (ACLargerCell *)[self.contentView dequeueReusableCellWithReuseIdentifier:kLargerImageViewReuseIdentifier forIndexPath:[NSIndexPath indexPathForItem:_currentSelectIndex inSection:0]];
+    UIScrollView *scrollView = cell.cellScrollView;
     if (scrollView) {
         scrollView.zoomScale = 1.0;
     }
@@ -189,7 +207,7 @@
 }
 
 - (void)selectContentItem {
-    [self.contentView setContentOffset:CGPointMake(self.width * self.currentSelectIndex, 0.0) animated:YES];
+    [self.contentView setContentOffset:CGPointMake(CGRectGetWidth(self.bounds) * self.currentSelectIndex, 0.0) animated:YES];
 }
 
 - (void)showWithView:(UIView *)view {
@@ -198,7 +216,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 1.0;
     }completion:^(BOOL finished) {
-        [APP_SHARE setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     }];
 }
 
@@ -207,7 +225,7 @@
 }
 
 - (void)hide {
-    [APP_SHARE setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 0.0;
     } completion:^(BOOL finished) {
@@ -216,29 +234,36 @@
     }];
 }
 
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    ACLargerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kLargerImageViewReuseIdentifier forIndexPath:indexPath];
+    
+    __weak UIImageView *weakRef = cell.cellImageView;
+    [cell.cellImageView setImageWithURL:[NSURL URLWithString:self.imgURLs[indexPath.row]]
+                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
+     {
+         if (!error && image) {
+             
+             UIImage *newImage = [ACUtilitys resizedFixedImageWithImage:image size:weakRef.frame.size];
+             weakRef.image = newImage;
+         }
+     }];
+    
+    return cell;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return [self.imgURLs count];
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+   
     if (scrollView == self.contentView) {
-        NSInteger tempIndex = scrollView.contentOffset.x / self.width;
+        NSInteger tempIndex = scrollView.contentOffset.x / CGRectGetWidth(self.bounds);
         if (tempIndex != _currentSelectIndex) {
             [self revertPreviousView];
             _currentSelectIndex = tempIndex;
         }
     }
 }
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    UIView *currentView = [scrollView viewWithTag:400];
-    return currentView;
-}
-
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    
-    UIView *currentView = [scrollView viewWithTag:400];
-    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) / 2 : 0.0;
-    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ? (scrollView.bounds.size.height - scrollView.contentSize.height) / 2 : 0.0;
-    
-    currentView.center = CGPointMake(scrollView.contentSize.width / 2 + offsetX, scrollView.contentSize.height / 2 + offsetY);
-}
-
 
 @end

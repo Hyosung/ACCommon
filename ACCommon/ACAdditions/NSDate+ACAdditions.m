@@ -176,8 +176,6 @@ NSInteger const kManySecondsMinute = 60;
     }
 }
 
-
-
 /*标准时间日期描述*/
 - (NSString *)formattedTime {
     
@@ -234,7 +232,6 @@ NSInteger const kManySecondsMinute = 60;
     ret = [dateFormatter stringFromDate:self];
     return ret;
 }
-
 
 /*格式化日期描述*/
 - (NSString *)formattedDateDescription {

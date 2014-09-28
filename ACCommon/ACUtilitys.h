@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 /*
  常用工具类
