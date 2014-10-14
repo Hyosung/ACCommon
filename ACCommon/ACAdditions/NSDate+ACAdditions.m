@@ -176,22 +176,24 @@ NSInteger const kManySecondsMinute = 60;
     }
 }
 
+- (NSInteger)computingHours:(NSDate *) date {
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    [components setDay:date.dayNumber];
+    [components setMonth:date.monthNumber];
+    [components setYear:date.yearNumber];
+    
+    NSDate *currentDate = [[NSCalendar currentCalendar] dateFromComponents:components]; //当前date 0点时间
+    
+    NSInteger hour = [self timeIntervalSinceDate:currentDate] / kManySecondsHour;
+    
+    return hour;
+}
+
 /*标准时间日期描述*/
 - (NSString *)formattedTime {
     
-    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"YYYYMMdd"];
-    NSString * dateNow = [formatter stringFromDate:[NSDate date]];
-    NSDateComponents *components = [[NSDateComponents alloc] init];
-    [components setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]];
-    [components setMonth:[[dateNow substringWithRange:NSMakeRange(4,2)] intValue]];
-    [components setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
-    
-    NSDate *date = [[NSCalendar currentCalendar] dateFromComponents:components]; //今天 0点时间
-    
-    NSInteger hour = [self timeIntervalSinceDate:date] / kManySecondsHour;
+    NSInteger hour = [self computingHours:[NSDate date]];
     NSDateFormatter *dateFormatter = nil;
-    NSString *ret = @"";
     
     //hasAMPM==TURE为12小时制，否则为24小时制
     NSString *formatStringForHours = [NSDateFormatter dateFormatFromTemplate:@"j" options:0 locale:[NSLocale currentLocale]];
@@ -206,31 +208,69 @@ NSInteger const kManySecondsMinute = 60;
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天HH:mm"];
         }
         else {
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"yyyy-MM-dd"];
+            if (self.yearNumber == [NSDate date].yearNumber) {
+                
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 HH:mm"];
+            }
+            else {
+                
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"yyyy年MM月dd日 HH:mm"];
+            }
         }
     }else {
+        //        上午:6点-12点
+        //        中午:12点-14点
+        //        下午:14点-18点
+        //        晚上:18点-24点
+        //        凌晨:24点-6点
+        NSString *tempAP = @"";
+        NSInteger tempHour = [self computingHours:self];
+        if (tempHour >= 0 && tempHour <= 6) {
+            tempAP = @"凌晨";
+        }
+        else if (tempHour > 6 && tempHour <=11) {
+            tempAP = @"上午";
+        }
+        else if (tempHour >= 12 && tempHour < 14) {
+            tempAP = @"中午";
+        }
+        else if (tempHour >= 14 && tempHour <= 17) {
+            tempAP = @"下午";
+        }
+        else if (tempHour > 17 && tempHour <= 24) {
+            tempAP = @"晚上";
+        }
+        
         if (hour >= 0 && hour <= 6) {
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"凌晨hh:mm"];
         }
-        else if (hour > 6 && hour <=11 ) {
+        else if (hour > 6 && hour <= 11) {
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"上午hh:mm"];
         }
-        else if (hour > 11 && hour <= 17) {
+        else if (hour >= 12 && hour < 14) {
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"中午hh:mm"];
+        }
+        else if (hour >= 14 && hour <= 17) {
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"下午hh:mm"];
         }
         else if (hour > 17 && hour <= 24) {
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上hh:mm"];
         }
         else if (hour < 0 && hour >= -24){
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天HH:mm"];
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:[NSString stringWithFormat:@"昨天 %@hh:mm", tempAP]];
         }
         else  {
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"yyyy-MM-dd"];
+            if (self.yearNumber == [NSDate date].yearNumber) {
+                
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:[NSString stringWithFormat:@"MM月dd日 %@hh:mm", tempAP]];
+            }
+            else {
+                
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:[NSString stringWithFormat:@"yyyy年MM月dd日 %@hh:mm", tempAP]];
+            }
         }
     }
-    
-    ret = [dateFormatter stringFromDate:self];
-    return ret;
+    return [dateFormatter stringFromDate:self];
 }
 
 /*格式化日期描述*/

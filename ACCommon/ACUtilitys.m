@@ -76,87 +76,68 @@ inline NSString * UUID() {
 + (NSDictionary *)deviceModels {
     static NSDictionary *info = nil;
     
-    AC_EXEONCE_BEGIN(models)
-    NSArray *modelArray = @[
-                            @"i386", @"x86_64",
-                            
-                            @"iPhone1,1",
-                            @"iPhone1,2",
-                            @"iPhone2,1",
-                            @"iPhone3,1",
-                            @"iPhone3,2",
-                            @"iPhone3,3",
-                            @"iPhone4,1",
-                            @"iPhone5,1",
-                            @"iPhone5,2",
-                            @"iPhone5,3",
-                            @"iPhone5,4",
-                            @"iPhone6,1",
-                            @"iPhone6,2",
-                            
-                            @"iPod1,1",
-                            @"iPod2,1",
-                            @"iPod3,1",
-                            @"iPod4,1",
-                            @"iPod5,1",
-                            
-                            @"iPad1,1",
-                            @"iPad2,1",
-                            @"iPad2,2",
-                            @"iPad2,3",
-                            @"iPad2,4",
-                            @"iPad3,1",
-                            @"iPad3,2",
-                            @"iPad3,3",
-                            @"iPad3,4",
-                            @"iPad3,5",
-                            @"iPad3,6",
-                            
-                            @"iPad2,5",
-                            @"iPad2,6",
-                            @"iPad2,7",
-                            ];
-    NSArray *modelNameArray = @[
-                                @"iPhone Simulator", @"iPhone Simulator",
-                                
-                                @"iPhone 2G",
-                                @"iPhone 3G",
-                                @"iPhone 3GS",
-                                @"iPhone 4(GSM)",
-                                @"iPhone 4(GSM Rev A)",
-                                @"iPhone 4(CDMA)",
-                                @"iPhone 4S",
-                                @"iPhone 5(GSM)",
-                                @"iPhone 5(GSM+CDMA)",
-                                @"iPhone 5c(GSM)",
-                                @"iPhone 5c(Global)",
-                                @"iphone 5s(GSM)",
-                                @"iphone 5s(Global)",
-                                
-                                @"iPod Touch 1G",
-                                @"iPod Touch 2G",
-                                @"iPod Touch 3G",
-                                @"iPod Touch 4G",
-                                @"iPod Touch 5G",
-                                
-                                @"iPad",
-                                @"iPad 2(WiFi)",
-                                @"iPad 2(GSM)",
-                                @"iPad 2(CDMA)",
-                                @"iPad 2(WiFi + New Chip)",
-                                @"iPad 3(WiFi)",
-                                @"iPad 3(GSM+CDMA)",
-                                @"iPad 3(GSM)",
-                                @"iPad 4(WiFi)",
-                                @"iPad 4(GSM)",
-                                @"iPad 4(GSM+CDMA)",
-                                
-                                @"iPad mini (WiFi)",
-                                @"iPad mini (GSM)",
-                                @"ipad mini (GSM+CDMA)"
-                                ];
-    
-    info = [NSDictionary dictionaryWithObjects:modelNameArray forKeys:modelArray];
+    AC_EXEONCE_BEGIN(_models_)
+    info = @{
+             @"i386": @"iPhone Simulator",
+             @"x86_64": @"iPhone Simulator",
+             
+             @"iPhone1,1": @"iPhone 2G",
+             
+             @"iPhone1,2": @"iPhone 3G",
+             @"iPhone2,1": @"iPhone 3GS",
+             
+             @"iPhone3,1": @"iPhone 4(GSM)",
+             @"iPhone3,2": @"iPhone 4(GSM Rev A)",
+             @"iPhone3,3": @"iPhone 4(CDMA)",
+             
+             @"iPhone4,1": @"iPhone 4S",
+             
+             @"iPhone5,1": @"iPhone 5(GSM)",
+             @"iPhone5,2": @"iPhone 5(GSM+CDMA)",
+             
+             @"iPhone5,3": @"iPhone 5c(GSM)",
+             @"iPhone5,4": @"iPhone 5c(Global)",
+             
+             @"iPhone6,1": @"iPhone 5s(GSM)",
+             @"iPhone6,2": @"iPhone 5s(Global)",
+             
+             @"iPhone7,2": @"iPhone 6",
+             @"iPhone7,1": @"iPhone 6 Plus",
+             
+             @"iPod1,1": @"iPod Touch 1G",
+             @"iPod2,1": @"iPod Touch 2G",
+             @"iPod3,1": @"iPod Touch 3G",
+             @"iPod4,1": @"iPod Touch 4G",
+             @"iPod5,1": @"iPod Touch 5G",
+             
+             @"iPad1,1": @"iPad",
+             
+             @"iPad2,1": @"iPad 2(Wi-Fi)",
+             @"iPad2,2": @"iPad 2(GSM)",
+             @"iPad2,3": @"iPad 2(CDMA)",
+             @"iPad2,4": @"iPad 2(Wi-Fi + New Chip)",
+             
+             @"iPad3,1": @"iPad 3(Wi-Fi)",
+             @"iPad3,2": @"iPad 3(GSM+CDMA)",
+             @"iPad3,3": @"iPad 3(GSM)",
+             
+             @"iPad3,4": @"iPad 4(Wi-Fi)",
+             @"iPad3,5": @"iPad 4(GSM)",
+             @"iPad3,6": @"iPad 4(GSM+CDMA)",
+             
+             @"iPad4,1": @"iPad Air(Wi-Fi)",
+             @"iPad4,2": @"iPad Air(GSM+CDMA)",
+             @"iPad4,3": @"iPad Air(GSM)",
+             
+             @"iPad4,4": @"iPad mini Retina(Wi-Fi)",
+             @"iPad4,5": @"iPad mini Retina(GSM+CDMA)",
+             @"iPad4,6": @"iPad mini Retina(GSM)",
+             
+             @"iPad2,5": @"iPad mini(Wi-Fi)",
+             @"iPad2,6": @"iPad mini(GSM)",
+             @"iPad2,7": @"iPad mini(GSM+CDMA)"
+             
+             };
     AC_EXEONCE_END
     
     return info;
@@ -896,6 +877,7 @@ inline NSString * UUID() {
 }
 
 + (void)onCheckVersion:(NSString *) url {
+
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
     //CFShow((__bridge CFTypeRef)(infoDic));
     

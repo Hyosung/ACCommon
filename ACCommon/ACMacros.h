@@ -221,7 +221,7 @@ dispatch_once(&once##__token, ^{
 #define APP_CONTENT_NOT_NAV (SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT - STATUS_BAR_HEIGHT)
 #define APP_CONTENT_NOT_TAB (SCREEN_HEIGHT - TAB_BAR_HEIGHT - STATUS_BAR_HEIGHT)
 
-/*
+/**
  故事板
  */
 #define MAIN_STORYBOARD [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil]
@@ -247,10 +247,10 @@ dispatch_once(&once##__token, ^{
 
 //空的判断
 #define isEmptyObject(_object) (( _object ) == nil || [( _object ) isKindOfClass:[NSNull class]]) //不包括NSNull
-#define isEmptyList(_list) ({ !(( _list ) && ![( _list ) isKindOfClass:[NSNull class]] && ([( _list ) isKindOfClass:[NSArray class]] || [( _list ) isKindOfClass:[NSDictionary class]]) && [( _list ) count] > 0); })
-#define isEmptyString(_string) ({ if (( _string ) != nil && ![( _string ) isKindOfClass:[NSNull class]])\
-NSAssert([( _string ) isKindOfClass:[NSString class]], @"传入对象必须是NSString,或其子类"); \
-(( _string ) == nil || [( _string ) isKindOfClass:[NSNull class]] || [( _string ) isEqualToString:@""]); })
+#define isEmptyList(_list) ({ !(( _list ) && ([( _list ) isKindOfClass:[NSArray class]] || [( _list ) isKindOfClass:[NSDictionary class]]) && [( _list ) count] > 0); })
+#define isEmptyArray(_array) ({ !(( _array ) && [( _array ) isKindOfClass:[NSArray class]] && [( _array ) count] > 0); })
+#define isEmptyDictionary(_dictionary) ({ !(( _dictionary ) && [( _dictionary ) isKindOfClass:[NSDictionary class]] && [( _dictionary ) count] > 0); })
+#define isEmptyString(_string) ({ !(( _string ) != nil && [( _string ) isKindOfClass:[NSString class]] && ![( _string ) isEqualToString:@""]); })
 
 //处理字符串
 #define DEAL_WITH_STRING(_str) ({ ((_str) && (![(_str) isKindOfClass:[NSNull class]])) ? (_str) : @""; })
