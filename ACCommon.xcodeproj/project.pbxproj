@@ -68,6 +68,8 @@
 		048EAAE419268A040030B406 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAABB19268A040030B406 /* ASINetworkQueue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DD218863195BCB310054395C /* (null) in Sources */ = {isa = PBXBuildFile; };
 		DD218866195BCB6A0054395C /* (null) in Sources */ = {isa = PBXBuildFile; };
+		DD37E88219EFB0DE00B942CF /* CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD37E87C19EFB0DE00B942CF /* CTAssetsPickerController.m */; };
+		DD37E88319EFB0DE00B942CF /* CTAssetsPickerController.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD37E87D19EFB0DE00B942CF /* CTAssetsPickerController.strings */; };
 		DD56F99819D3C3C400837961 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		DD6830A719C2993F002CD5B2 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		DD69ABEC19D3B89300A0FBF3 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -277,6 +279,12 @@
 		048EAABA19268A040030B406 /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASINetworkQueue.h; sourceTree = "<group>"; };
 		048EAABB19268A040030B406 /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASINetworkQueue.m; sourceTree = "<group>"; };
 		048EAABC19268A040030B406 /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
+		DD37E87B19EFB0DE00B942CF /* CTAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTAssetsPickerController.h; sourceTree = "<group>"; };
+		DD37E87C19EFB0DE00B942CF /* CTAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTAssetsPickerController.m; sourceTree = "<group>"; };
+		DD37E87E19EFB0DE00B942CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CTAssetsPickerController.strings; sourceTree = "<group>"; };
+		DD37E88019EFB0DE00B942CF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CTAssetsPickerController.strings"; sourceTree = "<group>"; };
+		DD37E88119EFB0DE00B942CF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/CTAssetsPickerController.strings"; sourceTree = "<group>"; };
+		DD37E88519EFB1A300B942CF /* CTAssetsPickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CTAssetsPickerController.bundle; sourceTree = "<group>"; };
 		DD705BF81957CEE6007DAE8C /* ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAdditions.h; sourceTree = "<group>"; };
 		DD705BF91957CEE6007DAE8C /* NSData+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ACAdditions.h"; sourceTree = "<group>"; };
 		DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ACAdditions.m"; sourceTree = "<group>"; };
@@ -457,6 +465,7 @@
 		04853A5519116F7E000853EB /* ACExternals */ = {
 			isa = PBXGroup;
 			children = (
+				DD37E87A19EFB0DE00B942CF /* CTAssetsPickerController */,
 				045CC24B19D4592B0073EAC7 /* ACExternals-Header.h */,
 				045CC27B19D45A1E0073EAC7 /* appirater-master */,
 				DD705C271957F85F007DAE8C /* SVWebViewController */,
@@ -705,6 +714,17 @@
 			path = ACBaseController;
 			sourceTree = "<group>";
 		};
+		DD37E87A19EFB0DE00B942CF /* CTAssetsPickerController */ = {
+			isa = PBXGroup;
+			children = (
+				DD37E88519EFB1A300B942CF /* CTAssetsPickerController.bundle */,
+				DD37E87B19EFB0DE00B942CF /* CTAssetsPickerController.h */,
+				DD37E87C19EFB0DE00B942CF /* CTAssetsPickerController.m */,
+				DD37E87D19EFB0DE00B942CF /* CTAssetsPickerController.strings */,
+			);
+			path = CTAssetsPickerController;
+			sourceTree = "<group>";
+		};
 		DD705BF71957CEE6007DAE8C /* ACAdditions */ = {
 			isa = PBXGroup;
 			children = (
@@ -893,6 +913,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				048538AA191157E2000853EB /* InfoPlist.strings in Resources */,
+				DD37E88319EFB0DE00B942CF /* CTAssetsPickerController.strings in Resources */,
 				DDFE274219A5D395003C25E5 /* 代码片段收藏.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -985,6 +1006,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				048538AC191157E2000853EB /* ACCommonTests.m in Sources */,
+				DD37E88219EFB0DE00B942CF /* CTAssetsPickerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1044,6 +1066,16 @@
 				048538A9191157E2000853EB /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		DD37E87D19EFB0DE00B942CF /* CTAssetsPickerController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DD37E87E19EFB0DE00B942CF /* en */,
+				DD37E88019EFB0DE00B942CF /* zh-Hans */,
+				DD37E88119EFB0DE00B942CF /* zh-Hant */,
+			);
+			name = CTAssetsPickerController.strings;
 			sourceTree = "<group>";
 		};
 		DD705C281957F85F007DAE8C /* SVWebViewController.strings */ = {
