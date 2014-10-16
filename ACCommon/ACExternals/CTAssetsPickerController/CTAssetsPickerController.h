@@ -81,6 +81,4 @@
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPreviewAssets:(NSArray *)assets;
 
-- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishSingleAsset:(ALAsset *)asset;
-
 @end

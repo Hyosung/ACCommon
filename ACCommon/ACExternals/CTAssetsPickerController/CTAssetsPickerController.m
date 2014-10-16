@@ -726,12 +726,11 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     CTAssetsPickerController *picker = (CTAssetsPickerController *)self.navigationController;
     if (picker.allowsSingleSelection) {
         ALAsset *asset = self.assets[indexPath.item];
-        if ([picker.delegate respondsToSelector:@selector(assetsPickerController:didFinishSingleAsset:)]) {
-            [picker.delegate assetsPickerController:picker didFinishSingleAsset:asset];
+        if ([picker.delegate respondsToSelector:@selector(assetsPickerController:didFinishPickingAssets:)]) {
+            [picker.delegate assetsPickerController:picker didFinishPickingAssets:@[asset]];
         }
     }
     else {
@@ -915,8 +914,13 @@ static UIColor *selectedColor;
         
         CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+        
+        CGSize titleSize        = [self.title sizeWithAttributes:@{ NSFontAttributeName: titleFont}];
+#else
         
         CGSize titleSize        = [self.title sizeWithFont:titleFont];
+#endif
         [titleColor set];
         [self.title drawAtPoint:CGPointMake(rect.size.width - titleSize.width - 2 , startPoint.y + (titleHeight - 12) / 2)
                        forWidth:kThumbnailLength

@@ -176,11 +176,12 @@
         return CGSizeZero;
     }
     
-    CGSize size = [self sizeWithFont:font];
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    if (IOS7_AND_LATER) {
-        size = [self sizeWithAttributes:@{ NSFontAttributeName: font }];
-    }
+    
+    CGSize size = [self sizeWithAttributes:@{ NSFontAttributeName: font }];
+#else
+    
+    CGSize size = [self sizeWithFont:font];
 #endif
     return size;
 }
@@ -191,21 +192,21 @@
         return 0.0;
     }
     
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    CGRect frame = [self boundingRectWithSize:CGSizeMake(MAXFLOAT, height)
+                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                   attributes:@{ NSFontAttributeName: font }
+                                      context:nil];
+    
+    CGFloat newHeight = CGRectGetHeight(frame);
+    CGFloat width = CGRectGetWidth(frame);
+#else
     CGSize size = [self sizeWithFont:font
                    constrainedToSize:CGSizeMake(MAXFLOAT, height)
                        lineBreakMode:NSLineBreakByCharWrapping];
     CGFloat newHeight = size.height;
     CGFloat width = size.width;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    if (IOS7_AND_LATER) {
-        CGRect frame = [self boundingRectWithSize:CGSizeMake(MAXFLOAT, height)
-                                          options:NSStringDrawingUsesLineFragmentOrigin
-                                       attributes:@{ NSFontAttributeName: font }
-                                          context:nil];
-        
-        newHeight = CGRectGetHeight(frame);
-        width = CGRectGetWidth(frame);
-    }
 #endif
     if (height > newHeight) {
         
@@ -222,18 +223,17 @@
     if (![self isKindOfClass:[NSString class]] || !font) {
         return 0.0;
     }
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     
+   CGFloat height = CGRectGetHeight([self boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
+                                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                                    attributes:@{ NSFontAttributeName: font }
+                                                       context:nil]);
+#else
     CGFloat height = [self sizeWithFont:font
                       constrainedToSize:CGSizeMake(width, MAXFLOAT)
                           lineBreakMode:NSLineBreakByCharWrapping].height;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    
-    if (IOS7_AND_LATER) {
-        height = CGRectGetHeight([self boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
-                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:@{ NSFontAttributeName: font }
-                                                    context:nil]);
-    }
 #endif
     return height;
 }
