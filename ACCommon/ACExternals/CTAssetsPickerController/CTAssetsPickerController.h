@@ -56,6 +56,8 @@
  */
 @property (nonatomic, assign) BOOL allowsSingleSelection;
 
+@property (nonatomic, strong) UIColor *tintColor;
+
 @end
 
 

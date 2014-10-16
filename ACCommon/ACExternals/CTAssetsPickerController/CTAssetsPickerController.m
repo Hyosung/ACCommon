@@ -190,6 +190,16 @@
     return self;
 }
 
+- (void)setTintColor:(UIColor *)tintColor {
+    objc_setAssociatedObject(self, _cmd, tintColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.navigationBar.tintColor = tintColor;
+    self.toolbar.tintColor = tintColor;
+}
+
+- (UIColor *)tintColor {
+    return objc_getAssociatedObject(self, @selector(setTintColor:));
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -320,7 +330,19 @@
     ALAssetsGroupFaces | ALAssetsGroupPhotoStream;
     
     [self.assetsLibrary enumerateGroupsWithTypes:type
-                                      usingBlock:resultsBlock
+                                      usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                          if (group)
+                                          {
+                                              [group setAssetsFilter:assetsFilter];
+                                              
+                                              if (group.numberOfAssets > 0)
+                                                  [self.groups addObject:group];
+                                          }
+                                          else
+                                          {
+                                              [self reloadData];
+                                          }
+                                      }
                                     failureBlock:failureBlock];
 }
 
