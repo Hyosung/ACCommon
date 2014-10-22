@@ -14,7 +14,7 @@
 		<string>https://github.com/Hyosung/ACCommon.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>ACCommon.xcodeproj/project.xcworkspace</string>
+	<string>ACCommon.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>F7761B064498F8EDB4683551416D0348AFE5B913</key>

@@ -264,6 +264,12 @@ objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
 } \
 } while(0);
 
+#ifdef __cplusplus
+#define AC_EXTERN		extern "C" __attribute__((visibility ("default")))
+#else
+#define AC_EXTERN	        extern __attribute__((visibility ("default")))
+#endif
+
 #define AC_STATIC_INLINE static inline
 
 #pragma mark - degrees/radian functions

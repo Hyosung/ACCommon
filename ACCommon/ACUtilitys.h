@@ -54,6 +54,11 @@ extern inline NSString * UUID();
 + (NSString *)platform;
 
 /**
+ 当前视图控制器
+ */
++ (UIViewController *)currentViewController;
+
+/**
  当前根视图控制器
  */
 + (UIViewController *)currentRootViewController;

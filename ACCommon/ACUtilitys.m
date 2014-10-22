@@ -161,6 +161,48 @@ inline NSString * UUID() {
     return nil;
 }
 
++ (UIViewController *)currentViewController {
+    
+    id result = nil;
+    
+    UIApplication *sharedApplication = [UIApplication sharedApplication];
+    UIWindow *topWindow = sharedApplication.keyWindow;
+    
+    if (topWindow.windowLevel != UIWindowLevelNormal) {
+        
+        NSArray *windows = sharedApplication.windows;
+        
+        for(topWindow in windows) {
+            
+            if (topWindow.windowLevel == UIWindowLevelNormal && topWindow.subviews.count > 0) {
+                break;
+            }
+        }
+    }
+    
+    UIView *rootView = topWindow.subviews.firstObject;
+    
+    id nextResponder = [rootView nextResponder];
+    while (nextResponder != nil) {
+        if ([nextResponder isKindOfClass:[UITabBarController class]]) {
+            UITabBarController *tabBarController = nextResponder;
+            result = tabBarController.selectedViewController;
+            if ([result isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navigationController = result;
+                result = navigationController.visibleViewController;
+            }
+            break;
+        }
+        else if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            result = nextResponder;
+            break;
+        }
+        nextResponder = [nextResponder nextResponder];
+    }
+    
+    return result;
+}
+
 + (UIViewController *)currentRootViewController {
     
     UIViewController *result;
