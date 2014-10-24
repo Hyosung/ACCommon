@@ -89,6 +89,9 @@
 		DD705C481957F85F007DAE8C /* SVWebViewControllerActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C3A1957F85F007DAE8C /* SVWebViewControllerActivityChrome.m */; };
 		DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C401957F85F007DAE8C /* SVWebViewControllerActivitySafari.m */; };
 		DD705C4A1957F85F007DAE8C /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */; };
+		DDAF425919F8AF5200F49232 /* AnimatedGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425819F8AF5200F49232 /* AnimatedGIFImageSerialization.m */; };
+		DDAF425D19F8B36B00F49232 /* WebPImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */; };
+		DDAF425F19F8B37400F49232 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAF425E19F8B37400F49232 /* WebP.framework */; };
 		DDFE274219A5D395003C25E5 /* 代码片段收藏.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */; };
 /* End PBXBuildFile section */
 
@@ -334,6 +337,11 @@
 		DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivity.m; sourceTree = "<group>"; };
 		DD705C441957F85F007DAE8C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		DD705C451957F85F007DAE8C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
+		DDAF425719F8AF5200F49232 /* AnimatedGIFImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedGIFImageSerialization.h; sourceTree = "<group>"; };
+		DDAF425819F8AF5200F49232 /* AnimatedGIFImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedGIFImageSerialization.m; sourceTree = "<group>"; };
+		DDAF425B19F8B36B00F49232 /* WebPImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebPImageSerialization.h; sourceTree = "<group>"; };
+		DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebPImageSerialization.m; sourceTree = "<group>"; };
+		DDAF425E19F8B37400F49232 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "代码片段收藏.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -342,6 +350,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDAF425F19F8B37400F49232 /* WebP.framework in Frameworks */,
 				04853890191157E0000853EB /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -465,6 +474,8 @@
 		04853A5519116F7E000853EB /* ACExternals */ = {
 			isa = PBXGroup;
 			children = (
+				DDAF425A19F8B36B00F49232 /* WebPImageSerialization */,
+				DDAF425619F8AF5200F49232 /* AnimatedGIFImageSerialization */,
 				DD37E87A19EFB0DE00B942CF /* CTAssetsPickerController */,
 				045CC24B19D4592B0073EAC7 /* ACExternals-Header.h */,
 				045CC27B19D45A1E0073EAC7 /* appirater-master */,
@@ -810,6 +821,25 @@
 			path = Safari;
 			sourceTree = "<group>";
 		};
+		DDAF425619F8AF5200F49232 /* AnimatedGIFImageSerialization */ = {
+			isa = PBXGroup;
+			children = (
+				DDAF425719F8AF5200F49232 /* AnimatedGIFImageSerialization.h */,
+				DDAF425819F8AF5200F49232 /* AnimatedGIFImageSerialization.m */,
+			);
+			path = AnimatedGIFImageSerialization;
+			sourceTree = "<group>";
+		};
+		DDAF425A19F8B36B00F49232 /* WebPImageSerialization */ = {
+			isa = PBXGroup;
+			children = (
+				DDAF425E19F8B37400F49232 /* WebP.framework */,
+				DDAF425B19F8B36B00F49232 /* WebPImageSerialization.h */,
+				DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */,
+			);
+			path = WebPImageSerialization;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -940,6 +970,7 @@
 				04853AD019116F7E000853EB /* UIImageView+WebCache.m in Sources */,
 				04853AD519116F7E000853EB /* SDWebImageManager.m in Sources */,
 				04853AD119116F7E000853EB /* SDWebImageDownloader.m in Sources */,
+				DDAF425D19F8B36B00F49232 /* WebPImageSerialization.m in Sources */,
 				DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */,
 				04853AD219116F7E000853EB /* SDWebImageDownloaderOperation.m in Sources */,
 				04853ABD19116F7E000853EB /* AFHTTPRequestOperationManager.m in Sources */,
@@ -965,6 +996,7 @@
 				DD705C131957CEE6007DAE8C /* UIButton+ACAdditions.m in Sources */,
 				04853AD819116F7E000853EB /* SVProgressHUD.m in Sources */,
 				DD705C101957CEE6007DAE8C /* NSObject+ACAdditions.m in Sources */,
+				DDAF425919F8AF5200F49232 /* AnimatedGIFImageSerialization.m in Sources */,
 				DD705C0D1957CEE6007DAE8C /* NSData+ACAdditions.m in Sources */,
 				DD705C4A1957F85F007DAE8C /* SVWebViewControllerActivity.m in Sources */,
 				DD218866195BCB6A0054395C /* (null) in Sources */,
@@ -1169,6 +1201,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DSTROOT = /tmp/ACCommon.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ACCommon/ACExternals/WebPImageSerialization",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ACCommon/ACCommon-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
@@ -1181,6 +1217,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DSTROOT = /tmp/ACCommon.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ACCommon/ACExternals/WebPImageSerialization",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ACCommon/ACCommon-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
