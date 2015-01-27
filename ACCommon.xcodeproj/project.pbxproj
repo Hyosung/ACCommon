@@ -92,6 +92,7 @@
 		DDAF425919F8AF5200F49232 /* AnimatedGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425819F8AF5200F49232 /* AnimatedGIFImageSerialization.m */; };
 		DDAF425D19F8B36B00F49232 /* WebPImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */; };
 		DDAF425F19F8B37400F49232 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAF425E19F8B37400F49232 /* WebP.framework */; };
+		DDCF79531A7789C400D43C99 /* iosntp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDCF79521A7789C400D43C99 /* iosntp.framework */; };
 		DDFE274219A5D395003C25E5 /* 代码片段收藏.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */; };
 /* End PBXBuildFile section */
 
@@ -342,6 +343,7 @@
 		DDAF425B19F8B36B00F49232 /* WebPImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebPImageSerialization.h; sourceTree = "<group>"; };
 		DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebPImageSerialization.m; sourceTree = "<group>"; };
 		DDAF425E19F8B37400F49232 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
+		DDCF79521A7789C400D43C99 /* iosntp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = iosntp.framework; sourceTree = "<group>"; };
 		DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "代码片段收藏.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -352,6 +354,7 @@
 			files = (
 				DDAF425F19F8B37400F49232 /* WebP.framework in Frameworks */,
 				04853890191157E0000853EB /* Foundation.framework in Frameworks */,
+				DDCF79531A7789C400D43C99 /* iosntp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +477,7 @@
 		04853A5519116F7E000853EB /* ACExternals */ = {
 			isa = PBXGroup;
 			children = (
+				DDCF79511A7789C400D43C99 /* NTP */,
 				DDAF425A19F8B36B00F49232 /* WebPImageSerialization */,
 				DDAF425619F8AF5200F49232 /* AnimatedGIFImageSerialization */,
 				DD37E87A19EFB0DE00B942CF /* CTAssetsPickerController */,
@@ -840,6 +844,14 @@
 			path = WebPImageSerialization;
 			sourceTree = "<group>";
 		};
+		DDCF79511A7789C400D43C99 /* NTP */ = {
+			isa = PBXGroup;
+			children = (
+				DDCF79521A7789C400D43C99 /* iosntp.framework */,
+			);
+			path = NTP;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1204,6 +1216,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ACCommon/ACExternals/WebPImageSerialization",
+					"$(PROJECT_DIR)/ACCommon/ACExternals/NTP",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ACCommon/ACCommon-Prefix.pch";
@@ -1220,6 +1233,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ACCommon/ACExternals/WebPImageSerialization",
+					"$(PROJECT_DIR)/ACCommon/ACExternals/NTP",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ACCommon/ACCommon-Prefix.pch";
