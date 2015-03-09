@@ -343,7 +343,7 @@ extern inline NSString * UUID();
 
 /*
  生成浮点型的随机数
- 范围[from,to) 包含from,不包含to
+ 范围[from,to) 包含from,包含to
  默认随机数一位小数点
  */
 + (double)getFloatRandomNumber:(double) from to:(double) to;

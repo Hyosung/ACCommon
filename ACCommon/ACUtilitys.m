@@ -1114,8 +1114,9 @@ inline NSString * UUID() {
 }
 
 + (NSInteger)getRandomNumber:(NSInteger)from to:(NSInteger)to {
-   
-    return (NSInteger)(from + (arc4random() % (to - from + 1)));
+    
+    NSAssert(to > from, @"from 不能大于等于 to");
+    return from + arc4random() % (to - from);
 }
 
 + (NSInteger)getRandomNumberTo:(NSInteger)to{
@@ -1123,8 +1124,9 @@ inline NSString * UUID() {
 }
 
 + (double)getFloatRandomNumber:(double)from to:(double)to {
-    double randomNumber = from + ((double)arc4random() / ARC4RANDOM_MAX) * to;
-    return [[NSString stringWithFormat:@"%0.1f",randomNumber] doubleValue];
+    NSAssert(to > from, @"from 不能大于等于 to");
+    double randomNumber = from + ((double)arc4random() / ARC4RANDOM_MAX) * (to - from);
+    return [[NSString stringWithFormat:@"%0.1lf",randomNumber] doubleValue];
 }
 
 #if defined(__USE_Reachability__) && __USE_Reachability__
