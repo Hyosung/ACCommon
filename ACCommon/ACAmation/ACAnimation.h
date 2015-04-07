@@ -97,6 +97,105 @@
    andHighlightedImage:(UIImage *) highlightedImage
           andMaskImage:(UIImage *) maskImage;
 
+/**
+ *  @author Stoney, 15-04-07 13:04:38
+ *
+ *  永久闪烁的动画
+ *
+ *  @param duration 动画时间
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)foreverFlashingAnimation:(CFTimeInterval)duration;
+
+/**
+ *  @author Stoney, 15-04-07 14:04:34
+ *
+ *  有闪烁次数的动画
+ *
+ *  @param duration    动画时间
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)flashingAnimation:(CFTimeInterval)duration
+                            repeatCount:(CGFloat)repeatCount;
+
+/**
+ *  @author Stoney, 15-04-07 14:04:20
+ *
+ *  横向移动
+ *
+ *  @param duration 动画时间
+ *  @param x        x
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)horizontalMoveAnimation:(CFTimeInterval)duration
+                                            x:(CGFloat) x;
+
+/**
+ *  @author Stoney, 15-04-07 14:04:44
+ *
+ *  纵向移动
+ *
+ *  @param duration 动画时间
+ *  @param y        y
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)verticalMoveAnimation:(CFTimeInterval)duration
+                                          y:(CGFloat)y;
+
+/**
+ *  @author Stoney, 15-04-07 14:04:10
+ *
+ *  缩放动画
+ *
+ *  @param duration    动画时间
+ *  @param scale       缩放系数
+ *  @param orginScale  旧的缩放系数
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)scaleAnimation:(CFTimeInterval)duration
+                               scale:(CGFloat) scale
+                          orginScale:(CGFloat) orginScale
+                         repeatCount:(CGFloat) repeatCount;
+
+/**
+ *  @author Stoney, 15-04-07 14:04:05
+ *
+ *  路径动画
+ *
+ *  @param duration    动画时间
+ *  @param path        东华路径
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++ (CAKeyframeAnimation *)keyframeAniamtion:(CFTimeInterval) duration
+                                      path:(CGPathRef)path
+                               repeatCount:(CGFloat)repeatCount;
+
+/**
+ *  @author Stoney, 15-04-07 15:04:35
+ *
+ *  旋转动画
+ *
+ *  @param duration    动画时间
+ *  @param degree      旋转度数
+ *  @param direction   旋转方向
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++(CABasicAnimation *)rotationAnimation:(CFTimeInterval)duration
+                                degree:(CGFloat)degree
+                             direction:(CGFloat)direction
+                           repeatCount:(CGFloat)repeatCount;
+
 #pragma mark - Private API
 
 /**

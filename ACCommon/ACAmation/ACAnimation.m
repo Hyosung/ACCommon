@@ -714,6 +714,192 @@
     
     [view.layer addAnimation:animation forKey:nil];
 }
+
+/**
+ *  @author Stoney, 15-04-07 13:04:38
+ *
+ *  永久闪烁的动画
+ *
+ *  @param duration 动画时间
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)foreverFlashingAnimation:(CFTimeInterval)duration {
+    
+    CABasicAnimation *flashingAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    
+    flashingAnimation.fromValue = @1.0;
+    flashingAnimation.toValue = @0.0;
+    flashingAnimation.autoreverses = YES;
+    flashingAnimation.duration = duration;
+    flashingAnimation.repeatCount = FLT_MAX;
+    flashingAnimation.removedOnCompletion = NO;
+    flashingAnimation.fillMode = kCAFillModeForwards;
+    
+    return flashingAnimation;
+}
+
+/**
+ *  @author Stoney, 15-04-07 14:04:34
+ *
+ *  有闪烁次数的动画
+ *
+ *  @param duration    动画时间
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)flashingAnimation:(CFTimeInterval)duration repeatCount:(CGFloat)repeatCount {
+    
+    CABasicAnimation *flashingAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    
+    flashingAnimation.fromValue = @1.0;
+    flashingAnimation.toValue = @0.0;
+    
+    flashingAnimation.duration = duration;
+    flashingAnimation.fillMode = kCAFillModeForwards;
+    flashingAnimation.repeatCount = repeatCount;
+    flashingAnimation.autoreverses = YES;
+    flashingAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    flashingAnimation.removedOnCompletion = NO;
+    
+    return  flashingAnimation;
+}
+
+/**
+ *  @author Stoney, 15-04-07 14:04:20
+ *
+ *  横向移动
+ *
+ *  @param duration 动画时间
+ *  @param x        x
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)horizontalMoveAnimation:(CFTimeInterval)duration x:(CGFloat) x {
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
+    
+    animation.toValue = @(x);
+    animation.duration = duration;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    
+    return animation;
+}
+
+/**
+ *  @author Stoney, 15-04-07 14:04:44
+ *
+ *  纵向移动
+ *
+ *  @param duration 动画时间
+ *  @param y        y
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)verticalMoveAnimation:(CFTimeInterval)duration y:(CGFloat)y {
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
+    
+    animation.toValue = @(y);
+    animation.duration = duration;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    
+    return animation;
+}
+
+/**
+ *  @author Stoney, 15-04-07 14:04:10
+ *
+ *  缩放动画
+ *
+ *  @param duration    动画时间
+ *  @param scale       缩放系数
+ *  @param orginScale  旧的缩放系数
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++ (CABasicAnimation *)scaleAnimation:(CFTimeInterval)duration
+                               scale:(CGFloat) scale
+                          orginScale:(CGFloat) orginScale
+                         repeatCount:(CGFloat) repeatCount {
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    
+    animation.fromValue = @(orginScale);
+    animation.toValue = @(scale);
+    animation.duration = duration;
+    animation.autoreverses = YES;
+    animation.repeatCount = repeatCount;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    
+    return animation;
+}
+
+/**
+ *  @author Stoney, 15-04-07 14:04:05
+ *
+ *  路径动画
+ *
+ *  @param duration    动画时间
+ *  @param path        东华路径
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++ (CAKeyframeAnimation *)keyframeAniamtion:(CFTimeInterval) duration
+                                      path:(CGPathRef)path
+                               repeatCount:(CGFloat)repeatCount {
+    
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    
+    animation.path = path;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    animation.autoreverses = NO;
+    animation.duration= duration;
+    animation.repeatCount = repeatCount;
+    
+    return animation;
+}
+
+/**
+ *  @author Stoney, 15-04-07 15:04:35
+ *
+ *  旋转动画
+ *
+ *  @param duration    动画时间
+ *  @param degree      旋转度数
+ *  @param direction   旋转方向
+ *  @param repeatCount 动画次数
+ *
+ *  @return 动画对象
+ */
++(CABasicAnimation *)rotationAnimation:(CFTimeInterval)duration
+                                degree:(CGFloat)degree
+                             direction:(CGFloat)direction
+                           repeatCount:(CGFloat)repeatCount {
+    
+    CATransform3D rotationTransform  = CATransform3DMakeRotation(degree, 0.0, 0.0, direction);
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    
+    animation.toValue = [NSValue valueWithCATransform3D:rotationTransform];
+    animation.duration = duration;
+    animation.autoreverses = NO;
+    animation.cumulative = YES;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    animation.repeatCount = repeatCount;
+    
+    return animation;
+}
+
 #endif
 
 @end
