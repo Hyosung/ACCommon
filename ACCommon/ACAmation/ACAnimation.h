@@ -106,7 +106,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)foreverFlashingAnimation:(CFTimeInterval)duration;
++ (CABasicAnimation *)animationForeverFlashing:(CFTimeInterval)duration;
 
 /**
  *  @author Stoney, 15-04-07 14:04:34
@@ -118,7 +118,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)flashingAnimation:(CFTimeInterval)duration
++ (CABasicAnimation *)animationFlashing:(CFTimeInterval)duration
                             repeatCount:(CGFloat)repeatCount;
 
 /**
@@ -131,7 +131,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)horizontalMoveAnimation:(CFTimeInterval)duration
++ (CABasicAnimation *)animationHorizontalMove:(CFTimeInterval)duration
                                             x:(CGFloat) x;
 
 /**
@@ -144,7 +144,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)verticalMoveAnimation:(CFTimeInterval)duration
++ (CABasicAnimation *)animationVerticalMove:(CFTimeInterval)duration
                                           y:(CGFloat)y;
 
 /**
@@ -159,7 +159,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)scaleAnimation:(CFTimeInterval)duration
++ (CABasicAnimation *)animationScale:(CFTimeInterval)duration
                                scale:(CGFloat) scale
                           orginScale:(CGFloat) orginScale
                          repeatCount:(CGFloat) repeatCount;
@@ -175,7 +175,7 @@
  *
  *  @return 动画对象
  */
-+ (CAKeyframeAnimation *)keyframeAniamtion:(CFTimeInterval) duration
++ (CAKeyframeAnimation *)aniamtionKeyframe:(CFTimeInterval) duration
                                       path:(CGPathRef)path
                                repeatCount:(CGFloat)repeatCount;
 
@@ -191,7 +191,7 @@
  *
  *  @return 动画对象
  */
-+(CABasicAnimation *)rotationAnimation:(CFTimeInterval)duration
++(CABasicAnimation *)aniamtionRotation:(CFTimeInterval)duration
                                 degree:(CGFloat)degree
                              direction:(CGFloat)direction
                            repeatCount:(CGFloat)repeatCount;

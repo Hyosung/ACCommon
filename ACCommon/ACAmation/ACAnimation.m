@@ -724,7 +724,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)foreverFlashingAnimation:(CFTimeInterval)duration {
++ (CABasicAnimation *)animationForeverFlashing:(CFTimeInterval)duration {
     
     CABasicAnimation *flashingAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
     
@@ -749,7 +749,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)flashingAnimation:(CFTimeInterval)duration repeatCount:(CGFloat)repeatCount {
++ (CABasicAnimation *)animationFlashing:(CFTimeInterval)duration repeatCount:(CGFloat)repeatCount {
     
     CABasicAnimation *flashingAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
     
@@ -776,7 +776,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)horizontalMoveAnimation:(CFTimeInterval)duration x:(CGFloat) x {
++ (CABasicAnimation *)animationHorizontalMove:(CFTimeInterval)duration x:(CGFloat) x {
     
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
     
@@ -798,7 +798,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)verticalMoveAnimation:(CFTimeInterval)duration y:(CGFloat)y {
++ (CABasicAnimation *)animationVerticalMove:(CFTimeInterval)duration y:(CGFloat)y {
     
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
     
@@ -822,7 +822,7 @@
  *
  *  @return 动画对象
  */
-+ (CABasicAnimation *)scaleAnimation:(CFTimeInterval)duration
++ (CABasicAnimation *)animationScale:(CFTimeInterval)duration
                                scale:(CGFloat) scale
                           orginScale:(CGFloat) orginScale
                          repeatCount:(CGFloat) repeatCount {
@@ -851,7 +851,7 @@
  *
  *  @return 动画对象
  */
-+ (CAKeyframeAnimation *)keyframeAniamtion:(CFTimeInterval) duration
++ (CAKeyframeAnimation *)aniamtionKeyframe:(CFTimeInterval) duration
                                       path:(CGPathRef)path
                                repeatCount:(CGFloat)repeatCount {
     
@@ -880,7 +880,7 @@
  *
  *  @return 动画对象
  */
-+(CABasicAnimation *)rotationAnimation:(CFTimeInterval)duration
++(CABasicAnimation *)animationRotation:(CFTimeInterval)duration
                                 degree:(CGFloat)degree
                              direction:(CGFloat)direction
                            repeatCount:(CGFloat)repeatCount {
