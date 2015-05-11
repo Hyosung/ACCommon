@@ -309,4 +309,15 @@
     return [UIImage imageWithData:data];
 }
 
+#pragma mark - 汉字 To PinYin
+- (NSString *)transformToPinyin {
+    NSMutableString *mutableString = [NSMutableString stringWithString:self];
+    //转换为带声调的拼音
+    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
+    //去掉声调
+    //CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformStripDiacritics, false);
+    mutableString = (NSMutableString *)[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
+    return mutableString;
+}
+
 @end

@@ -158,5 +158,8 @@
 #pragma mark - NSString To UIImage
 - (UIImage *)stringConvertedImage;
 
+#pragma mark - 汉字 To PinYin
+- (NSString *)transformToPinyin;
+
 
 @end
