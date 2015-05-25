@@ -53,5 +53,8 @@
 - (UIImage *)roundedCornerImageWithCornerRadius:(CGFloat)cornerRadius;
 
 #pragma mark - UIImage To NSString
-- (NSString *)imageConvertedString;
+- (NSString *)convertString;
+
+#pragma mark Image Draw
+- (UIImage *)convertGrayImage;
 @end

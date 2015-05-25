@@ -152,13 +152,13 @@ inline NSString * UUID() {
     //    printf("version:%s\n",systemInfo.version);
     //    printf("machine:%s\n",systemInfo.machine);
     char *machines = strtok(systemInfo.machine, ",");
-    if (machines != NULL) {
-        NSString *deviceString = [NSString stringWithCString:&machines[0] encoding:NSUTF8StringEncoding];
-        return deviceString;
+    if (machines == NULL) {
+        return nil;
     }
     
+    NSString *deviceString = [NSString stringWithCString:&machines[0] encoding:NSUTF8StringEncoding];
+    return deviceString;
     //    NSString *deviceString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-    return nil;
 }
 
 + (UIViewController *)currentViewController {
@@ -239,7 +239,7 @@ inline NSString * UUID() {
     }
     else {
         
-        NSAssert(NO, @"ShareKit: Could not find a root view controller.  You can assign one manually by calling [[SHK currentHelper] setRootViewController:YOURROOTVIEWCONTROLLER].");
+        NSAssert(NO, @"ACCommon: Could not find a root view controller.  You can assign one manually by calling [[SHK currentHelper] setRootViewController:YOURROOTVIEWCONTROLLER].");
     }
     
     return result;

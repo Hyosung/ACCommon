@@ -578,7 +578,7 @@
 
 
 #pragma mark - UIImage To NSString
-- (NSString *)imageConvertedString {
+- (NSString *)convertString {
     NSDictionary *systeminfo = [NSDictionary dictionaryWithContentsOfFile:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"systeminfo"]];
     float o = 0.1;
 	if (systeminfo){//如果有系统设置信息
@@ -598,4 +598,45 @@
 	
 	return dataString;
 }
+
+/**
+ *  @author Stoney, 15-05-25 14:05:58
+ *
+ *  来源 https://developer.apple.com/library/mac/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_context/dq_context.html#//apple_ref/doc/uid/TP30001066-CH203-BCIBHHBB
+ *
+ *  @return image
+ */
+- (UIImage *)convertGrayImage {
+    CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(NULL,
+                                                 CGImageGetWidth(self.CGImage),
+                                                 CGImageGetHeight(self.CGImage),
+                                                 8,    // bits per component
+                                                 0,
+                                                 space,
+                                                 kCGImageAlphaNone);
+    CGColorSpaceRelease(space);
+    
+    CGContextDrawImage(context, CGRectMake(0.0, 0.0, self.size.width, self.size.height), self.CGImage);
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    CGContextRelease(context);
+    
+    UIImage *grayImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    
+    return grayImage;
+    
+    //另一种方式
+//   UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+//   [self drawInRect:CGRectMake(0.0,
+//                               0.0,
+//                               self.size.width,
+//                               self.size.height)
+//           blendMode:kCGBlendModeLuminosity
+//               alpha:1.0];
+//   UIImage *grayImage = UIGraphicsGetImageFromCurrentImageContext();
+//   UIGraphicsEndImageContext();
+}
+
 @end
