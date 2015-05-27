@@ -93,6 +93,7 @@
 		DDAF425D19F8B36B00F49232 /* WebPImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */; };
 		DDAF425F19F8B37400F49232 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAF425E19F8B37400F49232 /* WebP.framework */; };
 		DDCF79531A7789C400D43C99 /* iosntp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDCF79521A7789C400D43C99 /* iosntp.framework */; };
+		DDEBCB691B157992002E365E /* ACSNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEBCB681B157992002E365E /* ACSNetworkReachabilityManager.m */; };
 		DDFE274219A5D395003C25E5 /* 代码片段收藏.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */; };
 /* End PBXBuildFile section */
 
@@ -344,6 +345,8 @@
 		DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebPImageSerialization.m; sourceTree = "<group>"; };
 		DDAF425E19F8B37400F49232 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		DDCF79521A7789C400D43C99 /* iosntp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = iosntp.framework; sourceTree = "<group>"; };
+		DDEBCB671B157992002E365E /* ACSNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACSNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		DDEBCB681B157992002E365E /* ACSNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACSNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "代码片段收藏.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -673,6 +676,8 @@
 		048EAAA0192671040030B406 /* ACNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				DDEBCB671B157992002E365E /* ACSNetworkReachabilityManager.h */,
+				DDEBCB681B157992002E365E /* ACSNetworkReachabilityManager.m */,
 				048EAAA1192671BF0030B406 /* ACNetworking.h */,
 				048EAAA2192671C00030B406 /* ACNetworking.m */,
 			);
@@ -1042,6 +1047,7 @@
 				048EAAE019268A040030B406 /* ASIDownloadCache.m in Sources */,
 				DD705C0E1957CEE6007DAE8C /* NSDate+ACAdditions.m in Sources */,
 				04853AC619116F7E000853EB /* GTMBase64.m in Sources */,
+				DDEBCB691B157992002E365E /* ACSNetworkReachabilityManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

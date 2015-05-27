@@ -56,8 +56,31 @@
 	[super drawRect:rect];
 	
 	if (shouldDrawPlaceholder) {
-		[_placeholderTextColor set];
-		[_placeholder drawInRect:CGRectMake(8.0f, 8.0f, self.width - 16.0f, self.height - 16.0f) withFont:self.font];
+        
+        if (shouldDrawPlaceholder) {
+            
+            CGSize placeholderSize = [_placeholder sizeWithAttributes:@{NSFontAttributeName: self.font}];
+            CGFloat placeholderHeight = MIN(placeholderSize.height, self.height - 16.0f);
+            if ([_placeholder respondsToSelector:@selector(drawInRect:withAttributes:)]) {
+                
+                [_placeholder drawInRect:CGRectMake(8.0f,
+                                                    (self.height - placeholderHeight) / 2.0,
+                                                    self.width - 16.0f,
+                                                    placeholderHeight)
+                          withAttributes:@{NSFontAttributeName: self.font, NSForegroundColorAttributeName: _placeholderTextColor}];
+            }
+            else {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 70000
+                [_placeholderTextColor set];
+                [_placeholder drawInRect:CGRectMake(8.0f,
+                                                    (self.height - placeholderHeight) / 2.0,
+                                                    self.width - 16.0f,
+                                                    placeholderHeight)
+                                withFont:self.font];
+#endif
+            }
+            
+        }
 	}
 }
 

@@ -851,7 +851,7 @@
  *
  *  @return 动画对象
  */
-+ (CAKeyframeAnimation *)aniamtionKeyframe:(CFTimeInterval) duration
++ (CAKeyframeAnimation *)animationKeyframe:(CFTimeInterval) duration
                                       path:(CGPathRef)path
                                repeatCount:(CGFloat)repeatCount {
     
