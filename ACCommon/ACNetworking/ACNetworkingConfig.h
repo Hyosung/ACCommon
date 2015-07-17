@@ -1,5 +1,5 @@
 //
-//  ACNetworkConfig.h
+//  ACNetworkingConfig.h
 //  ACCommon
 //
 //  Created by 暁星 on 15/7/16.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ACNetworkConfig : NSObject
+@interface ACNetworkingConfig : NSObject
 
 + (instancetype)config;
 

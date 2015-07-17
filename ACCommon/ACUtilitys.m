@@ -48,7 +48,6 @@ inline NSString * UUID() {
 
 + (NSDictionary *)deviceModels {
     static NSDictionary *info = nil;
-    
     AC_EXEONCE_BEGIN(_models_)
     info = @{
              @"i386": @"iPhone Simulator",

@@ -36,6 +36,8 @@
 		2B3966A484426C0038D7C5A5 /* libPods-ACCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BBE94E708FF063D7B7C065 /* libPods-ACCommon.a */; };
 		DD02EA9C1B589A0800418650 /* CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD37E87C19EFB0DE00B942CF /* CTAssetsPickerController.m */; };
 		DD02EA9D1B589A4D00418650 /* 代码片段收藏.rtf in CopyFiles */ = {isa = PBXBuildFile; fileRef = DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */; };
+		DD02EAA31B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m in Sources */ = {isa = PBXBuildFile; fileRef = DD02EAA21B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m */; };
+		DD02EAA61B5900C900418650 /* ACNetworkingContent.m in Sources */ = {isa = PBXBuildFile; fileRef = DD02EAA51B5900C900418650 /* ACNetworkingContent.m */; };
 		DD705C0D1957CEE6007DAE8C /* NSData+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFA1957CEE6007DAE8C /* NSData+ACAdditions.m */; };
 		DD705C0E1957CEE6007DAE8C /* NSDate+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFC1957CEE6007DAE8C /* NSDate+ACAdditions.m */; };
 		DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705BFE1957CEE6007DAE8C /* NSDictionary+ACAdditions.m */; };
@@ -63,7 +65,7 @@
 		DDEBCB691B157992002E365E /* ACNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEBCB681B157992002E365E /* ACNetworkReachabilityManager.m */; };
 		DDF611631B57854C005331B1 /* ACAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF611621B57854C005331B1 /* ACAlertManager.m */; };
 		DDF611661B578DA3005331B1 /* UINavigationBar+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF611651B578DA3005331B1 /* UINavigationBar+ACAdditions.m */; };
-		DDF6116F1B57AB0C005331B1 /* ACNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF6116E1B57AB0C005331B1 /* ACNetworkConfig.m */; };
+		DDF6116F1B57AB0C005331B1 /* ACNetworkingConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF6116E1B57AB0C005331B1 /* ACNetworkingConfig.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +186,11 @@
 		426810EBAF71173EAAE9E66A /* Pods-ACCommon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ACCommon.release.xcconfig"; path = "Pods/Target Support Files/Pods-ACCommon/Pods-ACCommon.release.xcconfig"; sourceTree = "<group>"; };
 		B6A64F8E9A3B9301636B7783 /* Pods-ACCommon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ACCommon.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ACCommon/Pods-ACCommon.debug.xcconfig"; sourceTree = "<group>"; };
 		DD02EA9E1B589B0500418650 /* ACExternals-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ACExternals-Header.h"; sourceTree = "<group>"; };
+		DD02EAA11B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+ACMultipartForm.h"; sourceTree = "<group>"; };
+		DD02EAA21B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+ACMultipartForm.m"; sourceTree = "<group>"; };
+		DD02EAA41B5900C900418650 /* ACNetworkingContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworkingContent.h; sourceTree = "<group>"; };
+		DD02EAA51B5900C900418650 /* ACNetworkingContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACNetworkingContent.m; sourceTree = "<group>"; };
+		DD02EAA71B59011E00418650 /* ACNetworkingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACNetworkingHeader.h; sourceTree = "<group>"; };
 		DD37E87B19EFB0DE00B942CF /* CTAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTAssetsPickerController.h; sourceTree = "<group>"; };
 		DD37E87C19EFB0DE00B942CF /* CTAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTAssetsPickerController.m; sourceTree = "<group>"; };
 		DD37E87E19EFB0DE00B942CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CTAssetsPickerController.strings; sourceTree = "<group>"; };
@@ -259,8 +266,8 @@
 		DDF611621B57854C005331B1 /* ACAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAlertManager.m; sourceTree = "<group>"; };
 		DDF611641B578DA3005331B1 /* UINavigationBar+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+ACAdditions.h"; sourceTree = "<group>"; };
 		DDF611651B578DA3005331B1 /* UINavigationBar+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+ACAdditions.m"; sourceTree = "<group>"; };
-		DDF6116D1B57AB0C005331B1 /* ACNetworkConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworkConfig.h; sourceTree = "<group>"; };
-		DDF6116E1B57AB0C005331B1 /* ACNetworkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACNetworkConfig.m; sourceTree = "<group>"; };
+		DDF6116D1B57AB0C005331B1 /* ACNetworkingConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworkingConfig.h; sourceTree = "<group>"; };
+		DDF6116E1B57AB0C005331B1 /* ACNetworkingConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACNetworkingConfig.m; sourceTree = "<group>"; };
 		DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "代码片段收藏.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -481,10 +488,13 @@
 		048EAAA0192671040030B406 /* ACNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				DDF6116D1B57AB0C005331B1 /* ACNetworkConfig.h */,
-				DDF6116E1B57AB0C005331B1 /* ACNetworkConfig.m */,
+				DD02EAA41B5900C900418650 /* ACNetworkingContent.h */,
+				DD02EAA51B5900C900418650 /* ACNetworkingContent.m */,
+				DDF6116D1B57AB0C005331B1 /* ACNetworkingConfig.h */,
+				DDF6116E1B57AB0C005331B1 /* ACNetworkingConfig.m */,
 				048EAAA1192671BF0030B406 /* ACNetworking.h */,
 				048EAAA2192671C00030B406 /* ACNetworking.m */,
+				DD02EAA71B59011E00418650 /* ACNetworkingHeader.h */,
 				DDEBCB671B157992002E365E /* ACNetworkReachabilityManager.h */,
 				DDEBCB681B157992002E365E /* ACNetworkReachabilityManager.m */,
 			);
@@ -572,6 +582,8 @@
 				045CC27719D459CF0073EAC7 /* UIViewController+ACAdditions.m */,
 				DDD8811B1B4CEFD300C38922 /* UIViewController+ACSideslip.h */,
 				DDD8811C1B4CEFD300C38922 /* UIViewController+ACSideslip.m */,
+				DD02EAA11B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.h */,
+				DD02EAA21B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m */,
 			);
 			path = ACAdditions;
 			sourceTree = "<group>";
@@ -809,6 +821,7 @@
 				DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */,
 				045CC27819D459CF0073EAC7 /* NSArray+ACAdditions.m in Sources */,
 				DD705C161957CEE6007DAE8C /* UIView+ACAdditions.m in Sources */,
+				DD02EAA61B5900C900418650 /* ACNetworkingContent.m in Sources */,
 				DD705C111957CEE6007DAE8C /* NSString+ACAdditions.m in Sources */,
 				04853AD719116F7E000853EB /* SoundManager.m in Sources */,
 				04853AC519116F7E000853EB /* ChineseToPinyin.m in Sources */,
@@ -819,8 +832,9 @@
 				045CC27919D459CF0073EAC7 /* NSDateFormatter+ACAdditions.m in Sources */,
 				DDD8811E1B4CEFD300C38922 /* UIViewController+ACSideslip.m in Sources */,
 				045CC27A19D459CF0073EAC7 /* UIViewController+ACAdditions.m in Sources */,
-				DDF6116F1B57AB0C005331B1 /* ACNetworkConfig.m in Sources */,
+				DDF6116F1B57AB0C005331B1 /* ACNetworkingConfig.m in Sources */,
 				DD705C131957CEE6007DAE8C /* UIButton+ACAdditions.m in Sources */,
+				DD02EAA31B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m in Sources */,
 				04853AD819116F7E000853EB /* SVProgressHUD.m in Sources */,
 				DD705C101957CEE6007DAE8C /* NSObject+ACAdditions.m in Sources */,
 				DDAF425919F8AF5200F49232 /* AnimatedGIFImageSerialization.m in Sources */,

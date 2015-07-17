@@ -1,18 +1,18 @@
 //
-//  ACNetworkConfig.m
+//  ACNetworkingConfig.m
 //  ACCommon
 //
 //  Created by 暁星 on 15/7/16.
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
-#import "ACNetworkConfig.h"
+#import "ACNetworkingConfig.h"
 
-@implementation ACNetworkConfig
+@implementation ACNetworkingConfig
 
 + (instancetype)config {
     static dispatch_once_t onceToken;
-    static ACNetworkConfig *networkConfig = nil;
+    static ACNetworkingConfig *networkConfig = nil;
     dispatch_once(&onceToken, ^{
         networkConfig = [[self alloc] init];
     });

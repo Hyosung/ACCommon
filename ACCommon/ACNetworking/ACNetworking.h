@@ -7,19 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-typedef void(^ACCompletedCallback)(NSDictionary *result, NSError *error);
-typedef void(^ACUploadCallback)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
-typedef void(^ACDownloadCallback)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead);
-
-typedef NS_ENUM(NSUInteger, ACNetworkMethod) {
-    ACNetworkMethodGET = 0  ,
-    ACNetworkMethodPOST     ,
-    ACNetworkMethodHEAD     ,
-    ACNetworkMethodPUT      ,
-    ACNetworkMethodPATCH    ,
-    ACNetworkMethodDELETE
-};
+#import "ACNetworkingContent.h"
 
 @interface ACNetworking : NSObject
 
@@ -28,47 +16,43 @@ typedef NS_ENUM(NSUInteger, ACNetworkMethod) {
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 
 #pragma mark - 默认的baseURL
+- (NSOperation *)fetchDataFromRequestContent:(ACNetworkingContent *) content;
+
 - (NSOperation *)fetchDataFromPath:(NSString *) path
                             method:(ACNetworkMethod) method
                         parameters:(NSDictionary *) parameters
-                         completed:(ACCompletedCallback) callback;
+                        completion:(ACNetworkCompletionHandler) completionBlock;
 
 - (NSOperation *)GET_fetchDataFromPath:(NSString *) path
                             parameters:(NSDictionary *) parameters
-                             completed:(ACCompletedCallback) callback;
+                            completion:(ACNetworkCompletionHandler) completionBlock;
 
 - (NSOperation *)POST_fetchDataFromPath:(NSString *) path
                              parameters:(NSDictionary *) parameters
-                              completed:(ACCompletedCallback) callback;
+                             completion:(ACNetworkCompletionHandler) completionBlock;
 
 - (NSOperation *)uploadFileFromPath:(NSString *) path
-                         parameters:(NSDictionary *) parameters
                            fileInfo:(NSDictionary *) fileInfo
-                          completed:(ACCompletedCallback) completedCallback
-                             upload:(ACUploadCallback) uploadCallback;
+                         parameters:(NSDictionary *) parameters
+                           progress:(ACNetworkProgressHandler) progressBlock;
 
 - (NSOperation *)downloadFileFromPath:(NSString *) path
-                           parameters:(NSDictionary *) parameters
-                            completed:(ACCompletedCallback) completedCallback
-                             download:(ACDownloadCallback) downloadCallback;
+                             progress:(ACNetworkProgressHandler) progressBlock;
 
 #pragma mark - 自定义请求链接
 
 - (NSOperation *)fetchDataFromURLString:(NSString *) URLString
                                  method:(ACNetworkMethod) method
                              parameters:(NSDictionary *) parameters
-                              completed:(ACCompletedCallback) callback;
+                             completion:(ACNetworkCompletionHandler) completionBlock;
 
 - (NSOperation *)uploadFileFromURLString:(NSString *) URLString
-                              parameters:(NSDictionary *) parameters
                                 fileInfo:(NSDictionary *) fileInfo
-                               completed:(ACCompletedCallback) completedCallback
-                                  upload:(ACUploadCallback) uploadCallback;
+                              parameters:(NSDictionary *) parameters
+                                progress:(ACNetworkProgressHandler) progressBlock;
 
 - (NSOperation *)downloadFileFromURLString:(NSString *) URLString
-                                parameters:(NSDictionary *) parameters
-                                 completed:(ACCompletedCallback) completedCallback
-                                  download:(ACDownloadCallback) downloadCallback;
+                                  progress:(ACNetworkProgressHandler) progressBlock;
 
 #endif
 
