@@ -13,47 +13,52 @@
 #pragma mark - WebImage Loading
 
 #if defined(__USE_SDWebImage__) && __USE_SDWebImage__
-- (void)setACImageURLString:(NSString *)anURLString {
-    [self setACImageURLString:anURLString forState:UIControlStateNormal];
+- (void)ac_setImageWithURLString:(NSString *) URLString {
+    [self ac_setImageWithURLString:URLString forState:UIControlStateNormal placeholderImage:nil completion:NULL];
 }
 
-- (void)setACImageURLString:(NSString *)anURLString forState:(UIControlState)state {
-    NSURL *URL = [NSURL URLWithString:anURLString];
-    UIImage *placeholderImage = [ACUtilitys drawPlaceholderWithSize:self.frame.size];
+- (void)ac_setImageWithURLString:(NSString *) URLString
+                placeholderImage:(UIImage *) placeholderImage {
     
-    __weak __typeof(&*self) weakSelf = self;
-    [self setImageWithURL:URL forState:state
-         placeholderImage:placeholderImage
-                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
-    {
-        if (image && !error) {
-            __strong __typeof(&*weakSelf) strongSelf = weakSelf;
-            UIImage *newImage = [ACUtilitys zoomImageWithSize:strongSelf.frame.size image:image];
-            [strongSelf setImage:newImage forState:state];
-        }
-    }];
+    [self ac_setImageWithURLString:URLString forState:UIControlStateNormal placeholderImage:placeholderImage completion:NULL];
 }
 
-- (void)setACBackgroundImageURLString:(NSString *) anURLString {
-    [self setACBackgroundImageURLString:anURLString forState:UIControlStateNormal];
-}
-
-- (void)setACBackgroundImageURLString:(NSString *) anURLString forState:(UIControlState)state {
-    NSURL *URL = [NSURL URLWithString:anURLString];
-    UIImage *placeholderImage = [ACUtilitys drawPlaceholderWithSize:self.frame.size];
+- (void)ac_setImageWithURLString:(NSString *) URLString
+                        forState:(UIControlState) state
+                placeholderImage:(UIImage *) placeholderImage {
     
-    __weak __typeof(&*self) weakSelf = self;
-    [self setBackgroundImageWithURL:URL
-                           forState:state
-                   placeholderImage:placeholderImage
-                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
-     {
-         if (image && !error) {
-             __strong __typeof(&*weakSelf) strongSelf = weakSelf;
-              UIImage *newImage = [ACUtilitys zoomImageWithSize:strongSelf.frame.size image:image];
-              [strongSelf setBackgroundImage:newImage forState:state];
-          }
-     }];
+    [self ac_setImageWithURLString:URLString forState:state placeholderImage:placeholderImage completion:NULL];
+}
+
+- (void)ac_setImageWithURLString:(NSString *) URLString
+                        forState:(UIControlState) state
+                placeholderImage:(UIImage *) placeholderImage
+                      completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock {
+    
+}
+
+- (void)ac_setBackgroundImageWithURLString:(NSString *) URLString {
+    [self ac_setBackgroundImageWithURLString:URLString forState:UIControlStateNormal placeholderImage:nil completion:NULL];
+}
+
+- (void)ac_setBackgroundImageWithURLString:(NSString *) URLString
+                          placeholderImage:(UIImage *) placeholderImage {
+    
+    [self ac_setBackgroundImageWithURLString:URLString forState:UIControlStateNormal placeholderImage:placeholderImage completion:NULL];
+}
+
+- (void)ac_setBackgroundImageWithURLString:(NSString *) URLString
+                                  forState:(UIControlState) state
+                          placeholderImage:(UIImage *) placeholderImage {
+    
+    [self ac_setBackgroundImageWithURLString:URLString forState:state placeholderImage:placeholderImage completion:NULL];
+}
+
+- (void)ac_setBackgroundImageWithURLString:(NSString *) URLString
+                                  forState:(UIControlState) state
+                          placeholderImage:(UIImage *) placeholderImage
+                                completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock {
+    
 }
 #endif
 

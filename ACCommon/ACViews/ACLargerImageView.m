@@ -238,15 +238,17 @@ static NSString *kLargerImageViewReuseIdentifier = @"kLargerImageViewReuseIdenti
     ACLargerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kLargerImageViewReuseIdentifier forIndexPath:indexPath];
     
     __weak UIImageView *weakRef = cell.cellImageView;
-    [cell.cellImageView setImageWithURL:[NSURL URLWithString:self.imgURLs[indexPath.row]]
-                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
-     {
-         if (!error && image) {
-             
-             UIImage *newImage = [ACUtilitys resizedFixedImageWithImage:image size:weakRef.frame.size];
-             weakRef.image = newImage;
-         }
-     }];
+    [cell.cellImageView sd_setImageWithURL:[NSURL URLWithString:self.imgURLs[indexPath.row]]
+                                 completed:^(UIImage *image,
+                                             NSError *error,
+                                             SDImageCacheType cacheType,
+                                             NSURL *imageURL) {
+        if (!error && image) {
+            
+            UIImage *newImage = [image resizedFixedImageWithSize:weakRef.frame.size];
+            weakRef.image = newImage;
+        }
+    }];
     
     return cell;
 }

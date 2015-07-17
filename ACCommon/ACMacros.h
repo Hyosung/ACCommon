@@ -13,8 +13,8 @@
 #ifndef ACCommon_ACMacros_h
 #define ACCommon_ACMacros_h
 
-static NSString * const kACAppleID = @"Apple ID";
-static NSString * const kACCompanyName = @"Company Name";
+static NSString * const kACAppleID = @"<#Apple ID#>";
+static NSString * const kACCompanyName = @"<#Company Name#>";
 
 /*
  round(<#double#>)：如果参数是小数，则求本身的四舍五入。
@@ -163,29 +163,29 @@ static NSString * const kACCompanyName = @"Company Name";
  单例的方法申明
  */
 #undef AC_SINGLETON
-#define AC_SINGLETON(__class) \
+#define AC_SINGLETON(__class)                       \
 + (__class *)shared##__class;
 
 /*
  单例的实现方法
  */
 #undef ACIMP_SINGLETON
-#define ACIMP_SINGLETON(__class) \
-+ (__class *)shared##__class{ \
-static dispatch_once_t onceToken; \
-static __class *__singleton__ = nil; \
-dispatch_once(&onceToken, ^{ \
-__singleton__ = [[__class alloc] init]; \
-}); \
-return __singleton__; \
+#define ACIMP_SINGLETON(__class)                    \
++ (__class *)shared##__class {                      \
+    static dispatch_once_t onceToken;               \
+    static __class *__singleton__ = nil;            \
+    dispatch_once(&onceToken, ^{                    \
+        __singleton__ = [[__class alloc] init];     \
+    });                                             \
+    return __singleton__;                           \
 }
 
 /*
  只执行一次（这里是开始）
  */
 #undef AC_EXEONCE_BEGIN
-#define AC_EXEONCE_BEGIN(__token) \
-static dispatch_once_t once##__token; \
+#define AC_EXEONCE_BEGIN(__token)                   \
+static dispatch_once_t once##__token;               \
 dispatch_once(&once##__token, ^{
 
 /*
@@ -197,145 +197,101 @@ dispatch_once(&once##__token, ^{
 /*
  用于在浏览器中跳转到App Store应用中去的链接 并跳转到评分页面
  */
-#define SCORE_URL [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@",kACAppleID]
+#define SCORE_URL                           [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@",kACAppleID]
 
 /*
  用于在Apple Store上请求当前Apple ID 的相关信息的链接
  */
-#define APP_URL [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@",kACAppleID]
+#define APP_URL                             [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@",kACAppleID]
 
-#define DATA_REQUEST(TEXT)  [NSString stringWithFormat:@"http://app.zontenapp.com.cn/%@",TEXT]
-#define IMAGE_REQUEST(TEXT) [NSString stringWithFormat:@"http://image.zontenapp.com.cn/%@/%@",kACCompanyName,TEXT]
-
-#define SCREEN_SIZE   ([UIScreen mainScreen].bounds.size)
-#define SCREEN_WIDTH  CGRectGetWidth([UIScreen mainScreen].bounds)
-#define SCREEN_HEIGHT CGRectGetHeight([UIScreen mainScreen].bounds)
-#define SCREEN_BOUNDS ([UIScreen mainScreen].bounds)
-
-#define TAB_BAR_HEIGHT        (49.0f)
-#define TOOL_BAR_HEIGHT       (44.0f)
-#define STATUS_BAR_HEIGHT     (20.0f)
-#define NAVIGATION_BAR_HEIGHT (44.0f)
-
-#define APP_CONTENT_HEIGHT  (SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT - STATUS_BAR_HEIGHT - TAB_BAR_HEIGHT)
-#define APP_CONTENT_NOT_NAV (SCREEN_HEIGHT - NAVIGATION_BAR_HEIGHT - STATUS_BAR_HEIGHT)
-#define APP_CONTENT_NOT_TAB (SCREEN_HEIGHT - TAB_BAR_HEIGHT - STATUS_BAR_HEIGHT)
+//#define DATA_REQUEST(TEXT)                  [NSString stringWithFormat:@"http://app.zontenapp.com.cn/%@",TEXT]
+//#define IMAGE_REQUEST(TEXT)                 [NSString stringWithFormat:@"http://image.zontenapp.com.cn/%@/%@",kACCompanyName,TEXT]
 
 /**
  故事板
  */
-#define MAIN_STORYBOARD [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil]
+#define oMainStoryboard                     [UIStoryboard storyboardWithName:@"Main" bundle:nil]
 
-#define APP_SHARE    [UIApplication sharedApplication]
-#define USER_DEFAULT [NSUserDefaults standardUserDefaults]
-#define FILE_MANAGER [NSFileManager defaultManager]
+#define kAppDelegate                        ({ (AppDelegate *)[UIApplication sharedApplication].delegate; })
+#define kAppWindow                          ({ ((AppDelegate *)[UIApplication sharedApplication].delegate).window; })
+
+#define oSharedApplication                  [UIApplication sharedApplication]
+#define oFileManager                        [NSFileManager defaultManager]
+
+#define oUserDefaults                       [NSUserDefaults standardUserDefaults]
+#define UDsIntegerForKey(defaultName)       [[NSUserDefaults standardUserDefaults] integerForKey:(defaultName)]
+#define UDsStringForKey(defaultName)        [[NSUserDefaults standardUserDefaults] stringForKey:(defaultName)]
+#define UDsObjectForKey(defaultName)        [[NSUserDefaults standardUserDefaults] objectForKey:(defaultName)]
+#define UDsBoolForKey(defaultName)          [[NSUserDefaults standardUserDefaults] boolForKey:(defaultName)]
+#define UDsURLForKey(detaultName)           [[NSUserDefaults standardUserDefaults] URLForKey:(defaultName)]
+
+#define UDsSetObject(value, defaultName)    [[NSUserDefaults standardUserDefaults] setObject:(value) forKey:(defaultName)]
+#define UDsSynchronize()                    [[NSUserDefaults standardUserDefaults] synchronize]
 
 //对象强转（可针对C、OC两种）
-#define OBJ_CONVERT(_type,_name,_obj) _type _name = (_type)(_obj)
+#define OBJ_CONVERT(_type, _name, _obj)     _type _name = (_type)(_obj)
 //OC对象强转（只针对OC对象）
-#define OC_OBJ_CONVERT(_type,_name,_obj,_tag) OBJ_CONVERT(_type *,_name,[_obj viewWithTag:(_tag)])
+#define OC_OBJ_CONVERT(_type, _name, _obj, _tag) OBJ_CONVERT(_type *,_name,[_obj viewWithTag:(_tag)])
 
 //基础类型的类型编码字符
 #define _C_ENCODE @"cCsSiIlLqQfdbB"
-#define __C_BASE_TYPE__(_value) ( [_C_ENCODE rangeOfString:[NSString stringWithCString:@encode(__typeof__(_value)) encoding:NSUTF8StringEncoding] options:NSRegularExpressionSearch].location != NSNotFound )
+#define __C_BASE_TYPE__(_value)             ( [_C_ENCODE rangeOfString:[NSString stringWithCString:@encode(__typeof__(_value)) encoding:NSUTF8StringEncoding] options:NSRegularExpressionSearch].location != NSNotFound )
 
 //C基础类型转NSNumber
-#define CBT_CONVERT_OC(_cvalue) ({ __typeof__(_cvalue) __NSX_PASTE__(_a,L) = (_cvalue); __C_BASE_TYPE__(__NSX_PASTE__(_a,L)) ? @(__NSX_PASTE__(_a,L)) : [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
+#define CBT_CONVERT_OC(_cvalue)             ({ __typeof__(_cvalue) __NSX_PASTE__(_a,L) = (_cvalue); __C_BASE_TYPE__(__NSX_PASTE__(_a,L)) ? @(__NSX_PASTE__(_a,L)) : [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
 
 //C类型转NSValue
-#define C_CONVERT_OC(_cobj) ({__typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj); [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
+#define C_CONVERT_OC(_cobj)                 ({ __typeof__(_cobj) __NSX_PASTE__(_a,L) = (_cobj); [NSValue value:&__NSX_PASTE__(_a,L) withObjCType:@encode(__typeof__(__NSX_PASTE__(_a,L)))]; })
 
 //空的判断
-#define isEmptyObject(_object) (( _object ) == nil || [( _object ) isKindOfClass:[NSNull class]]) //不包括NSNull
-#define isEmptyList(_list) ({ !(( _list ) && ([( _list ) isKindOfClass:[NSArray class]] || [( _list ) isKindOfClass:[NSDictionary class]]) && [( _list ) count] > 0); })
-#define isEmptyArray(_array) ({ !(( _array ) && [( _array ) isKindOfClass:[NSArray class]] && [( _array ) count] > 0); })
-#define isEmptyDictionary(_dictionary) ({ !(( _dictionary ) && [( _dictionary ) isKindOfClass:[NSDictionary class]] && [( _dictionary ) count] > 0); })
-#define isEmptyString(_string) ({ !(( _string ) != nil && [( _string ) isKindOfClass:[NSString class]] && ![( _string ) isEqualToString:@""]); })
+#define isEmptyObject(_object)              (( _object ) == nil || [( _object ) isKindOfClass:[NSNull class]]) //不包括NSNull
+#define isEmptyList(_list)                  ({ !(( _list ) && ([( _list ) isKindOfClass:[NSArray class]] || [( _list ) isKindOfClass:[NSDictionary class]]) && [( _list ) count] > 0); })
+#define isEmptyArray(_array)                ({ !(( _array ) && [( _array ) isKindOfClass:[NSArray class]] && [( _array ) count] > 0); })
+#define isEmptyDictionary(_dictionary)      ({ !(( _dictionary ) && [( _dictionary ) isKindOfClass:[NSDictionary class]] && [( _dictionary ) count] > 0); })
+#define isEmptyString(_string)              ({ !(( _string ) != nil && [( _string ) isKindOfClass:[NSString class]] && ![( _string ) isEqualToString:@""]); })
 
 //处理字符串
-#define DEAL_WITH_STRING(_str) ({ ((_str) && (![(_str) isKindOfClass:[NSNull class]])) ? (_str) : @""; })
-#define STRING_NULL_MSG(_str, _msg) ({ [DEAL_WITH_STRING(_str) isEqualToString:@""] ? (_msg) : (_str); })
+#define DEAL_WITH_STRING(_str)              ({ ((_str) && (![(_str) isKindOfClass:[NSNull class]])) ? (_str) : @""; })
+#define STRING_NULL_MSG(_str, _msg)         ({ [DEAL_WITH_STRING(_str) isEqualToString:@""] ? (_msg) : (_str); })
 
 //方法调用，不存在不会出错
 #define AC_FUNCTION_CALL(_obj, _fun, ...) \
 do { \
-if((_obj) && [_obj respondsToSelector:@selector(_fun)]) { \
-objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
-} \
+    if((_obj) && [_obj respondsToSelector:@selector(_fun)]) { \
+        objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
+    } \
 } while(0);
 
 #ifdef __cplusplus
-#define AC_EXTERN		extern "C" __attribute__((visibility ("default")))
+#define AC_EXTERN                           extern "C" __attribute__((visibility ("default")))
 #else
-#define AC_EXTERN	        extern __attribute__((visibility ("default")))
+#define AC_EXTERN                           extern __attribute__((visibility ("default")))
 #endif
 
-#define AC_STATIC_INLINE static inline
+#define AC_STATIC_INLINE                    static inline
 
 #pragma mark - degrees/radian functions
 /*
  旋转的单位采用弧度(radians),而不是角度（degress）。以下两个函数，你可以在弧度和角度之间切换。
  */
-#define DegreesToRadians(degrees) ((degrees) * M_PI / 180.0)
-#define RadiansToDegrees(radians) ((radians) * 180.0 / M_PI)
+#define DegreesToRadians(degrees)           ((degrees) * M_PI / 180.0)
+#define RadiansToDegrees(radians)           ((radians) * 180.0 / M_PI)
 
-#pragma mark - color functions
+#define APP_TMP_ADDTO(_path)                [NSString stringWithFormat:@"%@/%@",NSTemporaryDirectory(),_path]
 
-#define COLORHEXA(rgbValue,alpha)                                    \
-[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16)) / 255.0 \
-                green:((float)((rgbValue & 0x00FF00) >> 8 )) / 255.0 \
-                 blue:((float)((rgbValue & 0x0000FF) >> 0 )) / 255.0 \
-                alpha:alpha]
+#define APP_CACHES                          [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define APP_LIBRARY                         [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define APP_DOCUMENT                        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 
-#define COLORRGBA(r,g,b,a)         \
-[UIColor colorWithRed:(r) / 255.0f \
-                green:(g) / 255.0f \
-                 blue:(b) / 255.0f \
-                alpha:(a)]
-
-#define COLORRGB(r,g,b) COLORRGBA(r,g,b,1.0)
-
-#define COLORHEX(hex) COLORHEXA(hex,1.0)
-
-#define APP_TMP_ADDTO(_path) [NSString stringWithFormat:@"%@/%@",NSTemporaryDirectory(),_path]
-
-#define APP_CACHES   [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
-#define APP_LIBRARY  [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0]
-#define APP_DOCUMENT [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
-
-#define CUT_PLAN(_image,_rect) [UIImage imageWithCGImage:CGImageCreateWithImageInRect([_image CGImage], _rect)]
-
-#define IOS_VERSION          [[UIDevice currentDevice].systemVersion floatValue]
-#define CurrentPhone         ([UIDevice currentDevice].model)
-#define CurrentLanguage      ([NSLocale preferredLanguages][0])
-#define StatusOrientation    ([UIApplication sharedApplication].statusBarOrientation)
-#define CurrentOrientation   ([UIDevice currentDevice].orientation)
-#define CurrentSystemVersion ([UIDevice currentDevice].systemVersion)
-
-#define ACSTR(fmt,...) [NSString stringWithFormat:(fmt),##__VA_ARGS__]
+#define ACSTR(fmt,...)                      [NSString stringWithFormat:(fmt),##__VA_ARGS__]
+#define CENTER(A, B)                        ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); ((__a - __b) / 2.0); })
 
 //use dlog to print while in debug model
 #ifdef DEBUG
-#define ACLog(fmt, ...) NSLog((@"[Time %s] [Function %s] [Name i雲] [Line %d] " fmt),__TIME__, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define ACLog(fmt, ...)                     NSLog((@"[%s] [%s] [i雲] [%d] " fmt),__TIME__, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
-#define ACLog(...) do{ }while(0);
+#define ACLog(...)                          do{ } while(0);
 #endif
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-#define IOS7_AND_LATER ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
-#else
-#define IOS7_AND_LATER (0)
-#endif
-
-//#if IOS7_AND_LATER
-//#define SCORE_URL [@"itms-apps://itunes.apple.com/app/id" stringByAppendingString:APP_ID]
-//#else
-//#define SCORE_URL [@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=" stringByAppendingString:APP_ID]
-//#endif
-
-#define isiPad   (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-#define iPhone5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
-#define isRetina ([UIScreen mainScreen].scale == 2)
 
 #if TARGET_OS_IPHONE
 //iPhone Device
@@ -346,9 +302,9 @@ objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
 #endif
 
 #if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
-#define __IOS_64__ (1)
+#define __AC_IOS_64__ (1)
 #else
-#define __IOS_64__ (0)
+#define __AC_IOS_64__ (0)
 #endif
 
 
@@ -372,52 +328,44 @@ objc_msgSend(_obj, @selector(_fun), ##__VA_ARGS__); \
 /*
  保持竖屏
  */
-#define AC_PORTRAIT()  \
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation\
-{\
-return (toInterfaceOrientation == UIInterfaceOrientationPortrait);\
-}\
-\
-\
-- (BOOL)shouldAutorotate\
-{\
-return NO;\
-}\
-\
-- (NSUInteger)supportedInterfaceOrientations\
-{\
-return UIInterfaceOrientationMaskPortrait;\
-}\
-\
-- (UIInterfaceOrientation)preferedInterfaceOrientationForPresentation\
-{\
-return UIInterfaceOrientationPortrait;\
+#define AC_ORIENTATION_PORTRAIT()                                                                   \
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {     \
+    return (toInterfaceOrientation == UIInterfaceOrientationPortrait);                              \
+}                                                                                                   \
+                                                                                                    \
+- (BOOL)shouldAutorotate {                                                                          \
+    return NO;                                                                                      \
+}                                                                                                   \
+                                                                                                    \
+- (NSUInteger)supportedInterfaceOrientations {                                                      \
+    return UIInterfaceOrientationMaskPortrait;                                                      \
+}                                                                                                   \
+                                                                                                    \
+- (UIInterfaceOrientation)preferedInterfaceOrientationForPresentation {                             \
+    return UIInterfaceOrientationPortrait;                                                          \
 }
 
 /*
  保持四个方向都可以
  */
-#define AC_ORIENTATION_ALL() \
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation\
-{\
-return YES;\
-}\
-\
-\
-- (BOOL)shouldAutorotate\
-{\
-return YES;\
-}\
-\
-- (NSUInteger)supportedInterfaceOrientations\
-{\
-return UIInterfaceOrientationMaskAll;\
-}\
-\
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation\
-{\
-return UIInterfaceOrientationPortrait | UIInterfaceOrientationPortraitUpsideDown | UIInterfaceOrientationLandscapeLeft | UIInterfaceOrientationLandscapeRight;\
+#define AC_ORIENTATION_ALL()                                                                        \
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {     \
+    return YES;                                                                                     \
+}                                                                                                   \
+                                                                                                    \
+- (BOOL)shouldAutorotate {                                                                          \
+    return YES;                                                                                     \
+}                                                                                                   \
+                                                                                                    \
+- (NSUInteger)supportedInterfaceOrientations {                                                      \
+    return UIInterfaceOrientationMaskAll;                                                           \
+}                                                                                                   \
+                                                                                                    \
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {                            \
+    return UIInterfaceOrientationPortrait |                                                         \
+           UIInterfaceOrientationPortraitUpsideDown |                                               \
+           UIInterfaceOrientationLandscapeLeft |                                                    \
+           UIInterfaceOrientationLandscapeRight;                                                    \
 }
-
 
 #endif

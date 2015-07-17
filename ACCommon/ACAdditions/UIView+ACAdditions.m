@@ -100,6 +100,30 @@
     self.frame = newFrame;
 }
 
+- (void)setLeftTopOffset:(UIOffset) offset {
+    CGRect newFrame = self.frame;
+    newFrame.origin.x = offset.horizontal;
+    newFrame.origin.y = offset.vertical;
+    self.frame = newFrame;
+}
+
+- (UIOffset)leftTopOffset {
+    UIOffset offset = UIOffsetMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame));
+    return offset;
+}
+
+- (void)setRightBottomOffset:(UIOffset) offset {
+    CGRect newFrame = self.frame;
+    newFrame.origin.x = offset.horizontal - CGRectGetWidth(self.frame);
+    newFrame.origin.y = offset.vertical - CGRectGetHeight(self.frame);
+    self.frame = newFrame;
+}
+
+- (UIOffset)rightBottomOffset {
+    UIOffset offset = UIOffsetMake(CGRectGetMaxX(self.frame), CGRectGetMaxY(self.frame));
+    return offset;
+}
+
 #pragma mark - View 
 
 - (UIImage *)snapshot {
@@ -118,7 +142,6 @@
     UIImage *image = [self snapshot];
     [self saveImageToPhotosAlbum:image];
 }
-
 
 - (void)saveImageToPhotosAlbum:(UIImage *) image {
     

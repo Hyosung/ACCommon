@@ -8,8 +8,6 @@
 
 #import "ACUtilitys.h"
 
-#import <CommonCrypto/CommonDigest.h>
-#import <CommonCrypto/CommonCryptor.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #import <sys/utsname.h>
@@ -17,34 +15,11 @@
 
 @import ImageIO;
 
-@interface ACUtilitys() {
-#if defined(__USE_Reachability__) && __USE_Reachability__
-    Reachability *hostReach;
-    NetworkStatus curStatus;
-#endif
-}
-
-#if defined(__USE_Reachability__) && __USE_Reachability__
-- (void)reachabilityChanged:(NSNotification *)note;
-#endif
-
-+ (CGFloat)reckonWithSize:(CGSize) size
-                 isHeight:(BOOL) flag
-                   number:(CGFloat) number;
-@end
-
 @implementation ACUtilitys
 
 #if defined(ACIMP_SINGLETON)
 ACIMP_SINGLETON(ACUtilitys)
 #endif
-
-- (void)dealloc {
-#if defined(__USE_Reachability__) && __USE_Reachability__
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
-    [hostReach stopNotifier];
-#endif
-}
 
 inline NSString * UUID() {
     
@@ -54,10 +29,8 @@ inline NSString * UUID() {
     
     CFUUIDRef UUID = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef UUIDStr = CFUUIDCreateString(kCFAllocatorDefault, UUID);
-    NSString *uuidStr = (__bridge NSString *)(UUIDStr);
     CFRelease(UUID);
-    CFRelease(UUIDStr);
-    return uuidStr;
+    return CFBridgingRelease(UUIDStr);
 #endif
 }
 
@@ -70,7 +43,7 @@ inline NSString * UUID() {
     NSString *platform = [NSString stringWithUTF8String:machine];
     
     free(machine);
-    return STRING_NULL_MSG([ACUtilitys deviceModels][platform], @"未知设备");
+    return STRING_NULL_MSG([self deviceModels][platform], @"Apple 设备");
 }
 
 + (NSDictionary *)deviceModels {
@@ -239,7 +212,7 @@ inline NSString * UUID() {
     }
     else {
         
-        NSAssert(NO, @"ACCommon: Could not find a root view controller.  You can assign one manually by calling [[SHK currentHelper] setRootViewController:YOURROOTVIEWCONTROLLER].");
+        NSAssert(NO, @"ACCommon: Could not find a root view controller. ");
     }
     
     return result;
@@ -263,10 +236,10 @@ inline NSString * UUID() {
         image2x = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:ext]];
     }
     
-    if (isRetina && image2x) {
+    if ([UIScreen mainScreen].scale == 2 && image2x) {
         return image2x;
     }
-    
+   
     if (!image1x) {
         return image2x;
     }
@@ -275,40 +248,28 @@ inline NSString * UUID() {
 }
 
 + (UIImage *)imageNamed:(NSString *) name {
-    return [ACUtilitys imageNamed:name orType:@"png"];
+    return [self imageNamed:name orType:@"png"];
 }
 
 + (UIImage *)imageNamedExtJpg:(NSString *)name {
-    return [ACUtilitys imageNamed:name orType:@"jpg"];
+    return [self imageNamed:name orType:@"jpg"];
 }
 
 + (UIImage *)imageCacheNamed:(NSString *)name {
     return [UIImage imageNamed:name];
 }
 
-/*
-+ (UIImage *)getImageFromView:(UIView *)orgView {
-    UIGraphicsBeginImageContextWithOptions(orgView.bounds.size, NO, [UIScreen mainScreen].scale);
-    
-    [orgView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    return image;
-}*/
-
-+ (UIImage *)imagesSynthesisWithImages:(NSArray *)images andSize:(CGSize)size {
++ (UIImage *)imagesSynthesisWithImages:(NSArray *)images size:(CGSize)size {
     UIImage *newImage = nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
-    [images enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        UIImage *curImage = obj[@"image"];
-        CGRect curRect = CGRectFromString(obj[@"rect"]);
-        if (curImage) {
+    
+    for (NSDictionary *info in images) {
+        UIImage *curImage = info[@"image"];
+        CGRect curRect = CGRectFromString(info[@"rect"]);
+        if (curImage && CGRectGetWidth(curRect) > 0 && CGRectGetHeight(curRect) > 0) {
             [curImage drawInRect:curRect];
         }
-    }];
+    }
     
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -371,7 +332,7 @@ inline NSString * UUID() {
 //用来辨别设备所使用网络的运营商
 + (NSString*)checkCarrier {
     
-    NSString *ret = @"";
+    NSString *ret = @"其他";
     
     CTTelephonyNetworkInfo *info = [[CTTelephonyNetworkInfo alloc] init];
     
@@ -389,59 +350,32 @@ inline NSString * UUID() {
         return ret;
     }
     
-    if ([code isEqualToString:@"00"] || [code isEqualToString:@"02"] || [code isEqualToString:@"07"]) {
+    if ([code isEqualToString:@"00"] ||
+        [code isEqualToString:@"02"] ||
+        [code isEqualToString:@"07"]) {
         
         ret = @"移动";
     }
     
-    if ([code isEqualToString:@"01"]|| [code isEqualToString:@"06"] ) {
+    if ([code isEqualToString:@"01"] ||
+        [code isEqualToString:@"06"] ) {
         ret = @"联通";
     }
     
-    if ([code isEqualToString:@"03"]|| [code isEqualToString:@"05"] ) {
+    if ([code isEqualToString:@"03"] ||
+        [code isEqualToString:@"05"] ) {
         ret = @"电信";
     }
     
     return ret;
 }
 
-
-
-/*+ (void)savePhotosAlbum:(UIImage *)image {
-    UIImageWriteToSavedPhotosAlbum(image, self, @selector(imageSavedToPhotosAlbum:didFinishSavingWithError:contextInfo:), nil);
-}*/
-
-/*+ (void)saveImageFromToPhotosAlbum:(UIView*)view {
-    UIImage *image = [view snapshot];
-    [image savePhotosAlbum];
-}*/
-
-/*+ (void)imageSavedToPhotosAlbum:(UIImage *)image
-       didFinishSavingWithError:(NSError *)error
-                    contextInfo:(void *) contextInfo {
-    NSString *message;
-    NSString *title;
-    if (!error) {
-        title = @"成功提示";
-        message = @"成功保存到相册";
-    } else {
-        title = @"失败提示";
-        message = [error description];
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:message
-                                                   delegate:nil
-                                          cancelButtonTitle:@"知道了"
-                                          otherButtonTitles:nil];
-    [alert show];
-}*/
-
 + (NSString *)getTimeDiffString:(NSTimeInterval) timestamp {
     
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDate *todate = [NSDate dateWithTimeIntervalSince1970:timestamp];
     NSDate *today = [NSDate date];//当前时间
-    unsigned int unitFlag = NSDayCalendarUnit | NSHourCalendarUnit |NSMinuteCalendarUnit;
+    unsigned int unitFlag = NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit;
     NSDateComponents *gap = [cal components:unitFlag fromDate:today toDate:todate options:0];//计算时间差
     
     if (ABS([gap day]) > 0) {
@@ -455,143 +389,91 @@ inline NSString * UUID() {
     }
 }
 
-+ (UIImage *)cutImageWithFrame:(CGRect)frame image:(UIImage *)image {
-    
-    CGFloat height = [ACUtilitys reckonWithSize:image.size width:CGRectGetWidth(frame)];
-    if (image.size.width < CGRectGetWidth(frame)) {
-        frame.size.width = image.size.width;
-        if (image.size.height < CGRectGetHeight(frame)) {
-            frame.size.height = image.size.height;
-        }
-    } else {
-        UIImage *newImage1 = [ACUtilitys zoomImageWithSize:CGSizeMake(CGRectGetWidth(frame), height) image:image];
-        if (newImage1.size.height < CGRectGetHeight(frame)) {
-            frame.size.height = newImage1.size.height;
-        }
++ (CGSize)calculateSize:(CGSize)originSize newSize:(CGSize)size {
+  
+    CGFloat newWidth = MIN(originSize.width, size.width);
+    CGFloat newHeight = [self calculateHeightKnownWidth:newWidth originSize:originSize];
+    if (newHeight > size.height) {
+        newWidth = [self calculateWidthKnownHeight:size.height originSize:originSize];
+        newHeight = size.height;
     }
-    CGImageRef cutImageRef = CGImageCreateWithImageInRect(image.CGImage, frame);
-    UIImage *cutImage = [UIImage imageWithCGImage:cutImageRef];
-    CGImageRelease(cutImageRef);
-    return cutImage;
-}
-
-+ (UIImage *)zoomImageWithSize:(CGSize)size image:(UIImage *)image {
-    UIImage *newImage = nil;
-    UIGraphicsBeginImageContextWithOptions(size,NO,[UIScreen mainScreen].scale);
-    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0, size.height);
-    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1, -1);
-    CGContextDrawImage(
-                       UIGraphicsGetCurrentContext(),
-                       CGRectMake(0, 0, size.width, size.height),
-                       [image CGImage]);
-    newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
-+ (UIImage *)resizedImageWithImage:(UIImage *)image
-                          isHeight:(BOOL)flag
-                            number:(CGFloat)number {
-    CGSize size;
-    if (flag) {
-        size = CGSizeMake([ACUtilitys reckonWithSize:image.size height:number], number);
-    }else{
-        size = CGSizeMake(number, [ACUtilitys reckonWithSize:image.size width:number]);
-    }
-    
-    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
-    [image drawInRect:CGRectMake(0.0f, 0.0f, size.width, size.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
-+ (UIImage *)resizedImageWithImage:(UIImage *)image size:(CGSize)size {
-    UIImage *newImage = nil;
-    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
-    CGSize newSize = [ACUtilitys reckonWithSize:image.size andNewSize:size];
-    [image drawInRect:CGRectMake(
-                                 size.width / 2 - newSize.width / 2,
-                                 size.height / 2 - newSize.height / 2,
-                                 newSize.width,
-                                 newSize.height)];
-    newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
-+ (UIImage *)resizedFixedImageWithImage:(UIImage *)image size:(CGSize)size {
-    
-    UIImage *newImage = nil;
-    CGSize newSize = [ACUtilitys reckonWithSize:image.size andNewSize:size];
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, [UIScreen mainScreen].scale);
-    
-    [image drawInRect:CGRectMake(0.0,
-                                 0.0,
-                                 newSize.width,
-                                 newSize.height)];
-    newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
-+ (CGSize)reckonWithSize:(CGSize) oldSize andNewSize:(CGSize) newSize {
-    CGFloat newWidth = MIN(oldSize.width, newSize.width);
-    CGFloat newHeight = [ACUtilitys reckonWithSize:oldSize width:newWidth];
-    if (newHeight > newSize.height) {
-        newWidth = [ACUtilitys reckonWithSize:oldSize height:newSize.height];
-        newHeight = newSize.height;
-    }
-    newHeight = MIN(newHeight, oldSize.height);
+//    newHeight = MIN(newHeight, originSize.height);
     return CGSizeMake(newWidth, newHeight);
 }
 
-+ (UIImage *)resizedImageWithImage:(UIImage *)image toHeight:(CGFloat)height {
-    return [ACUtilitys resizedImageWithImage:image isHeight:YES number:height];
++ (CGFloat)calculateHeightKnownWidth:(CGFloat)width originSize:(CGSize)size {
+    return (size.height / size.width) * width;
 }
 
-+ (UIImage *)resizedImageWithImage:(UIImage *)image toWidth:(CGFloat)width {
-    return [ACUtilitys resizedImageWithImage:image isHeight:NO number:width];
++ (CGFloat)calculateWidthKnownHeight:(CGFloat)height originSize:(CGSize)size {
+    return (size.width / size.height) * height;
 }
 
-+ (CGFloat)reckonWithSize:(CGSize) size
-                 isHeight:(BOOL) flag
-                   number:(CGFloat) number {
-    CGFloat newNumber = 0.0f;
-    CGFloat scale1 = size.height / size.width;
-    CGFloat scale2 = size.width / size.height;
-    if (!flag) {
-        newNumber = scale1 * number;
-    }else{
-        newNumber = scale2 * number;
++ (UIImage *)drawPlaceholderImage:(UIImage *) image size:(CGSize) size color:(UIColor *) color {
+//    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+//                                                                  NSUserDomainMask,
+//                                                                  YES) firstObject];
+//    id scaleMark = ([UIScreen mainScreen].scale > 1) ? [NSString stringWithFormat:@"@%@x", @([UIScreen mainScreen].scale)] : @"";
+//    NSString *newPath = [documentPath stringByAppendingPathComponent:[NSString stringWithFormat:@"placeholder/placeholder_%@x%@%@.png", @((NSInteger)size.width), @((NSInteger)size.height), scaleMark]];
+//    UIImage *newImage = [UIImage imageWithContentsOfFile:newPath];
+//    
+//    if (newImage) {
+//        return newImage;
+//    }
+    
+    if (!image || (size.width <= 0 || size.height <= 0)) {
+        return nil;
     }
-    return newNumber;
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    
+    CGContextRef contextRef = UIGraphicsGetCurrentContext();
+    [color setFill];
+    CGContextFillRect(contextRef, CGRectMake(0, 0, size.width, size.height));
+    
+    CGFloat width = MAX(MIN(size.width - 60.0, image.size.width), image.size.width / 2.0);
+    CGFloat scale = image.size.height / image.size.width;
+    CGFloat height = scale * width;
+    
+    CGSize newSize = CGSizeMake(width, height);
+    
+    CGContextTranslateCTM(contextRef, 0, size.height);
+    CGContextScaleCTM(contextRef, 1, -1);
+    CGContextDrawImage(contextRef,CGRectMake(size.width / 2.0 - newSize.width / 2.0,
+                                             size.height / 2.0 - newSize.height / 2.0,
+                                             newSize.width,
+                                             newSize.height), [image CGImage]);
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+//    NSString *placeholderDirPath = [documentPath stringByAppendingPathComponent:@"placeholder"];
+//    if (![[NSFileManager defaultManager] fileExistsAtPath:placeholderDirPath]) {
+//        [[NSFileManager defaultManager] createDirectoryAtPath:placeholderDirPath
+//                                  withIntermediateDirectories:YES
+//                                                   attributes:nil
+//                                                        error:nil];
+//    }
+//    
+//    [UIImagePNGRepresentation(newImage) writeToFile:newPath atomically:YES];
+    
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
-+ (CGFloat)reckonWithSize:(CGSize) size height:(CGFloat) height {
-    return [ACUtilitys reckonWithSize:size isHeight:YES number:height];
++ (UIImage *)drawPureImage:(UIColor *)maskColor
+                 forecolor:(UIColor *)forecolor
+                 imagePath:(NSString *)imagePath {
+    return [self drawPureImage:maskColor
+                             forecolor:forecolor
+                           originImage:[UIImage imageWithContentsOfFile:imagePath]];
 }
 
-+ (CGFloat)reckonWithSize:(CGSize) size width:(CGFloat) width {
-    return [ACUtilitys reckonWithSize:size isHeight:NO number:width];
-}
-
-+ (UIImage *)drawMask:(UIColor *)maskColor
-      foregroundColor:(UIColor *)foregroundColor
-      imageNamedOrExt:(NSString *)nameOrExt {
-    return [ACUtilitys drawMask:maskColor
-             foregroundColor:foregroundColor
-                       image:[ACUtilitys imageNamed:nameOrExt orType:nil]];
-}
-
-+ (UIImage *)drawMask:(UIColor *)maskColor
-      foregroundColor:(UIColor *)foregroundColor
-                image:(UIImage *)originImage {
-    CGRect imageRect = CGRectMake(
-                                  0,
-                                  0,
-                                  CGImageGetWidth(originImage.CGImage),
-                                  CGImageGetHeight(originImage.CGImage));
++ (UIImage *)drawPureImage:(UIColor *)maskColor
+                 forecolor:(UIColor *)forecolor
+               originImage:(UIImage *)image {
+    CGRect imageRect = CGRectMake(0.0,
+                                  0.0,
+                                  CGImageGetWidth(image.CGImage),
+                                  CGImageGetHeight(image.CGImage));
     
     // 创建位图上下文
     
@@ -605,23 +487,22 @@ inline NSString * UUID() {
                                                  
                                                  0, // 每行字节数
                                                  
-                                                 CGImageGetColorSpace(originImage.CGImage), // 颜色空间
+                                                 CGImageGetColorSpace(image.CGImage), // 颜色空间
                                                  
-                                                 CGImageGetBitmapInfo(originImage.CGImage)/*kCGImageAlphaPremultipliedLast*/);// alpha通道，RBGA
+                                                 CGImageGetBitmapInfo(image.CGImage)/*kCGImageAlphaPremultipliedLast*/);// alpha通道，RBGA
     
     // 设置当前上下文填充色为白色（RGBA值）
-    CGContextSetRGBFillColor(
-                             context,
-                             CGColorGetComponents([foregroundColor CGColor])[0],
-                             CGColorGetComponents([foregroundColor CGColor])[1],
-                             CGColorGetComponents([foregroundColor CGColor])[2],
-                             CGColorGetAlpha([foregroundColor CGColor]));
+    CGContextSetRGBFillColor(context,
+                             CGColorGetComponents([forecolor CGColor])[0],
+                             CGColorGetComponents([forecolor CGColor])[1],
+                             CGColorGetComponents([forecolor CGColor])[2],
+                             CGColorGetAlpha([forecolor CGColor]));
     
-    CGContextFillRect(context,imageRect);
+    CGContextFillRect(context, imageRect);
     
     // 用 originImage 作为 clipping mask（选区）
     
-    CGContextClipToMask(context,imageRect, originImage.CGImage);
+    CGContextClipToMask(context, imageRect, image.CGImage);
     
     // 设置当前填充色为黑色
     CGContextSetRGBFillColor(
@@ -636,218 +517,94 @@ inline NSString * UUID() {
     CGContextFillRect(context,imageRect);
     
     CGImageRef newCGImage = CGBitmapContextCreateImage(context);
-    UIImage* newImage = [UIImage imageWithCGImage:newCGImage
-                                            scale:originImage.scale
-                                      orientation:originImage.imageOrientation];
+    UIImage *newImage = [UIImage imageWithCGImage:newCGImage
+                                            scale:image.scale
+                                      orientation:image.imageOrientation];
     
     // Cleanup
-    
     CGContextRelease(context);
     
     CGImageRelease(newCGImage);
     
-    //    [UIImagePNGRepresentation(newImage) writeToFile:[XW_Document stringByAppendingPathComponent:[NSString stringWithFormat:@"__%@",nameOrExt]] atomically:YES];
-    
     return newImage;
 }
 
-+ (UIImage *)drawPlaceholderWithSize:(CGSize)size {
-    return [ACUtilitys drawPlaceholderWithSize:size bgcolor:PLACEHOLDER_COLOR];
++ (UIImage *)drawPureColor:(UIColor *)color{
+    return [self drawPureColor:color size:CGSizeMake(57.0, 57.0)];
 }
 
-+ (UIImage *)drawPlaceholderWithSize:(CGSize)size bgcolor:(UIColor *)color {
-    UIImage *oldImage = [UIImage imageNamed:PLACEHOLDER_NAME];
-    UIImage *newImage = nil;
-    
-    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
-    
-    CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    [color setFill];
-    CGContextFillRect(contextRef, CGRectMake(0, 0, size.width, size.height));
-    CGFloat height = MIN(size.height, oldImage.size.height);
-    CGSize newSize = CGSizeMake(height - 20.0, height - 20.0);
-    
-    if (newSize.width >= size.width) {
-        newSize = CGSizeMake(size.width - 20, size.width - 20);
-    }
-    
-    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0, size.height);
-    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1, -1);
-    CGContextDrawImage(contextRef,CGRectMake(
-                                             size.width / 2.0 - newSize.width / 2.0,
-                                             size.height / 2.0 - newSize.height / 2.0,
-                                             newSize.width,
-                                             newSize.height), [oldImage CGImage]);
-    newImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
-+ (UIImage *)drawingColor:(UIColor *)color {
-    return [ACUtilitys drawingColor:color size:CGSizeMake(57, 57)];
-}
-
-+ (UIImage *)drawingColor:(UIColor *)color size:(CGSize)size {
++ (UIImage *)drawPureColor:(UIColor *)color size:(CGSize)size {
     UIImage *image = nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
     [color setFill];
-    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, size.width, size.height));
+    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0.0, 0.0, size.width, size.height));
     image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
 /**
- * 绘制背景色渐变的矩形，p_colors渐变颜色设置，集合中存储UIColor对象（创建Color时一定用三原色来创建）
+ * 绘制背景色渐变的矩形，colors渐变颜色设置，集合中存储UIColor对象（创建Color时一定用三原色来创建）
  **/
-+ (UIImage *)drawGradientColor:(CGRect)p_clipRect
-                       options:(CGGradientDrawingOptions)p_options
-                        colors:(NSArray *)p_colors {
++ (UIImage *)drawGradientColor:(CGRect) clipRect
+                       options:(CGGradientDrawingOptions) options
+                        colors:(NSArray *) colors {
     UIImage *newImage = nil;
-    UIGraphicsBeginImageContextWithOptions(p_clipRect.size, NO, [UIScreen mainScreen].scale);
-    CGContextRef p_context = UIGraphicsGetCurrentContext();
+    UIGraphicsBeginImageContextWithOptions(clipRect.size, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSaveGState(p_context);// 保持住现在的context
-    CGContextClipToRect(p_context, p_clipRect);// 截取对应的context
-    NSUInteger colorCount = p_colors.count;
+    CGContextSaveGState(context);// 保持住现在的context
+    CGContextClipToRect(context, clipRect);// 截取对应的context
+    
+    NSUInteger colorCount = colors.count;
     int numOfComponents = 4;
     CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
     CGFloat colorComponents[colorCount * numOfComponents];
-    for (int i = 0; i < colorCount; i++) {
-        UIColor *color = p_colors[i];
+    
+    int i = 0;
+    for (UIColor *color in colors) {
         CGColorRef temcolorRef = color.CGColor;
         const CGFloat *components = CGColorGetComponents(temcolorRef);
         for (int j = 0; j < numOfComponents; ++j) {
             colorComponents[i * numOfComponents + j] = components[j];
         }
+        i++;
     }
+    
     CGGradientRef gradient =  CGGradientCreateWithColorComponents(rgb, colorComponents, NULL, colorCount);
     CGColorSpaceRelease(rgb);
-    CGPoint startPoint = p_clipRect.origin;
-    CGPoint endPoint = CGPointMake(CGRectGetMinX(p_clipRect), CGRectGetMaxY(p_clipRect));
-    CGContextDrawLinearGradient(p_context, gradient, startPoint, endPoint, p_options);
+    
+    CGPoint startPoint = clipRect.origin;
+    CGPoint endPoint = CGPointMake(CGRectGetMinX(clipRect), CGRectGetMaxY(clipRect));
+    
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, options);
     CGGradientRelease(gradient);
+    
     newImage = UIGraphicsGetImageFromCurrentImageContext();
-    CGContextRestoreGState(p_context);// 恢复到之前的context
+    CGContextRestoreGState(context);// 恢复到之前的context
+    
     UIGraphicsEndImageContext();
     
-    //    [UIImagePNGRepresentation(newImage) writeToFile:[XW_Document stringByAppendingPathComponent:@"xw.png"] atomically:YES];
     return newImage;
 }
 
-/*
-+ (CGSize)computeSizeWithString:(NSString *)aStr font:(UIFont *)font {
++ (BOOL)limitInputWords:(NSUInteger) wordCount
+                  input:(id) input
+                 string:(NSString *) string
+                  range:(NSRange) range {
     
-    if (!aStr || ![aStr isKindOfClass:[NSString class]] || !font) {
-        return CGSizeZero;
-    }
-    
-    CGSize size = [aStr sizeWithFont:font];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    if (IOS7_AND_LATER) {
-        size = [aStr sizeWithAttributes:@{ NSFontAttributeName: font }];
-    }
-#endif
-    return size;
-}
-
-+ (CGFloat)computeWidthWithString:(NSString *) aStr font:(UIFont *) font height:(CGFloat) height {
-    
-    if (!aStr || ![aStr isKindOfClass:[NSString class]] || !font) {
-        return 0.0;
-    }
-    
-    CGSize size = [aStr sizeWithFont:font
-                   constrainedToSize:CGSizeMake(MAXFLOAT, height)
-                       lineBreakMode:NSLineBreakByCharWrapping];
-    CGFloat newHeight = size.height;
-    CGFloat width = size.width;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    if (IOS7_AND_LATER) {
-        CGRect frame = [aStr boundingRectWithSize:CGSizeMake(MAXFLOAT, height)
-                                          options:NSStringDrawingUsesLineFragmentOrigin
-                                       attributes:@{ NSFontAttributeName: font }
-                                          context:nil];
-        
-        newHeight = CGRectGetHeight(frame);
-        width = CGRectGetWidth(frame);
-    }
-#endif
-    if (height > newHeight) {
-        
-        NSInteger row = floor(height / newHeight);
-        
-        width = ceil(width / row) + 5.0;
-    }
-    
-    return width;
-}
-
-+ (CGFloat)computeHeightWithString:(NSString *) aStr font:(UIFont *) font width:(CGFloat) width {
-    
-    if (!aStr || ![aStr isKindOfClass:[NSString class]] || !font) {
-        return 0.0;
-    }
-    
-    CGFloat height = [aStr sizeWithFont:font
-                      constrainedToSize:CGSizeMake(width, MAXFLOAT)
-                          lineBreakMode:NSLineBreakByCharWrapping].height;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    
-    if (IOS7_AND_LATER) {
-        height = CGRectGetHeight([aStr boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
-                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:@{ NSFontAttributeName: font }
-                                                    context:nil]);
-    }
-#endif
-    return height;
-}*/
- 
-
-/*
-//利用正则表达式验证
-+ (BOOL)isValidateEmail:(NSString *)email {
-    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
-    NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern:emailRegex
-                                                                             options:NSRegularExpressionCaseInsensitive
-                                                                               error:nil];
-    
-    NSInteger numer = [regular numberOfMatchesInString:email
-                                               options:NSMatchingAnchored
-                                                 range:NSMakeRange(0, email.length)];
-    
-    return numer==1;
-}*/
-
-+ (BOOL)isOutNumber:(NSInteger)number
-            objcect:(id)obj
-             string:(NSString *)string
-              range:(NSRange)range {
-    //string就是此时输入的那个字符textField就是此时正在输入的那个输入框返回YES就是可以改变输入框的值NO相反
+    NSAssert(([input isKindOfClass:[UITextField class]] || [input isKindOfClass:[UITextView class]]), @"input对象必须是UITextField或者UITextView");
     
     if ([string isEqualToString:@"\n"]) { //按会车可以改变
         return YES;
     }
-    id textField = nil;
-    if ([obj isKindOfClass:[UITextField class]] ||
-        [obj isKindOfClass:[UITextView class]]) {
-        textField = obj;
-    }
-    else {
-        NSAssert(textField, @"对象必须是UITextField或者UITextView");
-    }
     
-    NSString * toBeString = [[textField text] stringByReplacingCharactersInRange:range withString:string]; //得到输入框的内容
+    NSString *currentText = [[input text] stringByReplacingCharactersInRange:range withString:string]; //得到输入框的内容
     
-    //  if (self.myTextField == textField)  //判断是否时我们想要限定的那个输入框
-    //  {
-    if ([toBeString length] > number) { //如果输入框内容大于number则弹出警告
-        [textField setText:[toBeString substringToIndex:number]];
+    if (currentText.length > wordCount) { //如果输入框内容大于wordCount则弹出警告
+        [input setText:[currentText substringToIndex:wordCount]];
         return NO;
     }
-    //  }
     return YES;
 }
 
@@ -879,28 +636,27 @@ inline NSString * UUID() {
     return formattedStr;
 }
 
-+ (void)automaticCheckVersion:(void (^)(NSDictionary *))block url:(NSString *) url {
++ (void)automaticallyDetectVersion:(void (^)(NSDictionary *))block url:(NSString *)url {
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
     //CFShow((__bridge CFTypeRef)(infoDic));
     
     NSString *currentVersion = infoDic[@"CFBundleShortVersionString"];
-    NSString *URL = url;
-    __autoreleasing NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:URL]];
-    [request setHTTPMethod:@"POST"];
+    __autoreleasing NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"POST";
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
-                           completionHandler:^( NSURLResponse *response,
-                                                NSData *data,
-                                                NSError *error )
+                           completionHandler:^(
+                                               NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error )
     {
                                
         NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
                                                            options:NSJSONReadingAllowFragments
                                                              error:nil];
         NSArray *infoArray = dic[@"results"];
-        if ([infoArray count]) {
-            NSDictionary *releaseInfo = infoArray[0];
+        if (infoArray.count) {
+            NSDictionary *releaseInfo = infoArray.firstObject;
             NSString *lastVersion = releaseInfo[@"version"];
            
             if ([lastVersion compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
@@ -908,7 +664,6 @@ inline NSString * UUID() {
                 NSString *releaseNotes = releaseInfo[@"releaseNotes"];
                
                 if (block) {
-                   
                     block(@{@"trackViewUrl": trackViewURL,
                             @"version": lastVersion,
                             @"releaseNotes": releaseNotes});
@@ -918,71 +673,68 @@ inline NSString * UUID() {
     }];
 }
 
-+ (void)onCheckVersion:(NSString *) url {
++ (void)checkWhetherUpdate:(NSString *)url {
 
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
     //CFShow((__bridge CFTypeRef)(infoDic));
     
     NSString *currentVersion = infoDic[@"CFBundleShortVersionString"];
-    NSString *URL = url;
-    __autoreleasing NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:URL]];
-    [request setHTTPMethod:@"POST"];
+    __autoreleasing NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"POST";
     NSHTTPURLResponse *urlResponse = nil;
     NSError *error = nil;
     NSData *recervedData = [NSURLConnection sendSynchronousRequest:request
                                                  returningResponse:&urlResponse
                                                              error:&error];
     
-    if (recervedData) {
-        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:recervedData
-                                                            options:NSJSONReadingAllowFragments
-                                                              error:nil];
-        NSArray *infoArray = dic[@"results"];
-        if ([infoArray count]) {
-            NSDictionary *releaseInfo = infoArray[0];
-            NSString *lastVersion = releaseInfo[@"version"];
+    if (!recervedData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([lastVersion compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
-                NSString *trackViewURL = releaseInfo[@"trackViewUrl"];
-                NSString *releaseNotes = releaseInfo[@"releaseNotes"];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationAppUpdate"
-                                                                    object:self
-                                                                  userInfo:@{@"trackViewUrl": trackViewURL,
-                                                                             @"version": lastVersion,
-                                                                             @"releaseNotes": releaseNotes}];
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    __autoreleasing UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"软件更新"
-                                                                                    message:@"当前版本已是最新版本"
-                                                                                   delegate:nil
-                                                                          cancelButtonTitle:@"确定"
-                                                                          otherButtonTitles:nil];
-                    [alert show];
-                });
-            }
-        }
-        else {
+            __autoreleasing UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"软件更新"
+                                                                            message:@"网络连接失败"
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:@"确定"
+                                                                  otherButtonTitles:nil];
+            [alert show];
+        });
+        return;
+    }
+    
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:recervedData
+                                                        options:NSJSONReadingAllowFragments
+                                                          error:nil];
+    NSArray *infoArray = dic[@"results"];
+    if (infoArray.count <= 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                __autoreleasing UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"软件更新"
-                                                                                message:@"当前软件还未上线"
-                                                                               delegate:nil
-                                                                      cancelButtonTitle:@"确定"
-                                                                      otherButtonTitles:nil];
-                [alert show];
-            });
-        }
+            __autoreleasing UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"软件更新"
+                                                                            message:@"当前软件还未上线"
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:@"确定"
+                                                                  otherButtonTitles:nil];
+            [alert show];
+        });
+        return;
+    }
+    
+    NSDictionary *releaseInfo = infoArray.firstObject;
+    NSString *lastVersion = releaseInfo[@"version"];
+    
+    if ([lastVersion compare:currentVersion options:NSNumericSearch] == NSOrderedDescending) {
+        NSString *trackViewURL = releaseInfo[@"trackViewUrl"];
+        NSString *releaseNotes = releaseInfo[@"releaseNotes"];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NotificationAppUpdate"
+                                                            object:self
+                                                          userInfo:@{@"trackViewUrl": trackViewURL,
+                                                                     @"version": lastVersion,
+                                                                     @"releaseNotes": releaseNotes}];
     }
     else {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             __autoreleasing UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"软件更新"
-                                                                            message:@"网络连接失败"
+                                                                            message:@"当前版本已是最新版本"
                                                                            delegate:nil
                                                                   cancelButtonTitle:@"确定"
                                                                   otherButtonTitles:nil];
@@ -995,122 +747,63 @@ inline NSString * UUID() {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
-+ (NSString *)appStoreUrl:(NSString *) appid {
-    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *displayName = info[@"CFBundleDisplayName"];
-    //    NSString *displayName = [info objectForKey:@"CFBundleName"];
-    //https://itunes.apple.com/us/app/bu-yi-li-ji/id647152789?mt=8&uo=4
-    NSMutableArray *spliceArray = [NSMutableArray arrayWithCapacity:0];
-    for (int i = 0; i < displayName.length; i++) {
-        NSString *spliceText = [NSString stringWithFormat:@"%C",[displayName characterAtIndex:i]];
-        [spliceArray addObject:[ChineseToPinyin pinyinFromChiniseString:spliceText]];
-    }
-    
-    NSString *appStoreURL = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/%@/id%@?mt=8",[spliceArray componentsJoinedByString:@"-"],appid];
-    return [appStoreURL lowercaseString];
-}
-
-+ (void)setNavigationBar:(UINavigationBar *)navBar
-         backgroundImage:(UIImage *)image {
-    
-    // Insert ImageView
-    __autoreleasing UIImageView *_imgv = [[UIImageView alloc] initWithImage:image];
-    _imgv.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _imgv.frame = navBar.bounds;
-
-    [ACUtilitys setNavigationBar:navBar contentView:_imgv];
-}
-
-+ (void)setNavigationBar:(UINavigationBar *)navBar
-             contentView:(UIView *)view {
-    // Insert View
-    view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    view.frame = navBar.bounds;
-    UIView *v = [navBar subviews][0];
-    v.layer.zPosition = -FLT_MAX;
-    
-    view.layer.zPosition = -FLT_MAX + 1;
-    [navBar insertSubview:view atIndex:1];
-}
-
-+ (void)showNoContent:(BOOL) flag
-          displayView:(UIView *) view
-       displayContent:(NSString *) content {
-    if (flag) {
-        UILabel *label = nil;
-        if (![view viewWithTag:1024]) {
-            label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT / 4)];
-            label.tag = 1024;
-            label.backgroundColor = [UIColor clearColor];
-            label.textColor = [UIColor lightGrayColor];
-            label.font = [UIFont systemFontOfSize:17.0];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.center = view.center;
++ (NSURL *)appStoreURL:(NSString *)appid {
+    static NSURL *appStoreURL = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *displayName = info[@"CFBundleDisplayName"];
+        //    NSString *displayName = [info objectForKey:@"CFBundleName"];
+        //https://itunes.apple.com/us/app/bu-yi-li-ji/id647152789?mt=8&uo=4
+        NSMutableArray *spliceArray = [NSMutableArray arrayWithCapacity:0];
+        for (int i = 0; i < displayName.length; i++) {
+            NSMutableString *spliceText = [NSMutableString stringWithFormat:@"%C",[displayName characterAtIndex:i]];
+            //转换为带声调的拼音
+            CFStringTransform((__bridge CFMutableStringRef)spliceText, NULL, kCFStringTransformToLatin, false);
+            NSString *transformText = [spliceText stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
             
+            [spliceArray addObject:transformText];
+        }
+        
+        NSString *appStoreURLText = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/%@/id%@?mt=8",[spliceArray componentsJoinedByString:@"-"], appid];
+        appStoreURL = [NSURL URLWithString:[appStoreURLText lowercaseString]];
+    });
+    return appStoreURL;
+}
+
++ (void)showNoContentWhenPrompted:(BOOL)visible
+                    displayedView:(UIView *)view
+                   displayContent:(NSString *)content {
+    if (visible) {
+        UILabel *label = (UILabel *)[view viewWithTag:2048];
+        if (!label) {
+            label = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth([UIScreen mainScreen].bounds), CGRectGetHeight([UIScreen mainScreen].bounds) / 4)];
+            label.tag = 2048;
+            label.font = [UIFont systemFontOfSize:17.0];
+            label.center = view.center;
+            label.textColor = [UIColor lightGrayColor];
+            label.textAlignment = NSTextAlignmentCenter;
+            label.backgroundColor = [UIColor clearColor];
             [view addSubview:label];
         }
-        else {
-            label = (UILabel *)[view viewWithTag:1024];
-        }
-        label.alpha = 0;
         label.text = content;
+        label.alpha = 0.0;
         
         [UIView animateWithDuration:0.3 animations:^{
-            label.alpha = 1;
+            label.alpha = 1.0;
         }];
     }
     else {
-        if ([view viewWithTag:1024]) {
-            UILabel *label = (UILabel *)[view viewWithTag:1024];
+        UILabel *label = (UILabel *)[view viewWithTag:2048];
+        if (label) {
             [UIView animateWithDuration:0.3 animations:^{
-                label.alpha = 0;
+                label.alpha = 0.0;
             } completion:^(BOOL finished) {
                 [label removeFromSuperview];
             }];
         }
     }
-}
-
-//半角中空格的ascii码为32（其余ascii码为33-126），全角中空格的ascii码为12288（其余ascii码为65281-65374）
-//半角与全角之差为65248
-//半角转全角
-+ (NSString *)DBCToSBC:(NSString *)dbc {
-    NSString *sbc = @"";
-    for (int i=0; i<dbc.length; i++) {
-        unichar temp = [dbc characterAtIndex:i];
-        if (temp >= 33 && temp <= 126) {
-            temp = temp + 65248;
-            sbc = [NSString stringWithFormat:@"%@%C",sbc,temp];
-        }
-        else {
-            if (temp == 32) {
-                temp = 12288;
-            }
-            sbc = [NSString stringWithFormat:@"%@%C",sbc,temp];
-        }
-    }
-    return sbc;
-}
-
-//全角转半角
-+ (NSString *)SBCToDBC:(NSString *)sbc {
-    NSString *dbc = @"";
-    
-    for (int i = 0; i < sbc.length; i++) {
-        unichar temp = [sbc characterAtIndex:i];
-        if (temp >= 65281 && temp <= 65374) {
-            temp = temp - 65248;
-            dbc = [NSString stringWithFormat:@"%@%C",dbc,temp];
-        }
-        else {
-            if (temp == 12288) {
-                temp = 32;
-            }
-            dbc = [NSString stringWithFormat:@"%@%C",dbc,temp];
-        }
-    }
-    
-    return dbc;
 }
 
 + (NSInteger)getRandomNumber:(NSInteger)from to:(NSInteger)to {
@@ -1120,7 +813,7 @@ inline NSString * UUID() {
 }
 
 + (NSInteger)getRandomNumberTo:(NSInteger)to{
-    return [ACUtilitys getRandomNumber:0 to:to];
+    return [self getRandomNumber:0 to:to];
 }
 
 + (double)getFloatRandomNumber:(double)from to:(double)to {
@@ -1128,57 +821,5 @@ inline NSString * UUID() {
     double randomNumber = from + ((double)arc4random() / ARC4RANDOM_MAX) * (to - from);
     return [[NSString stringWithFormat:@"%0.1lf",randomNumber] doubleValue];
 }
-
-#if defined(__USE_Reachability__) && __USE_Reachability__
-- (void)reachabilityChanged:(NSNotification *)note {
-    Reachability* curReach = [note object];
-    
-    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    
-    NetworkStatus status = [curReach currentReachabilityStatus];
-    if (curStatus != status) {
-        switch (status) {
-            case ReachableViaWiFi: {
-                [SVProgressHUD showSuccessWithStatus:@"当前网络WiFi"];
-            }
-                break;
-            case ReachableViaWWAN: {
-                [SVProgressHUD showSuccessWithStatus:@"当前网络3G/2G"];
-            }
-                break;
-            case NotReachable: {
-                [SVProgressHUD showErrorWithStatus:@"当前网络不通畅"];
-            }
-                break;
-            default:
-                break;
-        }
-    }
-    curStatus = status;
-}
-
-- (void)setNetworkNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reachabilityChanged:)
-                                                 name:kReachabilityChangedNotification
-                                               object:nil];
-    hostReach = [Reachability reachabilityWithHostName:@"http://www.baidu.com"];
-    [hostReach startNotifier];
-}
-
-+ (BOOL)isNotNetwork {
-    return (![ACUtilitys isEnable3G] && ![ACUtilitys isEnableWiFi]);
-}
-
-// 是否wifi
-+ (BOOL)isEnableWiFi {
-    return ([[Reachability reachabilityForLocalWiFi] currentReachabilityStatus] != NotReachable);
-}
-
-// 是否3G
-+ (BOOL)isEnable3G {
-    return ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] != NotReachable);
-}
-#endif
 
 @end

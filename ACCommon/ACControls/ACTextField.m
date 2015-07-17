@@ -22,9 +22,9 @@
 - (void)setPlaceholderTextColor:(UIColor *)placeholderTextColor {
 	_placeholderTextColor = placeholderTextColor;
 	
-	if (!self.text && self.placeholder) {
+	if ((!self.text || [self.text isEqualToString:@""]) && self.placeholder) {
         
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
         self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder
                                                                      attributes:@{NSForegroundColorAttributeName: placeholderTextColor,
                                                                                   NSFontAttributeName: self.font}];
@@ -39,13 +39,17 @@
 	if (!_placeholderTextColor) {
 		[super drawPlaceholderInRect:rect];
 		return;
-	}
-	
+    }
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    [self.placeholder drawInRect:rect withAttributes:@{NSFontAttributeName: self.font,
+                                                       NSForegroundColorAttributeName: self.placeholderTextColor}];
+#else
     [_placeholderTextColor setFill];
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 60000
     [self.placeholder drawInRect:rect withFont:self.font lineBreakMode:NSLineBreakByTruncatingTail alignment:self.textAlignment];
 #else
     [self.placeholder drawInRect:rect withFont:self.font lineBreakMode:UILineBreakModeTailTruncation alignment:self.textAlignment];
+#endif
 #endif
 }
 

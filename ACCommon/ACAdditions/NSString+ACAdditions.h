@@ -12,10 +12,21 @@
 
 #pragma mark - md5
 
+
 /**
- md5加密
+ *  @author Stoney, 15-07-10 16:07:22
+ *
+ *  MD5加密 全小写
+ *
  */
 - (NSString *)md5;
+
+/**
+ *  @author Stoney, 15-07-10 16:07:33
+ *
+ *  @brief  MD5加密 全大写
+ */
+- (NSString *)MD5;
 
 #pragma mark - Base64
 
@@ -118,8 +129,8 @@
  字符串绘制成图片
  */
 - (UIImage *)drawImageWithSize:(CGSize) size
-                       andFont:(UIFont *) font
-                      andColor:(UIColor *) color;
+                          font:(UIFont *) font
+                         color:(UIColor *) color;
 
 #pragma mark - 字符串size计算
 
@@ -149,7 +160,7 @@
 /**
  返回指定路径下文件的MIME
  */
-- (NSString*)fileMIMEType:(NSString*) file;
+- (NSString*)fileMIMEType;
 
 #pragma mark - JSON
 - (id)JSON;
@@ -161,5 +172,24 @@
 #pragma mark - 汉字 To PinYin
 - (NSString *)transformToPinyin;
 
+- (NSString *)removeHTML;
+- (BOOL)isEmpty;
++ (BOOL)isEmpty:(NSString *) string;
+
+/**
+ *  @author Stoney, 15-07-16 15:07:34
+ *
+ *  @brief  转换为全角
+ *
+ */
+- (NSString *)transformToFullWidth;
+
+/**
+ *  @author Stoney, 15-07-16 15:07:52
+ *
+ *  @brief  转换为半角
+ *
+ */
+- (NSString *)transformToHalfSize;
 
 @end

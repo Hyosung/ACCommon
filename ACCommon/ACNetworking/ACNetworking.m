@@ -8,311 +8,210 @@
 
 #import "ACNetworking.h"
 
-NSString *const kACHTTPRequestBaseURLString = @"<#string#>";
+#import "AFNetworking.h"
+#import "ACNetworkConfig.h"
 
-@interface ACNetworking (Private)
+@interface ACNetworking ()
 
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
+@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
+@property (nonatomic, strong) ACNetworkConfig *config;
+@property (nonatomic, weak  ) AFHTTPRequestSerializer <AFURLRequestSerialization> *rs;
 
-/**
- 创建一个ASIHTTPRequest请求
- */
-+ (ASIHTTPRequest *)requestWithURLString:(NSString *) theURLString
-                                  method:(NSString *) method
-                                  params:(NSDictionary *) params;
+- (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(ACCompletedCallback) callback;
+- (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(ACCompletedCallback) callback;
 
-#endif
+- (NSString *)requestMethod:(ACNetworkMethod) method;
 
 @end
 
 @implementation ACNetworking
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
 
-static char * const kACASIRequestFinishKey       = "kACASIRequestFinishKey";
-static char * const kACASINetworkQueueFinishKey  = "kACASINetworkQueueFinishKey";
++ (instancetype)network {
+    static ACNetworking *network = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        network = [[self alloc] init];
+    });
+    return network;
+}
 
-static ASINetworkQueue *networkQueue = nil;
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.config = [ACNetworkConfig config];
+        self.manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.config.baseURL];
+        self.manager.requestSerializer.timeoutInterval = self.config.timeoutInterval;
+        self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        self.rs = self.manager.requestSerializer;
+    }
+    return self;
+}
 
-#endif
+- (NSString *)requestMethod:(ACNetworkMethod) method {
+    static dispatch_once_t onceToken;
+    static NSDictionary *methods = nil;
+    dispatch_once(&onceToken, ^{
+       methods = @{
+                   @(ACNetworkMethodGET)   : @"GET",
+                   @(ACNetworkMethodPUT)   : @"PUT",
+                   @(ACNetworkMethodHEAD)  : @"HEAD",
+                   @(ACNetworkMethodPOST)  : @"POST",
+                   @(ACNetworkMethodPATCH) : @"PATCH",
+                   @(ACNetworkMethodDELETE): @"DELETE"
+                   };
+    });
+    return methods[@(method)];
+}
+
+- (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(ACCompletedCallback) callback {
+    void (^successBlock)(AFHTTPRequestOperation *, id) = ^ (AFHTTPRequestOperation *operation,
+                                                            id responseObject) {
+        NSError *error = nil;
+        
+        id resultObject = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                          options:NSJSONReadingAllowFragments
+                                                            error:&error];
+        if (callback != NULL) {
+            callback(resultObject, error);
+        }
+    };
+    return successBlock;
+}
+
+- (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(ACCompletedCallback) callback {
+    void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = ^ (AFHTTPRequestOperation *operation,
+                                                                   NSError *error) {
+        if (callback != NULL) {
+            callback(nil, error);
+        }
+    };
+    return failureBlock;
+}
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-static AFHTTPRequestOperationManager *afOperation = nil;
-#endif
 
-
-- (void)dealloc
-{
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
-    networkQueue = nil;
-#endif
+- (NSOperation *)fetchDataFromPath:(NSString *) path
+                            method:(ACNetworkMethod) method
+                        parameters:(NSDictionary *) parameters
+                         completed:(ACCompletedCallback) callback {
+    NSURL *URL = [NSURL URLWithString:path ?: @""
+                        relativeToURL:self.manager.baseURL];
     
-#if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-    afOperation = nil;
-#endif
+    return [self fetchDataFromURLString:URL.absoluteString
+                                 method:method
+                             parameters:parameters
+                              completed:callback];
 }
 
-+ (void)initialize
-{
-    if (self == [ACNetworking class]) {
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
-        networkQueue = [ASINetworkQueue queue];
-        networkQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-        
-        networkQueue.delegate = self;
-        networkQueue.shouldCancelAllRequestsOnFailure = NO;
-        networkQueue.requestDidFailSelector = @selector(requestDidFailSelector:);
-        networkQueue.requestDidFinishSelector = @selector(requestDidFinishSelector:);
-        networkQueue.queueDidFinishSelector = @selector(queueDidFinishSelector:);
-#endif
-      
-        
-#if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-        afOperation = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:kACHTTPRequestBaseURLString]];
-#endif
-    }
+- (NSOperation *)GET_fetchDataFromPath:(NSString *) path
+                            parameters:(NSDictionary *) parameters
+                             completed:(ACCompletedCallback) callback {
+    return [self fetchDataFromPath:path
+                            method:ACNetworkMethodGET
+                        parameters:parameters
+                         completed:callback];
 }
 
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
-
-+ (ASIHTTPRequest *)requestWithURLString:(NSString *)theURLString
-                                  method:(NSString *)method
-                                  params:(NSDictionary *)params {
-    
-    NSAssert((method && [method isKindOfClass:[NSString class]]), @"网络请求方式不正确");
-    
-    if (!theURLString || ![theURLString isKindOfClass:[NSString class]]) {
-        theURLString = @"";
-    }
-    
-    method = [method uppercaseString];
-    
-    NSString *encodeURLString = [theURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL *baseURL = [NSURL URLWithString:kACHTTPRequestBaseURLString];
-    NSURL *tempURL = [NSURL URLWithString:encodeURLString relativeToURL:baseURL];
-    
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:tempURL];
-    request.requestMethod = method;
-    if (params && [params isKindOfClass:[NSDictionary class]] && [params count]) {
-        
-        if ([method isEqualToString:@"GET"] ||
-            [method isEqualToString:@"HEAD"] ||
-            [method isEqualToString:@"DELETE"]) {
-            
-            NSMutableArray *paramsArray = [NSMutableArray array];
-            for (NSString *key in params.allKeys) {
-                [paramsArray addObject:ACSTR(@"%@=%@",key,params[key])];
-            }
-            
-            NSString *URLString = [[tempURL.absoluteString stringByAppendingFormat:([tempURL.absoluteString rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@"),[paramsArray componentsJoinedByString:@"&"]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            tempURL = [NSURL URLWithString:URLString];
-            
-            request.url = tempURL;
-        }
-        else if ([method isEqualToString:@"POST"]) {
-            request = [ASIFormDataRequest requestWithURL:tempURL];
-            for (NSString *key in params.allKeys) {
-                [(ASIFormDataRequest *)request setPostValue:params[key] forKey:key];
-            }
-        }
-        else {
-            ACLog(@"其他请求暂不处理");
-        }
-    }
-    return request;
+- (NSOperation *)POST_fetchDataFromPath:(NSString *) path
+                             parameters:(NSDictionary *) parameters
+                              completed:(ACCompletedCallback) callback {
+    return [self fetchDataFromPath:path
+                            method:ACNetworkMethodPOST
+                        parameters:parameters
+                         completed:callback];
 }
 
-+ (void)startACASIHTTPRequestWithParams:(NSDictionary *)params
-                                 method:(NSString *)method
-                               complete:(ACCompleteCallback)callback {
-    __weak ASIHTTPRequest *request = [ACNetworking requestWithURLString:nil method:method params:params];
-    [request setCompletionBlock:^{
-        if (callback) {
-            __autoreleasing NSError *error = nil;
-            id result = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-            callback(result, error);
-        }
-        
-        [request clearDelegatesAndCancel];
-    }];
+- (NSOperation *)uploadFileFromPath:(NSString *) path
+                         parameters:(NSDictionary *) parameters
+                           fileInfo:(NSDictionary *) fileInfo
+                          completed:(ACCompletedCallback) completedCallback
+                             upload:(ACUploadCallback) uploadCallback {
+    NSURL *URL = [NSURL URLWithString:path ?: @""
+                        relativeToURL:self.manager.baseURL];
+    return [self uploadFileFromURLString:URL.absoluteString
+                              parameters:parameters
+                                fileInfo:fileInfo
+                               completed:completedCallback
+                                  upload:uploadCallback];
+}
+
+- (NSOperation *)downloadFileFromPath:(NSString *) path
+                           parameters:(NSDictionary *) parameters
+                            completed:(ACCompletedCallback) completedCallback
+                             download:(ACDownloadCallback) downloadCallback {
+    NSURL *URL = [NSURL URLWithString:path ?: @""
+                        relativeToURL:self.manager.baseURL];
+    return [self downloadFileFromURLString:URL.absoluteString
+                                parameters:parameters
+                                 completed:completedCallback
+                                  download:downloadCallback];
+}
+
+
+- (NSOperation *)fetchDataFromURLString:(NSString *) URLString
+                                 method:(ACNetworkMethod) method
+                             parameters:(NSDictionary *) parameters
+                              completed:(ACCompletedCallback) callback {
     
-    [request setFailedBlock:^{
-        if (callback) {
-            callback(nil, request.error);
-        }
-        
-        [request clearDelegatesAndCancel];
-    }];
+    NSMutableURLRequest *request = [self.rs requestWithMethod:[self requestMethod:method]
+                                                    URLString:URLString
+                                                   parameters:parameters
+                                                        error:nil];
+    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request
+                                                                              success:[self requestSuccess:callback]
+                                                                              failure:[self requestFailure:callback]];
     
-    [request startAsynchronous];
+    [self.manager.operationQueue addOperation:operation];
+    return operation;
 }
 
-+ (void)startACASIHTTPPostRequestWithParams:(NSDictionary *)params
-                                   complete:(ACCompleteCallback)callback {
-    [ACNetworking startACASIHTTPRequestWithParams:params method:@"POST" complete:callback];
-}
-
-+ (void)startACASIHTTPGetRequestWithParams:(NSDictionary *)params
-                                  complete:(ACCompleteCallback)callback {
-    [ACNetworking startACASIHTTPRequestWithParams:params method:@"GET" complete:callback];
-}
-
-+ (void)startACASIHTTPDownloadWithURLString:(NSString *)URLString
-                                   complete:(ACCompleteCallback)completeCallback
-                                   download:(ACDownloadCallback)downloadCallback {
-    __weak ASIHTTPRequest *request = [ACNetworking requestWithURLString:URLString method:@"GET" params:nil];
-    [request setAllowResumeForFileDownloads:YES];
-    [request setDownloadDestinationPath:[APP_CACHES stringByAppendingString:@"ACDownload"]];
-    [request setTemporaryFileDownloadPath:APP_TMP_ADDTO(@"ACTemp")];
-    [request setCompletionBlock:^{
-        if (completeCallback) {
-            NSError __autoreleasing *error = nil;
-            id result = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-            completeCallback(result, error);
-        }
-        
-        [request clearDelegatesAndCancel];
-    }];
-    [request setFailedBlock:^{
-        if (completeCallback) {
-            completeCallback(nil, request.error);
-        }
-        
-        [request clearDelegatesAndCancel];
-    }];
+- (NSOperation *)uploadFileFromURLString:(NSString *) URLString
+                              parameters:(NSDictionary *) parameters
+                                fileInfo:(NSDictionary *) fileInfo
+                               completed:(ACCompletedCallback) completedCallback
+                                  upload:(ACUploadCallback) uploadCallback {
+    NSMutableURLRequest *request = [self.rs multipartFormRequestWithMethod:@"POST"
+                                                                 URLString:URLString
+                                                                parameters:parameters
+                                                 constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                                     __weak NSArray *allKeys = fileInfo.allKeys;
+                                                     for (NSString *keyName in allKeys) {
+                                                         id fileURL = fileInfo[keyName];
+                                                         if ([fileURL isKindOfClass:[NSString class]]) {
+                                                             fileURL = [NSURL URLWithString:fileURL];
+                                                         }
+                                                         [formData appendPartWithFileURL:fileURL
+                                                                                    name:keyName
+                                                                                   error:nil];
+                                                     }
+                                                 }
+                                                                     error:nil];
     
-    [request setDownloadSizeIncrementedBlock:^(long long size) {
-        if (downloadCallback) {
-            downloadCallback(size, request.partialDownloadSize);
-        }
-    }];
-    [request startAsynchronous];
-}
-
-+ (void)startACASIHTTPUploadWithParams:(NSDictionary *)params
-                              fileKeys:(NSArray *)fileKeys
-                            fileValues:(NSArray *)fileValues
-                              complete:(ACCompleteCallback)completeCallback
-                                upload:(ACUploadCallback)uploadCallback {
-    __weak ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:kACHTTPRequestBaseURLString]];
+    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request
+                                                                              success:[self requestSuccess:completedCallback]
+                                                                              failure:[self requestFailure:completedCallback]];
+    [operation setUploadProgressBlock:uploadCallback];
     
-    if (params && [params count]) {
-        for (NSString *key in params.allKeys) {
-            [request setValue:params[key] forKey:key];
-        }
-    }
+    [self.manager.operationQueue addOperation:operation];
+    return operation;
+}
+
+- (NSOperation *)downloadFileFromURLString:(NSString *) URLString
+                                parameters:(NSDictionary *) parameters
+                                 completed:(ACCompletedCallback) completedCallback
+                                  download:(ACDownloadCallback) downloadCallback {
+    NSMutableURLRequest *request = [self.rs requestWithMethod:@"GET"
+                                                    URLString:URLString
+                                                   parameters:parameters
+                                                        error:nil];
+    AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:request
+                                                                              success:[self requestSuccess:completedCallback]
+                                                                              failure:[self requestFailure:completedCallback]];
     
-    if (fileKeys && fileValues) {
-        for (NSInteger i = 0; i < MIN([fileKeys count], [fileValues count]); i++) {
-            [request addFile:fileValues[i] forKey:fileKeys[i]];
-        }
-    }
+    [operation setDownloadProgressBlock:downloadCallback];
     
-    [request setCompletionBlock:^{
-        if (completeCallback) {
-            NSError __autoreleasing *error = nil;
-            id result = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-            completeCallback(result, error);
-        }
-        
-        [request clearDelegatesAndCancel];
-    }];
-    [request setFailedBlock:^{
-        if (completeCallback) {
-            completeCallback(nil, request.error);
-        }
-        
-        [request clearDelegatesAndCancel];
-    }];
-    
-    [request setUploadSizeIncrementedBlock:^(long long size) {
-        if (uploadCallback) {
-            uploadCallback(size, request.totalBytesRead);
-        }
-    }];
-    [request startAsynchronous];
-}
-
-+ (void)requestLoadingFinish:(ACRequestCompleteCallback)requestBlock {
-    objc_setAssociatedObject(self, kACASIRequestFinishKey, requestBlock, OBJC_ASSOCIATION_COPY);
-}
-
-+ (void)queueLoadingFinish:(ACQueueCompleteCallback) queueBlock {
-    
-    objc_setAssociatedObject(self, kACASINetworkQueueFinishKey, queueBlock, OBJC_ASSOCIATION_COPY);
-}
-
-+ (void)appendRequestToNetworkQueueWithParams:(NSDictionary *)params
-                                    URLString:(NSString *)URLString
-                                       method:(NSString *)method {
-    ASIHTTPRequest *request = [ACNetworking requestWithURLString:URLString
-                                                          method:method
-                                                          params:params];
-    [networkQueue addOperation:request];
-    [networkQueue go];
-}
-
-/*
- ASINetworkQueue 的delegate
- */
-
-+ (void)requestDidFinishSelector:(ASIHTTPRequest *) request {
-    ACRequestCompleteCallback callback = objc_getAssociatedObject(self, kACASIRequestFinishKey);
-    if (callback) {
-        NSError __autoreleasing *error = nil;
-        id result = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingAllowFragments error:&error];
-        callback(request, result, error);
-    }
-    [request clearDelegatesAndCancel];
-}
-
-+ (void)requestDidFailSelector:(ASIHTTPRequest *) request {
-    ACRequestCompleteCallback callback = objc_getAssociatedObject(self, kACASIRequestFinishKey);
-    if (callback) {
-        callback(request, nil, request.error);
-    }
-    [request clearDelegatesAndCancel];
-}
-
-+ (void)queueDidFinishSelector:(ASINetworkQueue *) queue {
-    ACQueueCompleteCallback callback = objc_getAssociatedObject(self, kACASINetworkQueueFinishKey);
-    if (callback) {
-        callback();
-    }
-    
-    [queue reset];
-}
-
-#endif
-
-#if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-+ (void)startACAFNHTTPRequestWithParams:(NSDictionary *) params
-                                 method:(NSString *) method
-                               complete:(ACCompleteCallback) callback {
-    
-}
-
-+ (void)startACAFNHTTPPostRequestWithParams:(NSDictionary *) params
-                                   complete:(ACCompleteCallback) callback {
-    
-}
-
-+ (void)startACAFNHTTPGetRequestWithParams:(NSDictionary *) params
-                                  complete:(ACCompleteCallback) callback {
-    
-}
-
-+ (void)startACAFNHTTPUploadWithParams:(NSDictionary *) params
-                              fileKeys:(NSArray *) fileKeys
-                            fileValues:(NSArray *) fileValues
-                              complete:(ACCompleteCallback) completeCallback
-                                upload:(ACUploadCallback) uploadCallback {
-    
-}
-
-+ (void)startACAFNHTTPDownloadWithURLString:(NSString *) URLString
-                                   complete:(ACCompleteCallback) completeCallback
-                                   download:(ACDownloadCallback) downloadCallback {
-    
+    [self.manager.operationQueue addOperation:operation];
+    return operation;
 }
 #endif
 

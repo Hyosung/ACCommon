@@ -33,13 +33,24 @@
     return [md5Ciphertext copy];
 }
 
+- (NSString *)MD5 {
+    const char *str = [self UTF8String];
+    unsigned char r[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), r);
+    
+    NSMutableString *md5Ciphertext = [NSMutableString stringWithString:@""];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [md5Ciphertext appendFormat:@"%02X",r[i]];
+    }
+    return [md5Ciphertext copy];
+}
+
 #pragma mark - Base64
 
 - (NSString*)encodeBase64 {
-    
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     data = [GTMBase64 encodeData:data];
-    NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *__autoreleasing base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return base64String;
 }
 
@@ -47,16 +58,19 @@
     
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     data = [GTMBase64 decodeData:data];
-    NSString *base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *__autoreleasing base64String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return base64String;
 }
 
 #pragma mark - String Validate
 
 - (BOOL)regularWithPattern:(NSString *)pattern {
-    if (!pattern && ![pattern validateNotNull]) {
+    if (!pattern ||
+        ![pattern isKindOfClass:[NSString class]] ||
+        [[pattern stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""]) {
         return NO;
     }
+    
     NSError *error = NULL;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                            options:NSRegularExpressionCaseInsensitive
@@ -70,10 +84,6 @@
 
 //验证是否不是空得
 - (BOOL)validateNotNull {
-    
-    if (![self isKindOfClass:[NSString class]]) {
-        return NO;
-    }
     
     if ([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""]) {
         return NO;
@@ -189,12 +199,13 @@
 
 #pragma mark - String Drawing
 
-- (UIImage *)drawImageWithSize:(CGSize)size andFont:(UIFont *)font andColor:(UIColor *)color {
+- (UIImage *)drawImageWithSize:(CGSize)size font:(UIFont *)font color:(UIColor *)color {
     
     UIImage *image = nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    [self drawInRect:(CGRect){.size = size, .origin = CGPointZero} withAttributes:@{NSFontAttributeName: font,NSForegroundColorAttributeName: color}];
+    [self drawInRect:(CGRect){.size = size, .origin = CGPointZero}
+      withAttributes:@{NSFontAttributeName: font,NSForegroundColorAttributeName: color}];
 #else
     [color set];
     [self drawInRect:(CGRect){.size = size, .origin = CGPointZero} withFont:font];
@@ -208,7 +219,7 @@
 
 - (CGSize)computeSizeWithFont:(UIFont *)font {
     
-    if (![self isKindOfClass:[NSString class]] || !font) {
+    if (!font) {
         return CGSizeZero;
     }
     
@@ -224,10 +235,9 @@
 
 - (CGFloat)computeWidthWithFont:(UIFont *) font height:(CGFloat) height {
     
-    if (![self isKindOfClass:[NSString class]] || !font) {
+    if (!font) {
         return 0.0;
     }
-    
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     CGRect frame = [self boundingRectWithSize:CGSizeMake(MAXFLOAT, height)
@@ -256,7 +266,7 @@
 
 - (CGFloat)computeHeightWithFont:(UIFont *) font width:(CGFloat) width {
     
-    if (![self isKindOfClass:[NSString class]] || !font) {
+    if (!font) {
         return 0.0;
     }
 
@@ -275,20 +285,21 @@
 }
 
 //引至ASIHTTPRequst #import <MobileCoreServices/MobileCoreServices.h>
-- (NSString*)fileMIMEType:(NSString*) file {
+- (NSString*)fileMIMEType {
     
-    if (![[NSFileManager defaultManager] fileExistsAtPath:file]) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:self]) {
 		return nil;
 	}
     
 	// Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[file pathExtension], NULL);
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[self pathExtension], NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
     CFRelease(UTI);
     if (!MIMEType) {
 		return @"application/octet-stream";
 	}
-    return (__bridge NSString *)MIMEType;
+    
+    return CFBridgingRelease(MIMEType);
 }
 
 #pragma mark - JSON
@@ -313,11 +324,91 @@
 - (NSString *)transformToPinyin {
     NSMutableString *mutableString = [NSMutableString stringWithString:self];
     //转换为带声调的拼音
-    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
+    CFStringTransform((__bridge CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
     //去掉声调
-    //CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformStripDiacritics, false);
-    mutableString = (NSMutableString *)[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
-    return mutableString;
+    //CFStringTransform((__bridge CFMutableStringRef)mutableString, NULL, kCFStringTransformStripDiacritics, false);
+    NSString *transformText = [mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
+    return transformText;
+}
+
+- (NSString *)removeHTML {
+    
+    NSScanner *theScanner;
+    
+    NSString *text = nil;
+    NSString *html = self;
+    theScanner = [NSScanner scannerWithString:self];
+    while ([theScanner isAtEnd] == NO) {
+        
+        // find start of tag
+        [theScanner scanUpToString:@"<" intoString:NULL];
+        // find end of tag
+        [theScanner scanUpToString:@">" intoString:&text];
+        
+        // replace the found tag with a space
+        
+        //(you can filter multi-spaces out later if you wish)
+        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@>", text] withString:@""];
+    }
+    
+    return html;
+}
+
+- (BOOL)isEmpty {
+    if ([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""]) {
+        return YES;
+    }
+    
+    return NO;
+}
+
++ (BOOL)isEmpty:(NSString *)string {
+    if (!string || ![string isKindOfClass:[NSString class]]) {
+        return YES;
+    }
+    
+    return [string isEmpty];
+}
+
+//半角中空格的ascii码为32（其余ascii码为33-126），全角中空格的ascii码为12288（其余ascii码为65281-65374）
+//半角与全角之差为65248
+//半角转全角
+- (NSString *)transformToFullWidth {
+    NSString *fullWidth = @"";
+    for (int i = 0; i < self.length; i++) {
+        unichar temp = [self characterAtIndex:i];
+        if (temp >= 33 && temp <= 126) {
+            temp = temp + 65248;
+            fullWidth = [NSString stringWithFormat:@"%@%C", fullWidth, temp];
+        }
+        else {
+            if (temp == 32) {
+                temp = 12288;
+            }
+            fullWidth = [NSString stringWithFormat:@"%@%C", fullWidth, temp];
+        }
+    }
+    return fullWidth;
+}
+
+//全角转半角
+- (NSString *)transformToHalfSize {
+    NSString *halfSize = @"";
+    for (int i = 0; i < self.length; i++) {
+        unichar temp = [self characterAtIndex:i];
+        if (temp >= 65281 && temp <= 65374) {
+            temp = temp - 65248;
+            halfSize = [NSString stringWithFormat:@"%@%C", halfSize, temp];
+        }
+        else {
+            if (temp == 12288) {
+                temp = 32;
+            }
+            halfSize = [NSString stringWithFormat:@"%@%C", halfSize, temp];
+        }
+    }
+    
+    return halfSize;
 }
 
 @end

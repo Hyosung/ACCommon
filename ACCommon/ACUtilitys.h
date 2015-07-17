@@ -12,8 +12,6 @@
  常用工具类
  */
 
-#define PLACEHOLDER_NAME @"placeholder"
-#define PLACEHOLDER_COLOR COLORRGB(228, 228, 228)
 /*
  用于生成浮点型的随机数
  */
@@ -26,25 +24,6 @@ AC_SINGLETON(ACUtilitys)
 #endif
 
 extern inline NSString * UUID();
-
-#if defined(__USE_Reachability__) && __USE_Reachability__
-- (void)setNetworkNotification;
-
-/*
- 是否有打开网络
- */
-+ (BOOL)isNotNetwork;
-
-/*
- 是否启动WiFi
- */
-+ (BOOL)isEnableWiFi;
-
-/*
- 是否启动3G
- */
-+ (BOOL)isEnable3G;
-#endif
 
 /**
  获取当前设备的名称如iPhone/iPod/iPad
@@ -77,17 +56,12 @@ extern inline NSString * UUID();
 + (UIImage *)imageCacheNamed:(NSString *) name;
 
 /*
- 截取当前View上的内容，并返回图片
- */
-/*+ (UIImage *)getImageFromView:(UIView *) orgView; */
-
-/*
  将多张图片合成一张
  @images 例:@[ @{ @"image": image1,@"rect": @"{{0,0},{120,120}}" },@{ @"image": image2,@"rect": @"{{120,0},{120,120}}" }]
  @size 合成图片的大小
  @return 合成的图片
  */
-+ (UIImage *)imagesSynthesisWithImages:(NSArray *) images andSize:(CGSize) size;
++ (UIImage *)imagesSynthesisWithImages:(NSArray *) images size:(CGSize) size;
 
 /**
  gif图片解析
@@ -101,167 +75,99 @@ extern inline NSString * UUID();
  */
 //+ (NSString *)imagesSynthesisGif:(NSArray *) images;
 
-/*
- 保存图片到相册
- */
-/*+ (void)savePhotosAlbum:(UIImage *)image;*/
-
-/*
- 保存当前view截图到相册
- */
-/*+ (void)saveImageFromToPhotosAlbum:(UIView*)view;*/
-
 + (NSString *)getTimeDiffString:(NSTimeInterval) timestamp;
 
-/*
- 从传入图片上截取指定区域的图片
- */
-+ (UIImage *)cutImageWithFrame:(CGRect) frame image:(UIImage *) image;
-
-/*
- 缩放传入图片到指定大小
- */
-+ (UIImage *)zoomImageWithSize:(CGSize) size image:(UIImage *) image;
-
-/*
- 重置图片的大小，图片不变形，只压缩
- @number 高度或者宽度
- @flag 传入的number值是高度或者宽度 YES:高度，NO:宽度
- */
-+ (UIImage *)resizedImageWithImage:(UIImage *)image
-                          isHeight:(BOOL)flag
-                            number:(CGFloat)number;
-
-/**
- 重置图片的大小，图片不变形，只压缩,图片居中绘制
- @size 图片大小
- */
-+ (UIImage *)resizedImageWithImage:(UIImage *)image
-                              size:(CGSize)size;
-
-/**
- 重置图片的大小，图片不变形，只压缩
- @size 图片大小
- */
-+ (UIImage *)resizedFixedImageWithImage:(UIImage *)image
-                                   size:(CGSize)size;
-/*
- 知道高度，重置图片大小
- */
-+ (UIImage *)resizedImageWithImage:(UIImage *)image
-                          toHeight:(CGFloat)height;
-/*
- 知道宽度，重置图片大小
- */
-+ (UIImage *)resizedImageWithImage:(UIImage *)image
-                           toWidth:(CGFloat)width;
 /**
  传入原来的size与要转换的size，计算出新的size
  */
-+ (CGSize)reckonWithSize:(CGSize) oldSize andNewSize:(CGSize) newSize;
++ (CGSize)calculateSize:(CGSize) originSize newSize:(CGSize) size;
 
 /*
  根据高度计算对应的宽度
  */
-+ (CGFloat)reckonWithSize:(CGSize) size
-                   height:(CGFloat) height;
++ (CGFloat)calculateWidthKnownHeight:(CGFloat) height
+                          originSize:(CGSize) size;
 /*
  根据宽度计算对应的高度
  */
-+ (CGFloat)reckonWithSize:(CGSize) size
-                    width:(CGFloat) width;
++ (CGFloat)calculateHeightKnownWidth:(CGFloat) width
+                          originSize:(CGSize) size;
 
-/*
- 给纯色图片重绘颜色  注:只对纯色图片有效
- @maskColor 罩遮色
- @foregroundColor 前景色
- @nameOrExt 图片名称包括后缀
+/**
+ *  @author Stoney, 15-07-16 10:07:51
+ *
+ *  @brief  绘制占位图
+ *
+ *  @param image 原图
+ *  @param size  绘制的大小
+ *  @param color 绘制的底色
+ *
  */
-+ (UIImage *)drawMask:(UIColor *) maskColor
-      foregroundColor:(UIColor *) foregroundColor
-      imageNamedOrExt:(NSString *) nameOrExt;
++ (UIImage *)drawPlaceholderImage:(UIImage *) image
+                             size:(CGSize) size
+                            color:(UIColor *) color;
 
-/*
- 给纯色图片重绘颜色  注:只对纯色图片有效
- @maskColor 罩遮色
- @foregroundColor 前景色
- @image 图片对象
+/**
+ *  @author Stoney, 15-07-16 11:07:34
+ *
+ *  @brief 给纯色图片重绘颜色
+ *  @note  注:只对纯色图片有效
+ *
+ *  @param maskColor 罩遮色
+ *  @param forecolor 前景色
+ *  @param imagePath 图片路径
+ *
  */
-+ (UIImage *)drawMask:(UIColor *) maskColor
-      foregroundColor:(UIColor *) foregroundColor
-                image:(UIImage *) image;
++ (UIImage *)drawPureImage:(UIColor *) maskColor
+                 forecolor:(UIColor *) forecolor
+                 imagePath:(NSString *) imagePath;
 
-/*
- 根据传入的size绘制占位图 默认背景色 RGBCOLOR(228, 228, 228)
+/**
+ *  @author Stoney, 15-07-16 11:07:59
+ *
+ *  @brief  给纯色图片重绘颜色  
+ *  @note   注:只对纯色图片有效
+ *
+ *  @param maskColor 罩遮色
+ *  @param forecolor 前景色
+ *  @param image     图片对象
+ *
  */
-+ (UIImage *)drawPlaceholderWithSize:(CGSize) size;
-
-/*
- 根据传入的size绘制占位图
- @color 背景色
- */
-+ (UIImage *)drawPlaceholderWithSize:(CGSize) size
-                             bgcolor:(UIColor *) color;
++ (UIImage *)drawPureImage:(UIColor *) maskColor
+                 forecolor:(UIColor *) forecolor
+               originImage:(UIImage *) image;
 
 /*
  根据传入的颜色绘制纯色图片 默认大小 {57，57}
  */
-+ (UIImage *)drawingColor:(UIColor *) color;
++ (UIImage *)drawPureColor:(UIColor *) color;
 
 /*
  绘制纯色图片
- @color 要绘制的颜色
- @size 图片大小
+ @param color 要绘制的颜色
+ @param size  图片大小
  */
-+ (UIImage *)drawingColor:(UIColor *) color
-                     size:(CGSize) size;
++ (UIImage *)drawPureColor:(UIColor *) color
+                      size:(CGSize) size;
 
 /*
  绘制渐变图
  */
-+ (UIImage *)drawGradientColor:(CGRect)p_clipRect
-                       options:(CGGradientDrawingOptions)p_options
-                        colors:(NSArray *)p_colors;
-
-/**
- 计算文本size 只针对单行
- @aStr 文本内容
- @font 字体
- */
-/*+ (CGSize)computeSizeWithString:(NSString *) aStr font:(UIFont *) font;*/
-
-/**
- 计算文本宽度 只针对多行
- @aStr 文本内容
- @font 字体
- @height 默认高度
- */
-/*+ (CGFloat)computeWidthWithString:(NSString *) aStr font:(UIFont *) font height:(CGFloat) height;*/
-
-/**
- 计算文本的高度 只针对多行
- @aStr 文本内容
- @font 字体
- @width 默认宽度
- */
-/*+ (CGFloat)computeHeightWithString:(NSString *) aStr font:(UIFont *) font width:(CGFloat) width;*/
-
-/*
- 验证邮箱格式
- */
-/*+ (BOOL)isValidateEmail:(NSString *) email;*/
++ (UIImage *)drawGradientColor:(CGRect) clipRect
+                       options:(CGGradientDrawingOptions) options
+                        colors:(NSArray *) colors;
 
 /**
  限制UITextView或者UITextField的输入字数
- @number 能输入的字数
- @obj UITextView对象或者UITextField对象
+ @wordCount 能输入的字数
+ @input UITextView对象或者UITextField对象
  @string 当前对象中的字符串
  @range 当前对象的范围大小
  */
-+ (BOOL)isOutNumber:(NSInteger) number
-            objcect:(id) obj
-             string:(NSString *)string
-              range:(NSRange) range;
++ (BOOL)limitInputWords:(NSUInteger) wordCount
+                  input:(id) input
+                 string:(NSString *) string
+                  range:(NSRange) range;
 
 /*
  格式化文件大小
@@ -269,19 +175,26 @@ extern inline NSString * UUID();
  */
 + (NSString *)formattedFileSize:(unsigned long long)size;
 
-/*
- 自动检查版本是否可更新，并提示
- @url 在Apple Store 上请求的链接
- @block-releaseInfo 字典中包含了应用在Apple Store上的下载地址和更新的信息、最新版本号，对应的key是trackViewUrl、releaseNotes、version
+/**
+ *  @author Stoney, 15-07-16 11:07:59
+ *
+ *  @brief  自动检查版本是否可更新，并提示
+ *
+ *  @param block 字典中包含了应用在Apple Store上的下载地址和更新的信息、最新版本号，对应的key是trackViewUrl、releaseNotes、version
+ *  @param url   在Apple Store 上请求的链接
  */
-+ (void)automaticCheckVersion:(void(^)(NSDictionary *releaseInfo)) block
-                          url:(NSString *) url;
++ (void)automaticallyDetectVersion:(void (^)(NSDictionary *releaseInfo)) block
+                               url:(NSString *) url;
 
-/*
- 检查是否有最新版本
- 有最新版本就从消息中心发出消息 消息名称是 NotificationAppUpdate
+/**
+ *  @author Stoney, 15-07-16 11:07:03
+ *
+ *  @brief   检查是否有最新版本 有最新版本就从消息中心发出消息 消息名称是 NotificationAppUpdate
+ *  @note    注意此方法为同步操作
+ *
+ *  @param url 请求Apple
  */
-+ (void)onCheckVersion:(NSString *) url;
++ (void)checkWhetherUpdate:(NSString *) url;
 
 /*
  跳转到App Store应用的评分页面
@@ -293,41 +206,20 @@ extern inline NSString * UUID();
  应用在 App Store的下载地址
  @appid 应用的Apple ID
  */
-+ (NSString *)appStoreUrl:(NSString *) appid;
++ (NSURL *)appStoreURL:(NSString *) appid;
 
-/*
- 设置导航栏的背景 支持大部分iOS版本
+/**
+ *  @author Stoney, 15-07-16 14:07:35
+ *
+ *  @brief  显示无内容时的提示
+ *
+ *  @param visible 是否显示
+ *  @param view    显示在的视图
+ *  @param content 显示的内容
  */
-+ (void)setNavigationBar:(UINavigationBar *) navBar
-         backgroundImage:(UIImage *) image;
-
-/*
- 给导航栏添加一个view覆盖在上面
- */
-+ (void)setNavigationBar:(UINavigationBar *)navBar
-             contentView:(UIView *)view;
-
-/*
- 当请求返回无数据时显示
- @flag 是否显示
- @view 显示提示的view
- @content 提示内容
- */
-+ (void)showNoContent:(BOOL) flag
-          displayView:(UIView *) view
-       displayContent:(NSString *) content;
-
-/*
- 半角转全角
- @dbc 半角字符串
- */
-+ (NSString *)DBCToSBC:(NSString *) dbc;
-
-/*
- 全角转半角
- @sbc 全角字符串
- */
-+ (NSString *)SBCToDBC:(NSString *) sbc;
++ (void)showNoContentWhenPrompted:(BOOL) visible
+                    displayedView:(UIView *) view
+                   displayContent:(NSString *) content;
 
 /*
  生成from到to之间的随机数

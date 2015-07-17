@@ -39,6 +39,12 @@
 
 #import "UIImageView+ACAdditions.h"
 
+#import "UINavigationBar+ACAdditions.h"
+
 #import "UIViewController+ACAdditions.h"
+
+#import "UIViewController+ACSideslip.h"
+
+#import "UINavigationController+ACSideslip.h"
 
 #endif

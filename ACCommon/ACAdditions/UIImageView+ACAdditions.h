@@ -20,7 +20,26 @@
 #pragma mark - WebImage Loading
 
 #if defined(__USE_SDWebImage__) && __USE_SDWebImage__
-- (void)setACImageURLString:(NSString *) anURLString;
+- (void)ac_setImageWithURLString:(NSString *) URLString;
+- (void)ac_setImageWithURLString:(NSString *) URLString
+                placeholderImage:(UIImage *) placeholderImage;
+- (void)ac_setImageWithURLString:(NSString *) URLString
+                      completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock;
+- (void)ac_setImageWithURLString:(NSString *) URLString
+                placeholderImage:(UIImage *) placeholderImage
+                      completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock;
+
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString;
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString
+                    placeholderImage:(UIImage *) placeholderImage;
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString
+                          completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock;
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString
+                    placeholderImage:(UIImage *) placeholderImage
+                          completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock;
+
+- (void)ac_setRoundedImageWithURLString:(NSString *) URLString
+                    placeholderImage:(UIImage *) placeholderImage;
 #endif
 
 @end

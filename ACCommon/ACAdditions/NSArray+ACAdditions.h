@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+//@interface NSMutableArray (ACAdditions)
+//@end
+
 @interface NSArray (ACAdditions)
 
 #pragma mark - JSONString

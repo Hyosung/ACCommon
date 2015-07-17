@@ -9,41 +9,22 @@
 #ifndef ACCommon_ACExternals_Header_h
 #define ACCommon_ACExternals_Header_h
 
-
 /*
  外部框架或外部类
  */
 
-//#if __AC_DEFINED__(__USE_AFNetworking__)
-//
-//#endif
-
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-#import "AFNetworking.h"
+#import <AFNetworking.h>
 #endif
 
 #if defined(__USE_ChineseToPinyin__) && __USE_ChineseToPinyin__
 #import "ChineseToPinyin.h"
 #endif
 
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
-#import "ASIHTTPRequest.h"
-#import "ASIFormDataRequest.h"
-#import "ASIHTTPRequestDelegate.h"
-#import "ASINetworkQueue.h"
-#endif
-
-#if defined(__USE_PullingRefreshTableView__) && __USE_PullingRefreshTableView__
-#import "PullingRefreshTableView.h"
-#endif
-
-#if defined(__USE_Reachability__) && __USE_Reachability__
-#import "Reachability.h"
-#endif
-
 #if defined(__USE_SDWebImage__) && __USE_SDWebImage__
-#import "UIImageView+WebCache.h"
-#import "UIButton+WebCache.h"
+
+#import <UIButton+WebCache.h>
+#import <UIImageView+WebCache.h>
 #endif
 
 #if defined(__USE_SVProgressHUD__) && __USE_SVProgressHUD__

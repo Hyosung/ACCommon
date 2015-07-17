@@ -8,73 +8,68 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^ACCompleteCallback)(NSDictionary *result, NSError *error);
-typedef void(^ACUploadCallback)(unsigned long long totalBytesWritten, unsigned long long totalBytesExpectedToWrite);
-typedef void(^ACDownloadCallback)(unsigned long long size, unsigned long long total);
-typedef void(^ACQueueCompleteCallback)(void);
-typedef void(^ACRequestCompleteCallback)(ASIHTTPRequest *request, NSDictionary *result, NSError *error);
+typedef void(^ACCompletedCallback)(NSDictionary *result, NSError *error);
+typedef void(^ACUploadCallback)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
+typedef void(^ACDownloadCallback)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead);
 
-extern NSString *const kACHTTPRequestBaseURLString;
+typedef NS_ENUM(NSUInteger, ACNetworkMethod) {
+    ACNetworkMethodGET = 0  ,
+    ACNetworkMethodPOST     ,
+    ACNetworkMethodHEAD     ,
+    ACNetworkMethodPUT      ,
+    ACNetworkMethodPATCH    ,
+    ACNetworkMethodDELETE
+};
 
 @interface ACNetworking : NSObject
 
-#if defined(__USE_ASIHTTPRequest__) && __USE_ASIHTTPRequest__
-
-+ (void)startACASIHTTPRequestWithParams:(NSDictionary *) params
-                                 method:(NSString *) method
-                               complete:(ACCompleteCallback) callback;
-
-+ (void)startACASIHTTPPostRequestWithParams:(NSDictionary *) params
-                                   complete:(ACCompleteCallback) callback;
-
-+ (void)startACASIHTTPGetRequestWithParams:(NSDictionary *) params
-                                  complete:(ACCompleteCallback) callback;
-
-+ (void)startACASIHTTPUploadWithParams:(NSDictionary *) params
-                              fileKeys:(NSArray *) fileKeys
-                            fileValues:(NSArray *) fileValues
-                              complete:(ACCompleteCallback) completeCallback
-                                upload:(ACUploadCallback) uploadCallback;
-
-+ (void)startACASIHTTPDownloadWithURLString:(NSString *) URLString
-                                   complete:(ACCompleteCallback) completeCallback
-                                   download:(ACDownloadCallback) downloadCallback;
-
-
-/**
- 首先调用这两个方法
- */
-+ (void)requestLoadingFinish:(ACRequestCompleteCallback) requestBlock;
-+ (void)queueLoadingFinish:(ACQueueCompleteCallback) queueBlock;
-
-/**
- 其次才使用这个方法
- */
-+ (void)appendRequestToNetworkQueueWithParams:(NSDictionary *) params
-                                    URLString:(NSString *) URLString
-                                       method:(NSString *) method;
-#endif
++ (instancetype)network;
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-+ (void)startACAFNHTTPRequestWithParams:(NSDictionary *) params
-                                 method:(NSString *) method
-                               complete:(ACCompleteCallback) callback;
 
-+ (void)startACAFNHTTPPostRequestWithParams:(NSDictionary *) params
-                                   complete:(ACCompleteCallback) callback;
+#pragma mark - 默认的baseURL
+- (NSOperation *)fetchDataFromPath:(NSString *) path
+                            method:(ACNetworkMethod) method
+                        parameters:(NSDictionary *) parameters
+                         completed:(ACCompletedCallback) callback;
 
-+ (void)startACAFNHTTPGetRequestWithParams:(NSDictionary *) params
-                                  complete:(ACCompleteCallback) callback;
+- (NSOperation *)GET_fetchDataFromPath:(NSString *) path
+                            parameters:(NSDictionary *) parameters
+                             completed:(ACCompletedCallback) callback;
 
-+ (void)startACAFNHTTPUploadWithParams:(NSDictionary *) params
-                              fileKeys:(NSArray *) fileKeys
-                            fileValues:(NSArray *) fileValues
-                              complete:(ACCompleteCallback) completeCallback
-                                upload:(ACUploadCallback) uploadCallback;
+- (NSOperation *)POST_fetchDataFromPath:(NSString *) path
+                             parameters:(NSDictionary *) parameters
+                              completed:(ACCompletedCallback) callback;
 
-+ (void)startACAFNHTTPDownloadWithURLString:(NSString *) URLString
-                                   complete:(ACCompleteCallback) completeCallback
-                                   download:(ACDownloadCallback) downloadCallback;
+- (NSOperation *)uploadFileFromPath:(NSString *) path
+                         parameters:(NSDictionary *) parameters
+                           fileInfo:(NSDictionary *) fileInfo
+                          completed:(ACCompletedCallback) completedCallback
+                             upload:(ACUploadCallback) uploadCallback;
+
+- (NSOperation *)downloadFileFromPath:(NSString *) path
+                           parameters:(NSDictionary *) parameters
+                            completed:(ACCompletedCallback) completedCallback
+                             download:(ACDownloadCallback) downloadCallback;
+
+#pragma mark - 自定义请求链接
+
+- (NSOperation *)fetchDataFromURLString:(NSString *) URLString
+                                 method:(ACNetworkMethod) method
+                             parameters:(NSDictionary *) parameters
+                              completed:(ACCompletedCallback) callback;
+
+- (NSOperation *)uploadFileFromURLString:(NSString *) URLString
+                              parameters:(NSDictionary *) parameters
+                                fileInfo:(NSDictionary *) fileInfo
+                               completed:(ACCompletedCallback) completedCallback
+                                  upload:(ACUploadCallback) uploadCallback;
+
+- (NSOperation *)downloadFileFromURLString:(NSString *) URLString
+                                parameters:(NSDictionary *) parameters
+                                 completed:(ACCompletedCallback) completedCallback
+                                  download:(ACDownloadCallback) downloadCallback;
+
 #endif
 
 @end

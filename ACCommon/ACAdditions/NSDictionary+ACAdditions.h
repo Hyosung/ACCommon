@@ -8,10 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+//@interface NSMutableDictionary (ACAdditions)
+//@end
+
 @interface NSDictionary (ACAdditions)
 
 #pragma mark - JSONString
 
 - (NSString *)JSONString;
 - (NSData *)JSONData;
+
+- (NSDictionary *)dictionaryForKey:(id) aKey;
+- (NSArray *)arrayForKey:(id) aKey;
+- (NSString *)stringForKey:(id) aKey;
+- (NSInteger)integerForKey:(id) aKey;
+- (CGFloat)floatForKey:(id) aKey;
+
 @end

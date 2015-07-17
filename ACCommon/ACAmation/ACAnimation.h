@@ -74,25 +74,60 @@
 
 // 旋转缩放
 
-// 各种旋转缩放效果
+/**
+ *  @author Stoney, 15-07-14 17:07:49
+ *
+ *  @brief  各种旋转缩放效果
+ *
+ */
 + (void)animationRotateAndScaleEffects:(UIView *)view;
 
-// 旋转同时缩小放大效果
+/**
+ *  @author Stoney, 15-07-14 17:07:12
+ *
+ *  @brief  旋转同时缩小放大效果
+ *
+ */
 + (void)animationRotateAndScaleDownUp:(UIView *)view;
 
-//旋转加缩放
+/**
+ *  @author Stoney, 15-07-14 17:07:25
+ *
+ *  @brief  旋转加缩放
+ *
+ */
 + (void)animationRotateAndScale:(UIView *) view;
 
-//旋转
+/**
+ *  @author Stoney, 15-07-14 17:07:39
+ *
+ *  @brief  旋转
+ *
+ */
 + (void)animationRotate:(UIView *) view;
 
-//抖动
+/**
+ *  @author Stoney, 15-07-14 17:07:51
+ *
+ *  @brief  抖动
+ *
+ */
 + (void)animationShake:(UIView *) view;
 
-//抛物线
+/**
+ *  @author Stoney, 15-07-14 17:07:07
+ *
+ *  @brief  抛物线
+ *
+ */
 + (void)animationCurve:(UIView *) view;
 
-//发光的动画
+/**
+ *  @author Stoney, 15-07-14 17:07:24
+ *
+ *  @brief  发光的动画
+ *
+ */
 + (void)animationShine:(UIView *) view
    andHighlightedImage:(UIImage *) highlightedImage
           andMaskImage:(UIImage *) maskImage;

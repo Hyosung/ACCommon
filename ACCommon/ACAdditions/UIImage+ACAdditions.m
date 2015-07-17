@@ -16,6 +16,84 @@
 
 #pragma mark - Image Resize
 
+- (UIImage *)zoomImageWithSize:(CGSize)size {
+    if (size.width <= 0 || size.height <= 0) {
+        return nil;
+    }
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, 0.0, size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextDrawImage(context,
+                       CGRectMake(0.0, 0.0, size.width, size.height),
+                       [self CGImage]);
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (UIImage *)resizedImageWithNumber:(CGFloat)number
+                           isHeight:(BOOL)flag {
+    CGSize size;
+    if (flag) {
+        size = CGSizeMake([self calculateWidthKnownHeight:number], number);
+    }
+    else{
+        size = CGSizeMake(number, [self calculateHeightKnownWidth:number]);
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    [self drawInRect:CGRectMake(0.0, 0.0, size.width, size.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (UIImage *)resizedImageWithSize:(CGSize)size {
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    
+    CGFloat newWidth = MIN(self.size.width, size.width);
+    CGFloat newHeight = [self calculateHeightKnownWidth:newWidth];
+    if (newHeight > size.height) {
+        newWidth = [self calculateWidthKnownHeight:size.height];
+        newHeight = size.height;
+    }
+    [self drawInRect:CGRectMake(size.width / 2.0 - newWidth / 2.0,
+                                size.height / 2.0 - newHeight / 2.0,
+                                newWidth,
+                                newHeight)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (UIImage *)resizedFixedImageWithSize:(CGSize)size {
+    
+    CGFloat newWidth = MIN(self.size.width, size.width);
+    CGFloat newHeight = [self calculateHeightKnownWidth:newWidth];
+    if (newHeight > size.height) {
+        newWidth = [self calculateWidthKnownHeight:size.height];
+        newHeight = size.height;
+    }
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(newWidth, newHeight), NO, [UIScreen mainScreen].scale);
+    
+    [self drawInRect:CGRectMake(0.0,
+                                0.0,
+                                newWidth,
+                                newHeight)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (UIImage *)resizedImageWithHeight:(CGFloat)height {
+    return [self resizedImageWithNumber:height isHeight:YES];
+}
+
+- (UIImage *)resizedImageWithWidth:(CGFloat)width {
+    return [self resizedImageWithNumber:width isHeight:NO];
+}
+
 // Returns a copy of this image that is cropped to the given bounds.
 // The bounds will be adjusted using CGRectIntegral.
 // This method ignores the image's imageOrientation setting.
@@ -291,7 +369,7 @@
     CGFloat blue = 0.0;
     CGFloat alpha = 0.8;
     //Create the gradient as an image, and then set it as the color of the mask view.
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT), NO, [UIScreen mainScreen].scale);
+    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, NO, [UIScreen mainScreen].scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     //Create the gradient
     size_t locationsCount = 2;
@@ -301,8 +379,8 @@
     CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, colors, locations, locationsCount);
     CGColorSpaceRelease(colorSpace);
     //Draw the gradient
-    CGPoint center = CGPointMake(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
-    float radius = MIN(SCREEN_WIDTH , SCREEN_HEIGHT);
+    CGPoint center = CGPointMake(CGRectGetWidth([UIScreen mainScreen].bounds) / 2.0, CGRectGetHeight([UIScreen mainScreen].bounds) / 2.0);
+    float radius = MIN(CGRectGetWidth([UIScreen mainScreen].bounds) , CGRectGetHeight([UIScreen mainScreen].bounds));
     CGContextDrawRadialGradient(context, gradient, center, 0, center, radius, kCGGradientDrawsAfterEndLocation);
     CGGradientRelease(gradient);
     //Get the gradient image
@@ -576,10 +654,9 @@
     return image;
 }
 
-
 #pragma mark - UIImage To NSString
 - (NSString *)convertString {
-    NSDictionary *systeminfo = [NSDictionary dictionaryWithContentsOfFile:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"systeminfo"]];
+    NSDictionary *systeminfo = [NSDictionary dictionaryWithContentsOfFile:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"systeminfo"]];
     float o = 0.1;
 	if (systeminfo){//如果有系统设置信息
 		if ([systeminfo[@"imagesize"] isEqualToString:@"大"]) {
@@ -637,6 +714,18 @@
 //               alpha:1.0];
 //   UIImage *grayImage = UIGraphicsGetImageFromCurrentImageContext();
 //   UIGraphicsEndImageContext();
+}
+
+- (CGFloat)calculateWidthKnownHeight:(CGFloat)height {
+    CGFloat scale = self.size.width / self.size.height;
+    CGFloat width = scale * height;
+    return width;
+}
+
+- (CGFloat)calculateHeightKnownWidth:(CGFloat)width {
+    CGFloat scale = self.size.height / self.size.width;
+    CGFloat height = scale * width;
+    return height;
 }
 
 @end

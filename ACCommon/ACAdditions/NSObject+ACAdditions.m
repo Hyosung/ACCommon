@@ -51,8 +51,8 @@
     for (int i = 0; i < outCount; i++) {
         Method method = methods[i];
         SEL selector = method_getName(method);
-        
-        [methodDic setObject:C_CONVERT_OC(selector) forKey:NSStringFromSelector(selector)];
+        [methodDic setObject:[NSValue value:&selector withObjCType:@encode(__typeof__(selector))]
+                      forKey:NSStringFromSelector(selector)];
     }
     
     free(methods);

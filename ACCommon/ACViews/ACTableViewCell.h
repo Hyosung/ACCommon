@@ -24,6 +24,7 @@ UIKIT_STATIC_INLINE BOOL ACSeparatorSpacesEqualToSeparatorSpaces(ACSeparatorSpac
 @interface ACTableViewCell : UITableViewCell
 
 @property (nonatomic) BOOL showingSeparator;
+@property (nonatomic) CGFloat separatorLineWidth;
 @property (nonatomic) ACSeparatorSpaces separatorSpace;
 @property (nonatomic, strong) UIColor *separatorColor;
 

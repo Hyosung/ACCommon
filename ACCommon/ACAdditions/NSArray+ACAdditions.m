@@ -8,13 +8,26 @@
 
 #import "NSArray+ACAdditions.h"
 
+//@implementation NSMutableArray (ACAdditions)
+//
+//- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx {
+//    if (!obj || idx >= self.count) {
+//        return;
+//    }
+//    
+//    [self replaceObjectAtIndex:idx withObject:obj];
+//}
+//
+//@end
+
 @implementation NSArray (ACAdditions)
 
 - (NSString *)JSONString {
     if (![NSJSONSerialization isValidJSONObject:self]) return nil;
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:nil];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *__autoreleasing JSONStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return JSONStr;
 }
 
 - (NSData *)JSONData {
@@ -22,6 +35,13 @@
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:nil];
     return data;
+}
+
+- (id)objectAtIndexedSubscript:(NSUInteger)idx {
+    if (idx >= self.count) {
+        return nil;
+    }
+    return [self objectAtIndex:idx];
 }
 
 @end

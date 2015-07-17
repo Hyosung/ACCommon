@@ -57,6 +57,35 @@
 - (void)handleTapGesture:(UITapGestureRecognizer *) gesture {
     //此method会将self.view里所有的subview的first responder都resign掉
     [self.view endEditing:YES];
+//    [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
+}
+
+
+- (void)addRefreshHeaderWithScrollView:(UIScrollView *) scrollView refreshingBlock:(void (^)())block {
+    if ([scrollView isKindOfClass:[UIScrollView class]]) {
+//        scrollView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:block];
+//        scrollView.header.lastUpdatedTimeKey = ACSSTR(@"kRefreshHeader%@%@%@", NSStringFromClass([self class]), self.navigationItem.title, @(scrollView.tag));
+//        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"下拉刷新"
+//                                                    forState:MJRefreshStateIdle];
+//        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"松开刷新"
+//                                                    forState:MJRefreshStatePulling];
+//        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"正在刷新..."
+//                                                    forState:MJRefreshStateRefreshing];
+    }
+}
+
+- (void)addRefreshFooterWithScrollView:(UIScrollView *) scrollView refreshingBlock:(void (^)())block {
+    if ([scrollView isKindOfClass:[UIScrollView class]]) {
+//        scrollView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:block];
+//        
+//        // 初始化文字
+//        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"加载更多"
+//                                                        forState:MJRefreshStateIdle];
+//        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"正在加载中..."
+//                                                        forState:MJRefreshStateRefreshing];
+//        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"已全部加载"
+//                                                        forState:MJRefreshStateNoMoreData];
+    }
 }
 
 @end

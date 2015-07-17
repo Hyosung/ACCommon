@@ -12,6 +12,43 @@
 
 #pragma mark - Image Resize
 
+/*
+ 缩放传入图片到指定大小
+ */
+- (UIImage *)zoomImageWithSize:(CGSize) size;
+
+/*
+ 重置图片的大小，图片不变形，只压缩
+ @number 高度或者宽度
+ @flag 传入的number值是高度或者宽度 YES:高度，NO:宽度
+ */
+- (UIImage *)resizedImageWithNumber:(CGFloat)number
+                           isHeight:(BOOL)flag;
+
+/**
+ 重置图片的大小，图片不变形，只压缩,图片居中绘制
+ @size 图片大小
+ */
+- (UIImage *)resizedImageWithSize:(CGSize)size;
+
+/**
+ 重置图片的大小，图片不变形，只压缩
+ @size 图片大小
+ */
+- (UIImage *)resizedFixedImageWithSize:(CGSize)size;
+
+/*
+ 知道高度，重置图片大小
+ */
+- (UIImage *)resizedImageWithHeight:(CGFloat)height;
+/*
+ 知道宽度，重置图片大小
+ */
+- (UIImage *)resizedImageWithWidth:(CGFloat)width;
+
+/*
+ 从传入图片上截取指定区域的图片
+ */
 - (UIImage *)croppedImage:(CGRect)bounds;
 
 - (UIImage *)resizedImage:(CGSize)newSize
@@ -57,4 +94,7 @@
 
 #pragma mark Image Draw
 - (UIImage *)convertGrayImage;
+
+- (CGFloat)calculateWidthKnownHeight:(CGFloat) height;
+- (CGFloat)calculateHeightKnownWidth:(CGFloat) width;
 @end

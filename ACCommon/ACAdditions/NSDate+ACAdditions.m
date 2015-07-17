@@ -8,7 +8,7 @@
 
 #import "NSDate+ACAdditions.h"
 
-#if __IOS_64__
+#if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
 #define DATE_STR(__number) [NSString stringWithFormat:@"%02ld",__number]
 #else
 #define DATE_STR(__number) [NSString stringWithFormat:@"%02d",__number]
@@ -25,26 +25,27 @@ NSInteger const kManySecondsMinute = 60;
 
 - (NSDateComponents *)dateComponents {
     static NSCalendarUnit unitFlags;
-    AC_EXEONCE_BEGIN(_datecomponents_)
-    
+    static dispatch_once_t once_datecomponents_;
+    dispatch_once(&once_datecomponents_, ^{
+        
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-    unitFlags = NSCalendarUnitYear |
-                NSCalendarUnitMonth |
-                NSCalendarUnitDay |
-                NSCalendarUnitHour |
-                NSCalendarUnitMinute |
-                NSCalendarUnitSecond |
-                NSCalendarUnitWeekday;
+        unitFlags = NSCalendarUnitYear |
+        NSCalendarUnitMonth |
+        NSCalendarUnitDay |
+        NSCalendarUnitHour |
+        NSCalendarUnitMinute |
+        NSCalendarUnitSecond |
+        NSCalendarUnitWeekday;
 #else
-    unitFlags = NSYearCalendarUnit |
-                NSMonthCalendarUnit |
-                NSDayCalendarUnit |
-                NSHourCalendarUnit |
-                NSMinuteCalendarUnit |
-                NSSecondCalendarUnit |
-                NSWeekdayCalendarUnit;
+        unitFlags = NSYearCalendarUnit |
+        NSMonthCalendarUnit |
+        NSDayCalendarUnit |
+        NSHourCalendarUnit |
+        NSMinuteCalendarUnit |
+        NSSecondCalendarUnit |
+        NSWeekdayCalendarUnit;
 #endif
-    AC_EXEONCE_END
+    });
     return [[NSCalendar currentCalendar] components:unitFlags fromDate:self];
 }
 
@@ -76,16 +77,20 @@ NSInteger const kManySecondsMinute = 60;
     return [self dateComponents].weekday;
 }
 
-- (NSString *)weekString {
+- (NSString *)weekString_z {
    return [NSString stringWithFormat:@"周%@",[self weeks][@([[self dateComponents] weekday])]];
 }
 
+- (NSString *)weekString_xq {
+    return [NSString stringWithFormat:@"星期%@",[self weeks][@([[self dateComponents] weekday])]];
+}
+
 - (NSString *)year {
-    return ACSTR(@"%@",@([[self dateComponents] year]));
+    return [NSString stringWithFormat:@"%@",@([[self dateComponents] year])];
 }
 
 - (NSString *)month {
-    return ACSTR(@"%@",@([[self dateComponents] month]));
+    return [NSString stringWithFormat:@"%@",@([[self dateComponents] month])];
 }
 
 - (NSString *)month_MM {
@@ -93,7 +98,7 @@ NSInteger const kManySecondsMinute = 60;
 }
 
 - (NSString *)day {
-    return ACSTR(@"%@",@([[self dateComponents] day]));
+    return [NSString stringWithFormat:@"%@",@([[self dateComponents] day])];
 }
 
 - (NSString *)day_dd {
@@ -101,7 +106,7 @@ NSInteger const kManySecondsMinute = 60;
 }
 
 - (NSString *)hour {
-    return ACSTR(@"%@",@([[self dateComponents] hour]));
+    return [NSString stringWithFormat:@"%@",@([[self dateComponents] hour])];
 }
 
 - (NSString *)hour_hh {
@@ -109,7 +114,7 @@ NSInteger const kManySecondsMinute = 60;
 }
 
 - (NSString *)minute {
-    return ACSTR(@"%@",@([[self dateComponents] minute]));
+    return [NSString stringWithFormat:@"%@",@([[self dateComponents] minute])];
 }
 
 - (NSString *)minute_mm {
@@ -117,7 +122,7 @@ NSInteger const kManySecondsMinute = 60;
 }
 
 - (NSString *)second {
-    return ACSTR(@"%@",@([[self dateComponents] second]));
+    return [NSString stringWithFormat:@"%@",@([[self dateComponents] second])];
 }
 
 - (NSString *)second_ss {
@@ -125,7 +130,7 @@ NSInteger const kManySecondsMinute = 60;
 }
 
 - (NSString *)week {
-    return ACSTR(@"周%@",[self weeks][@([[self dateComponents] weekday])]);
+    return [NSString stringWithFormat:@"周%@",[self weeks][@([[self dateComponents] weekday])]];
 }
 
 /*距离当前的时间间隔描述*/
@@ -286,14 +291,14 @@ NSInteger const kManySecondsMinute = 60;
         return @"1分钟内";
     }
     else if (timeInterval < kManySecondsHour) {//1小时内
-#if __IOS_64__
+#if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
         return [NSString stringWithFormat:@"%ld分钟前", timeInterval / kManySecondsMinute];
 #else
         return [NSString stringWithFormat:@"%d分钟前", timeInterval / kManySecondsMinute];
 #endif
     }
     else if (timeInterval < kManySecondsHour * 6) {//6小时内
-#if __IOS_64__
+#if __LP64__ || (TARGET_OS_EMBEDDED && !TARGET_OS_IPHONE) || TARGET_OS_WIN32 || NS_BUILD_32_LIKE_64
         return [NSString stringWithFormat:@"%ld小时前", timeInterval / kManySecondsHour];
 #else
         return [NSString stringWithFormat:@"%d小时前", timeInterval / kManySecondsHour];

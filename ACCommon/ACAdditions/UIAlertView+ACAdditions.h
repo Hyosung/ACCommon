@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIAlertView (ACAdditions)<UIAlertViewDelegate>
+@interface UIAlertView (ACAdditions) <UIAlertViewDelegate>
 
 #pragma mark - Delegate transform block
 

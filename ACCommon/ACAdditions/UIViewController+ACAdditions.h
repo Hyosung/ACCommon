@@ -12,4 +12,9 @@
 
 - (void)touchViewDismissKeyboard;
 
+- (void)addRefreshHeaderWithScrollView:(UIScrollView *) scrollView
+                       refreshingBlock:(void (^)())block;
+- (void)addRefreshFooterWithScrollView:(UIScrollView *) scrollView
+                       refreshingBlock:(void (^)())block;
+
 @end

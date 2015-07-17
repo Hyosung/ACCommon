@@ -67,25 +67,6 @@
  显示完整的时区偏移量（例如 -08:00）
  */
 
-/*
- NSEraCalendarUnit
- NSYearCalendarUnit
- NSMonthCalendarUnit
- NSDayCalendarUnit
- NSHourCalendarUnit
- NSMinuteCalendarUnit
- NSSecondCalendarUnit
- NSWeekCalendarUnit
- NSWeekdayCalendarUnit
- NSWeekdayOrdinalCalendarUnit
- NSQuarterCalendarUnit
- NSWeekOfMonthCalendarUnit
- NSWeekOfYearCalendarUnit
- NSYearForWeekOfYearCalendarUnit
- NSCalendarCalendarUnit
- NSTimeZoneCalendarUnit
- */
-
 @interface NSDate (ACAdditions)
 
 #pragma mark - 时间分段取出
@@ -98,7 +79,19 @@
 @property (readonly) NSInteger secondNumber;
 @property (readonly) NSInteger weekNumber;
 
-@property (readonly) NSString *weekString;
+/**
+ *  @author Stoney, 15-07-10 16:07:30
+ *
+ *  周几
+ */
+@property (nonatomic, copy, readonly) NSString *weekString_z;
+
+/**
+ *  @author Stoney, 15-07-10 16:07:39
+ *
+ *  星期几
+ */
+@property (nonatomic, copy, readonly) NSString *weekString_xq;
 
 - (NSString *)timeIntervalDescription;
 - (NSString *)minuteDescription;

@@ -30,19 +30,19 @@
 
 - (void)initialize {
     _showingSeparator = YES;
+    _separatorLineWidth = 0.5;
     _separatorColor = [[UIColor grayColor] colorWithAlphaComponent:0.7];
     _separatorSpace = ACSeparatorSpacesMake(15.0, 0.0);
 }
 
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    if (_showingSeparator) {
+    if (_showingSeparator && _separatorLineWidth > 0) {
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextSetStrokeColorWithColor(context, [_separatorColor CGColor]);
-        CGContextSetLineWidth(context, 1.0);
-//        CGFloat lineLength = CGRectGetWidth(rect) - _separatorSpace.left - _separatorSpace.right;
-        CGPoint p1 = CGPointMake(_separatorSpace.left, CGRectGetHeight(rect) - 1.0);
-        CGPoint p2 = CGPointMake(CGRectGetWidth(rect) - _separatorSpace.right, CGRectGetHeight(rect) - 1.0);
+        CGContextSetLineWidth(context, _separatorLineWidth);
+        CGPoint p1 = CGPointMake(_separatorSpace.left, CGRectGetHeight(rect) - 0.5);
+        CGPoint p2 = CGPointMake(CGRectGetWidth(rect) - _separatorSpace.right, CGRectGetHeight(rect) - 0.5);
         
         CGContextMoveToPoint(context, p1.x, p1.y);
         CGContextAddLineToPoint(context, p2.x, p2.y);
@@ -50,9 +50,15 @@
     }
 }
 
+- (void)setSeparatorLineWidth:(CGFloat)separatorLineWidth {
+    if (_separatorLineWidth != separatorLineWidth) {
+        _separatorLineWidth = separatorLineWidth;
+        [self setNeedsDisplay];
+    }
+}
+
 - (void)setShowingSeparator:(BOOL)showingSeparator {
     if (_showingSeparator != showingSeparator) {
-        
         _showingSeparator = showingSeparator;
         [self setNeedsDisplay];
     }

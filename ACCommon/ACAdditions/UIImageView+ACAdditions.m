@@ -69,20 +69,40 @@ static char * kACLongPressGestureBlockKey = "kACLongPressGestureBlockKey";
 #pragma mark - WebImage Loading
 
 #if defined(__USE_SDWebImage__) && __USE_SDWebImage__
-- (void)setACImageURLString:(NSString *)anURLString {
-    NSURL *URL = [NSURL URLWithString:anURLString];
-    UIImage *placeholderImage = [ACUtilitys drawPlaceholderWithSize:self.size];
-    __weak __typeof(&*self) weakSelf = self;
-    [self setImageWithURL:URL
-         placeholderImage:placeholderImage
-                completed:^(UIImage *image,NSError *error,SDImageCacheType cacheType)
-    {
-        if (image && !error) {
-            __strong __typeof(&*weakSelf) strongSelf = weakSelf;
-            UIImage *newImage = [ACUtilitys zoomImageWithSize:strongSelf.size image:image];
-            strongSelf.image = newImage;
-        }
-    }];
+- (void)ac_setImageWithURLString:(NSString *) URLString {
+    [self ac_setImageWithURLString:URLString placeholderImage:nil completion:NULL];
+}
+
+- (void)ac_setImageWithURLString:(NSString *) URLString placeholderImage:(UIImage *) placeholderImage {
+    [self ac_setImageWithURLString:URLString placeholderImage:placeholderImage completion:NULL];
+}
+
+- (void)ac_setImageWithURLString:(NSString *) URLString completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock {
+    [self ac_setImageWithURLString:URLString placeholderImage:nil completion:completionBlock];
+}
+
+- (void)ac_setImageWithURLString:(NSString *) URLString placeholderImage:(UIImage *) placeholderImage completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock {
+    
+}
+
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString {
+    [self ac_setGrayImageWithURLString:URLString placeholderImage:nil completion:NULL];
+}
+
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString placeholderImage:(UIImage *) placeholderImage {
+    [self ac_setGrayImageWithURLString:URLString placeholderImage:placeholderImage completion:NULL];
+}
+
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock {
+    [self ac_setGrayImageWithURLString:URLString placeholderImage:nil completion:completionBlock];
+}
+- (void)ac_setGrayImageWithURLString:(NSString *) URLString placeholderImage:(UIImage *) placeholderImage completion:(void (^)(UIImage *image, BOOL isCachedData)) completionBlock {
+    
+}
+
+- (void)ac_setRoundedImageWithURLString:(NSString *) URLString
+                        placeholderImage:(UIImage *) placeholderImage {
+    
 }
 #endif
 
