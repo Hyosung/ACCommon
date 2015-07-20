@@ -1,13 +1,13 @@
 //
-//  ACNetworkingHeader.h
+//  ACNetworkHeader.h
 //  ACCommon
 //
 //  Created by 上海易凡 on 15/7/17.
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
-#ifndef ACCommon_ACNetworkingHeader_h
-#define ACCommon_ACNetworkingHeader_h
+#ifndef ACCommon_ACNetworkHeader_h
+#define ACCommon_ACNetworkHeader_h
 
 typedef NS_ENUM(NSUInteger, ACNetworkMethod) {
     ACNetworkMethodGET = 0  ,

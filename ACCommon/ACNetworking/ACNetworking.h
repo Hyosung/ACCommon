@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ACNetworkingContent.h"
+#import "ACNetworkContent.h"
 
 @interface ACNetworking : NSObject
 
@@ -16,7 +16,7 @@
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 
 #pragma mark - 默认的baseURL
-- (NSOperation *)fetchDataFromRequestContent:(ACNetworkingContent *) content;
+- (NSOperation *)fetchDataFromRequestContent:(ACNetworkContent *) content;
 
 - (NSOperation *)fetchDataFromPath:(NSString *) path
                             method:(ACNetworkMethod) method
