@@ -168,4 +168,52 @@
     [alert show];
 }
 
+#pragma mark - UIViewController
+
+- (UIViewController *)viewController {
+    id result = nil;
+    
+    id nextResponder = [self nextResponder];
+    while (nextResponder != nil) {
+        if ([nextResponder isKindOfClass:[UITabBarController class]]) {
+            UITabBarController *tabBarController = nextResponder;
+            result = tabBarController.selectedViewController;
+            if ([result isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navigationController = result;
+                result = navigationController.visibleViewController;
+            }
+            break;
+        }
+        else if ([nextResponder isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *navigationController = result;
+            result = navigationController.visibleViewController;
+            break;
+        }
+        else if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            result = nextResponder;
+            break;
+        }
+        nextResponder = [nextResponder nextResponder];
+    }
+    
+    return result;
+}
+
+- (UIViewController *)rootViewController {
+    id result = nil;
+    
+    id nextResponder = [self nextResponder];
+    while (nextResponder != nil) {
+        if ([nextResponder isKindOfClass:[UITabBarController class]] ||
+            [nextResponder isKindOfClass:[UINavigationController class]] ||
+            [nextResponder isKindOfClass:[UIViewController class]]) {
+            result = nextResponder;
+            break;
+        }
+        nextResponder = [nextResponder nextResponder];
+    }
+    
+    return result;
+}
+
 @end

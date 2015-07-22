@@ -55,4 +55,9 @@
 - (UIImage *)snapshot;
 - (void)saveSnapshotToPhotosAlbum;
 
+#pragma mark - UIViewController
+
+- (UIViewController *)viewController;
+- (UIViewController *)rootViewController;
+
 @end

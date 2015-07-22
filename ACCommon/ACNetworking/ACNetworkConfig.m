@@ -15,6 +15,9 @@
     static ACNetworkConfig *networkConfig = nil;
     dispatch_once(&onceToken, ^{
         networkConfig = [[self alloc] init];
+        networkConfig.timeoutInterval = 30.0;
+        networkConfig.cacheExpirationTimeInterval = 60.0 * 3;
+        networkConfig.downloadFolder = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"Download"];
     });
     return networkConfig;
 }

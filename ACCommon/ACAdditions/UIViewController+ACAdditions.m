@@ -8,6 +8,8 @@
 
 #import "UIViewController+ACAdditions.h"
 
+#import <MJRefresh.h>
+
 @interface UIViewController ()
 @property (nonatomic, strong) id <NSObject> observerWillShow;
 @property (nonatomic, strong) id <NSObject> observerWillHide;
@@ -60,32 +62,48 @@
 //    [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
 }
 
-
 - (void)addRefreshHeaderWithScrollView:(UIScrollView *) scrollView refreshingBlock:(void (^)())block {
     if ([scrollView isKindOfClass:[UIScrollView class]]) {
-//        scrollView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:block];
-//        scrollView.header.lastUpdatedTimeKey = ACSSTR(@"kRefreshHeader%@%@%@", NSStringFromClass([self class]), self.navigationItem.title, @(scrollView.tag));
-//        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"下拉刷新"
-//                                                    forState:MJRefreshStateIdle];
-//        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"松开刷新"
-//                                                    forState:MJRefreshStatePulling];
-//        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"正在刷新..."
-//                                                    forState:MJRefreshStateRefreshing];
+        scrollView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:block];
+        scrollView.header.lastUpdatedTimeKey = [NSString stringWithFormat:@"kRefreshHeader%@%@%@", NSStringFromClass([self class]), self.navigationItem.title, @(scrollView.tag)];
+        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"下拉刷新"
+                                                    forState:MJRefreshStateIdle];
+        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"松开刷新"
+                                                    forState:MJRefreshStatePulling];
+        [(MJRefreshNormalHeader *)scrollView.header setTitle:@"正在刷新..."
+                                                    forState:MJRefreshStateRefreshing];
     }
 }
 
 - (void)addRefreshFooterWithScrollView:(UIScrollView *) scrollView refreshingBlock:(void (^)())block {
     if ([scrollView isKindOfClass:[UIScrollView class]]) {
-//        scrollView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:block];
-//        
-//        // 初始化文字
-//        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"加载更多"
-//                                                        forState:MJRefreshStateIdle];
-//        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"正在加载中..."
-//                                                        forState:MJRefreshStateRefreshing];
-//        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"已全部加载"
-//                                                        forState:MJRefreshStateNoMoreData];
+        scrollView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:block];
+        
+        // 初始化文字
+        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"加载更多"
+                                                        forState:MJRefreshStateIdle];
+        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"正在加载中..."
+                                                        forState:MJRefreshStateRefreshing];
+        [(MJRefreshAutoNormalFooter *)scrollView.footer setTitle:@"已全部加载"
+                                                        forState:MJRefreshStateNoMoreData];
     }
+}
+
+- (UIViewController *)rootViewController {
+    id __weak result = self;
+    
+    id nextResponder = [self nextResponder];
+    while (nextResponder != nil) {
+        if ([nextResponder isKindOfClass:[UITabBarController class]] ||
+            [nextResponder isKindOfClass:[UINavigationController class]] ||
+            [nextResponder isKindOfClass:[UIViewController class]]) {
+            result = nextResponder;
+            break;
+        }
+        nextResponder = [nextResponder nextResponder];
+    }
+    
+    return result;
 }
 
 @end

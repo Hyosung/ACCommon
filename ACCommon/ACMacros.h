@@ -279,9 +279,9 @@ do { \
 
 #define APP_TMP_ADDTO(_path)                [NSString stringWithFormat:@"%@/%@",NSTemporaryDirectory(),_path]
 
-#define APP_CACHES                          [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
-#define APP_LIBRARY                         [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0]
-#define APP_DOCUMENT                        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define APP_CACHES                          [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject]
+#define APP_LIBRARY                         [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject]
+#define APP_DOCUMENT                        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
 
 #define ACSTR(fmt,...)                      [NSString stringWithFormat:(fmt),##__VA_ARGS__]
 #define CENTER(A, B)                        ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); ((__a - __b) / 2.0); })

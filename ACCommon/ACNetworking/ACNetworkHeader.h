@@ -2,7 +2,7 @@
 //  ACNetworkHeader.h
 //  ACCommon
 //
-//  Created by 上海易凡 on 15/7/17.
+//  Created by 暁星 on 15/7/17.
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
@@ -17,6 +17,22 @@ typedef NS_ENUM(NSUInteger, ACNetworkMethod) {
     ACNetworkMethodPATCH    ,
     ACNetworkMethodDELETE
 };
+
+UIKIT_STATIC_INLINE NSString * RequestMethod(ACNetworkMethod method) {
+    static dispatch_once_t onceToken;
+    static NSDictionary *methods = nil;
+    dispatch_once(&onceToken, ^{
+        methods = @{
+                    @(ACNetworkMethodGET)   : @"GET",
+                    @(ACNetworkMethodPUT)   : @"PUT",
+                    @(ACNetworkMethodHEAD)  : @"HEAD",
+                    @(ACNetworkMethodPOST)  : @"POST",
+                    @(ACNetworkMethodPATCH) : @"PATCH",
+                    @(ACNetworkMethodDELETE): @"DELETE"
+                    };
+    });
+    return methods[@(method)];
+}
 
 typedef struct ACNetworkProgress {
     NSUInteger bytes;

@@ -10,6 +10,8 @@
 
 @interface UIViewController (ACAdditions) <UIGestureRecognizerDelegate>
 
+- (UIViewController *)rootViewController;
+
 - (void)touchViewDismissKeyboard;
 
 - (void)addRefreshHeaderWithScrollView:(UIScrollView *) scrollView
