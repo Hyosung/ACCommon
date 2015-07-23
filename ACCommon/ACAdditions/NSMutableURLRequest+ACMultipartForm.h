@@ -10,4 +10,6 @@
 
 @interface NSMutableURLRequest (ACMultipartForm)
 
+- (void)setObject:(id) object forKey:(NSString *) aKey;
+
 @end

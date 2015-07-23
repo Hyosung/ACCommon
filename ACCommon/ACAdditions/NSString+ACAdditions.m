@@ -298,7 +298,6 @@
     if (!MIMEType) {
 		return @"application/octet-stream";
 	}
-    
     return CFBridgingRelease(MIMEType);
 }
 
