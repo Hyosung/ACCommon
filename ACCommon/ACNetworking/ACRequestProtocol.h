@@ -1,5 +1,5 @@
 //
-//  ACNetworkRequestProtocol.h
+//  ACRequestProtocol.h
 //  ACCommon
 //
 //  Created by 暁星 on 15/7/22.
@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol ACNetworkRequestProtocol <NSObject>
+@protocol ACRequestProtocol <NSObject>
 
-@property (nonatomic, copy) NSURL *requestURL;
-@property (nonatomic, copy) NSString *requestPath;
+@property (copy) NSURL *URL;
+@property (copy) NSString *path;
+@property ACRequestMethod method;
 
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *) operationManager;
 

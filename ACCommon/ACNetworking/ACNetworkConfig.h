@@ -10,7 +10,7 @@
 
 @interface ACNetworkConfig : NSObject
 
-+ (instancetype)config;
++ (instancetype)sharedConfig;
 
 @property (nonatomic, copy) NSURL *baseURL;
 

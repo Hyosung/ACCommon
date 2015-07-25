@@ -1,5 +1,5 @@
 //
-//  ACNetworkCache.h
+//  ACMemoryCache.h
 //  ACCommon
 //
 //  Created by 暁星 on 15/7/20.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ACNetworkCacheObject : NSObject
+@interface ACMemoryCacheObject : NSObject
 
 @property (nonatomic, readonly) NSTimeInterval lastUpdateTimestamp;
 @property (nonatomic, readonly, getter=isExpiration) BOOL expiration;
@@ -20,9 +20,10 @@
 
 @end
 
-@interface ACNetworkCache : NSCache
+@interface ACMemoryCache : NSCache
 
-+ (instancetype)cache;
++ (instancetype)memoryCache;
++ (instancetype)sharedCache;
 
 - (id)objectForURL:(NSURL *) URL;
 - (void)setObject:(id) obj forURL:(NSURL *) URL;

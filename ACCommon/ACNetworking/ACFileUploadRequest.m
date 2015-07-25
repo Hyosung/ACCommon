@@ -1,22 +1,30 @@
 //
-//  ACNetworkUploadRequest.m
+//  ACFileUploadRequest.m
 //  ACCommon
 //
 //  Created by 暁星 on 15/7/21.
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
-#import "ACNetworkUploadRequest.h"
+#import "ACFileUploadRequest.h"
 
-@implementation ACNetworkUploadRequest
+@implementation ACFileUploadRequest
 
-@synthesize requestURL;
-@synthesize requestPath;
+@synthesize URL;
+@synthesize path;
+@synthesize method;
 @synthesize progressBlock;
 
+- (ACRequestMethod)method {
+    if (method == ACRequestMethodGET || method == ACRequestMethodHEAD) {
+        method = ACRequestMethodPOST;
+    }
+    return method;
+}
+
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *)operationManager {
-    NSURL *URL = self.requestURL ?: [NSURL URLWithString:self.requestPath ?: @"" relativeToURL:operationManager.baseURL];
-    self.requestURL = URL;
+    NSURL *tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
+    self.URL = tempURL;
     __weak __typeof__(self) weakSelf = self;
     return [operationManager.requestSerializer multipartFormRequestWithMethod:@"POST"
                                                                     URLString:URL.absoluteString
@@ -38,18 +46,18 @@
 
 @end
 
-ACNetworkUploadRequest * ACUploadRequestPath(NSString *path, NSDictionary *fileInfo, ACNetworkProgressHandler progressBlock) {
-    ACNetworkUploadRequest *content = [[ACNetworkUploadRequest alloc] init];
+ACFileUploadRequest * ACUploadRequestPath(NSString *path, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock) {
+    ACFileUploadRequest *content = [[ACFileUploadRequest alloc] init];
+    content.path = path;
     content.fileInfo = fileInfo;
-    content.requestPath = path;
     content.progressBlock = progressBlock;
     return content;
 }
 
-ACNetworkUploadRequest * ACUploadRequestURL(NSURL *URL, NSDictionary *fileInfo, ACNetworkProgressHandler progressBlock) {
-    ACNetworkUploadRequest *content = [[ACNetworkUploadRequest alloc] init];
+ACFileUploadRequest * ACUploadRequestURL(NSURL *URL, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock) {
+    ACFileUploadRequest *content = [[ACFileUploadRequest alloc] init];
+    content.URL = URL;
     content.fileInfo = fileInfo;
-    content.requestURL = URL;
     content.progressBlock = progressBlock;
     return content;
 }

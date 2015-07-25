@@ -10,7 +10,7 @@
 
 #import "AFNetworking.h"
 #import "ACNetworkConfig.h"
-#import "ACNetworkCache.h"
+#import "ACMemoryCache.h"
 
 @interface ACNetworking ()
 
@@ -21,8 +21,8 @@
 @property (nonatomic, weak  ) AFHTTPRequestSerializer <AFURLRequestSerialization> *rs;
 @property (nonatomic, strong) NSMapTable *operations;
 
-- (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(id <ACNetworkRequestProtocol>) request;
-- (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(id <ACNetworkRequestProtocol>) request;
+- (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(id <ACRequestProtocol>) request;
+- (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(id <ACRequestProtocol>) request;
 #endif
 
 @end
@@ -39,7 +39,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 
 #pragma mark - Lifecycle
 
-+ (instancetype)network {
++ (instancetype)sharedNetwork {
     static ACNetworking *network = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -51,7 +51,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.config = [ACNetworkConfig config];
+        self.config = [ACNetworkConfig sharedConfig];
         self.manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.config.baseURL];
         self.manager.requestSerializer.timeoutInterval = self.config.timeoutInterval;
         self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -78,13 +78,13 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 
 #pragma mark - Request Methods
 
-- (NSString *)fetchDataFromRequest:(ACNetworkRequest *) request {
+- (NSString *)fetchDataFromRequest:(ACHTTPRequest *) request {
     NSAssert(request, @"request不能为nil");
-    NSAssert(request.requestPath || request.requestURL, @"requestPath与requestURL只能填写其中一个");
+    NSAssert(request.path || request.URL, @"path与URL只能填写其中一个");
     
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
     
-    id resultObject = [[ACNetworkCache cache] fetchCacheDataForURL:URLRequest.URL];
+    id resultObject = [[ACMemoryCache sharedCache] fetchCacheDataForURL:URLRequest.URL];
     if (resultObject) {
         if (request.completionBlock) {
             request.completionBlock(resultObject, nil);
@@ -103,9 +103,9 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
     return operationIdentifier;
 }
 
-- (NSString *)uploadFileFromRequest:(ACNetworkUploadRequest *) request {
+- (NSString *)uploadFileFromRequest:(ACFileUploadRequest *) request {
     NSAssert(request, @"request不能为nil");
-    NSAssert(request.requestPath || request.requestURL, @"requestPath与requestURL只能填写其中一个");
+    NSAssert(request.path || request.URL, @"path与URL只能填写其中一个");
     
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
     
@@ -117,7 +117,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
         [operation setUploadProgressBlock:^(NSUInteger bytesWritten,
                                             long long totalBytesWritten,
                                             long long totalBytesExpectedToWrite) {
-            request.progressBlock(ACNetworkProgressMake(bytesWritten,
+            request.progressBlock(ACRequestProgressMake(bytesWritten,
                                                         totalBytesWritten,
                                                         totalBytesExpectedToWrite), nil, nil);
         }];
@@ -130,9 +130,9 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
     return operationIdentifier;
 }
 
-- (NSString *)downloadFileFromRequest:(ACNetworkDownloadRequest *) request {
+- (NSString *)downloadFileFromRequest:(ACFileDownloadRequest *) request {
     NSAssert(request, @"request不能为nil");
-    NSAssert(request.requestPath || request.requestURL, @"requestPath与requestURL只能填写其中一个");
+    NSAssert(request.path || request.URL, @"path与URL只能填写其中一个");
     
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
     
@@ -144,7 +144,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
         [operation setDownloadProgressBlock:^(NSUInteger bytesRead,
                                               long long totalBytesRead,
                                               long long totalBytesExpectedToRead) {
-            request.progressBlock(ACNetworkProgressMake(bytesRead,
+            request.progressBlock(ACRequestProgressMake(bytesRead,
                                                         totalBytesRead,
                                                         totalBytesExpectedToRead), nil, nil);
         }];
@@ -158,9 +158,9 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 }
 
 - (NSString *)fetchDataFromPath:(NSString *)path
-                         method:(ACNetworkMethod)method
+                         method:(ACRequestMethod)method
                      parameters:(NSDictionary *)parameters
-                     completion:(ACNetworkCompletionHandler)completionBlock {
+                     completion:(ACRequestCompletionHandler)completionBlock {
     NSURL *URL = [NSURL URLWithString:path ?: @""
                         relativeToURL:self.manager.baseURL];
     
@@ -172,18 +172,18 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 
 - (NSString *)GET_fetchDataFromPath:(NSString *)path
                          parameters:(NSDictionary *)parameters
-                         completion:(ACNetworkCompletionHandler)completionBlock{
+                         completion:(ACRequestCompletionHandler)completionBlock{
     return [self fetchDataFromPath:path
-                            method:ACNetworkMethodGET
+                            method:ACRequestMethodGET
                         parameters:parameters
                         completion:completionBlock];
 }
 
 - (NSString *)POST_fetchDataFromPath:(NSString *)path
                           parameters:(NSDictionary *)parameters
-                          completion:(ACNetworkCompletionHandler)completionBlock {
+                          completion:(ACRequestCompletionHandler)completionBlock {
     return [self fetchDataFromPath:path
-                            method:ACNetworkMethodPOST
+                            method:ACRequestMethodPOST
                         parameters:parameters
                         completion:completionBlock];
 }
@@ -191,7 +191,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 - (NSString *)uploadFileFromPath:(NSString *)path
                         fileInfo:(NSDictionary *)fileInfo
                       parameters:(NSDictionary *)parameters
-                        progress:(ACNetworkProgressHandler)progressBlock {
+                        progress:(ACRequestProgressHandler)progressBlock {
     NSURL *URL = [NSURL URLWithString:path ?: @""
                         relativeToURL:self.manager.baseURL];
     return [self uploadFileFromURLString:URL.absoluteString
@@ -201,7 +201,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 }
 
 - (NSString *)downloadFileFromPath:(NSString *)path
-                          progress:(ACNetworkProgressHandler)progressBlock{
+                          progress:(ACRequestProgressHandler)progressBlock{
     NSURL *URL = [NSURL URLWithString:path ?: @""
                         relativeToURL:self.manager.baseURL];
     return [self downloadFileFromURLString:URL.absoluteString
@@ -210,32 +210,32 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 
 
 - (NSString *)fetchDataFromURLString:(NSString *)URLString
-                              method:(ACNetworkMethod)method
+                              method:(ACRequestMethod)method
                           parameters:(NSDictionary *)parameters
-                          completion:(ACNetworkCompletionHandler)completionBlock {
+                          completion:(ACRequestCompletionHandler)completionBlock {
     
-    ACNetworkRequest *request = ACHTTPRequestURL(method, [NSURL URLWithString:URLString], parameters, completionBlock);
+    ACHTTPRequest *request = ACHTTPRequestURL(method, [NSURL URLWithString:URLString], parameters, completionBlock);
     return [self fetchDataFromRequest:request];
 }
 
 - (NSString *)uploadFileFromURLString:(NSString *)URLString
                              fileInfo:(NSDictionary *)fileInfo
                            parameters:(NSDictionary *)parameters
-                             progress:(ACNetworkProgressHandler)progressBlock {
-    ACNetworkUploadRequest *uploadRequest = ACUploadRequestURL([NSURL URLWithString:URLString], fileInfo, progressBlock);
+                             progress:(ACRequestProgressHandler)progressBlock {
+    ACFileUploadRequest *uploadRequest = ACUploadRequestURL([NSURL URLWithString:URLString], fileInfo, progressBlock);
     uploadRequest.parameters = parameters;
     return [self uploadFileFromRequest:uploadRequest];
 }
 
 - (NSString *)downloadFileFromURLString:(NSString *)URLString
-                               progress:(ACNetworkProgressHandler)progressBlock{
-    ACNetworkDownloadRequest *downloadRequest = ACDownloadRequestURL([NSURL URLWithString:URLString], progressBlock);
+                               progress:(ACRequestProgressHandler)progressBlock{
+    ACFileDownloadRequest *downloadRequest = ACDownloadRequestURL([NSURL URLWithString:URLString], progressBlock);
     return [self downloadFileFromRequest:downloadRequest];
 }
 
 #pragma mark - Extension Methods
 
-- (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(id<ACNetworkRequestProtocol>)request {
+- (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(id<ACRequestProtocol>)request {
     void (^successBlock)(AFHTTPRequestOperation *, id) = ^ (AFHTTPRequestOperation *operation,
                                                             id responseObject) {
         
@@ -243,51 +243,51 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
             return ;
         }
         
-        if ([request isKindOfClass:[ACNetworkRequest class]]) {
+        if ([request isKindOfClass:[ACHTTPRequest class]]) {
             NSError *error = nil;
             id resultObject = responseObject;
-            if (((ACNetworkRequest *)request).responseJSON) {
+            if (((ACHTTPRequest *)request).responseJSON) {
                 
                 resultObject  = [NSJSONSerialization JSONObjectWithData:responseObject
                                                                 options:NSJSONReadingAllowFragments
                                                                   error:&error];
             }
             
-            if (((ACNetworkRequest *)request).cacheResponseData &&
-                ((ACNetworkRequest *)request).method == ACNetworkMethodGET &&
+            if (((ACHTTPRequest *)request).cacheResponseData &&
+                ((ACHTTPRequest *)request).method == ACRequestMethodGET &&
                 resultObject) {
                 
-                [[ACNetworkCache cache] storeCacheData:resultObject forURL:request.requestURL];
+                [[ACMemoryCache sharedCache] storeCacheData:resultObject forURL:request.URL];
             }
             
-            if (((ACNetworkRequest *)request).completionBlock) {
-                ((ACNetworkRequest *)request).completionBlock(resultObject, error);
+            if (((ACHTTPRequest *)request).completionBlock) {
+                ((ACHTTPRequest *)request).completionBlock(resultObject, error);
             }
         }
-        else if ([request isKindOfClass:[ACNetworkDownloadRequest class]]) {
-            if (((ACNetworkDownloadRequest *)request).progressBlock) {
-                ((ACNetworkDownloadRequest *)request).progressBlock(ACNetworkProgressZero, responseObject, nil);
+        else if ([request isKindOfClass:[ACFileDownloadRequest class]]) {
+            if (((ACFileDownloadRequest *)request).progressBlock) {
+                ((ACFileDownloadRequest *)request).progressBlock(ACRequestProgressZero, responseObject, nil);
             }
         }
-        else if ([request isKindOfClass:[ACNetworkUploadRequest class]]) {
+        else if ([request isKindOfClass:[ACFileUploadRequest class]]) {
             NSError *error = nil;
             id resultObject = responseObject;
-            if (((ACNetworkUploadRequest *)request).responseJSON) {
+            if (((ACFileUploadRequest *)request).responseJSON) {
                 
                 resultObject  = [NSJSONSerialization JSONObjectWithData:responseObject
                                                                 options:NSJSONReadingAllowFragments
                                                                   error:&error];
             }
             
-            if (((ACNetworkUploadRequest *)request).progressBlock) {
-                ((ACNetworkUploadRequest *)request).progressBlock(ACNetworkProgressZero, resultObject, nil);
+            if (((ACFileUploadRequest *)request).progressBlock) {
+                ((ACFileUploadRequest *)request).progressBlock(ACRequestProgressZero, resultObject, nil);
             }
         }
     };
     return successBlock;
 }
 
-- (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(id<ACNetworkRequestProtocol>)request {
+- (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(id<ACRequestProtocol>)request {
     void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = ^ (AFHTTPRequestOperation *operation,
                                                                    NSError *error) {
         
@@ -295,26 +295,26 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
             return ;
         }
         
-        if ([request isKindOfClass:[ACNetworkRequest class]]) {
-            if (((ACNetworkRequest *)request).completionBlock) {
+        if ([request isKindOfClass:[ACHTTPRequest class]]) {
+            if (((ACHTTPRequest *)request).completionBlock) {
                 
                 id resultObject = nil;
-                if (((ACNetworkRequest *)request).cacheResponseData &&
-                    ((ACNetworkRequest *)request).method == ACNetworkMethodGET) {
-                    resultObject = [[ACNetworkCache cache] fetchCacheDataForURL:request.requestURL];
+                if (((ACHTTPRequest *)request).cacheResponseData &&
+                    ((ACHTTPRequest *)request).method == ACRequestMethodGET) {
+                    resultObject = [[ACMemoryCache sharedCache] fetchCacheDataForURL:request.URL];
                 }
                 if (resultObject) {
-                    ((ACNetworkRequest *)request).completionBlock(resultObject, nil);
+                    ((ACHTTPRequest *)request).completionBlock(resultObject, nil);
                 }
                 else {
-                    ((ACNetworkRequest *)request).completionBlock(nil, error);
+                    ((ACHTTPRequest *)request).completionBlock(nil, error);
                 }
             }
         }
-        else if ([request isKindOfClass:[ACNetworkDownloadRequest class]] ||
-                 [request isKindOfClass:[ACNetworkUploadRequest class]]) {
-            if (((id <ACNetworkProgressProtocol>)request).progressBlock) {
-                ((id <ACNetworkProgressProtocol>)request).progressBlock(ACNetworkProgressZero, nil, error);
+        else if ([request isKindOfClass:[ACFileDownloadRequest class]] ||
+                 [request isKindOfClass:[ACFileUploadRequest class]]) {
+            if (((id <ACRequestProgressProtocol>)request).progressBlock) {
+                ((id <ACRequestProgressProtocol>)request).progressBlock(ACRequestProgressZero, nil, error);
             }
         }
     };

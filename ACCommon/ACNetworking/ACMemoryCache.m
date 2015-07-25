@@ -1,16 +1,16 @@
 //
-//  ACNetworkCache.m
+//  ACMemoryCache.m
 //  ACCommon
 //
 //  Created by 暁星 on 15/7/20.
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
-#import "ACNetworkCache.h"
+#import "ACMemoryCache.h"
 #import "ACNetworkConfig.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation ACNetworkCacheObject
+@implementation ACMemoryCacheObject
 
 - (instancetype)initWithContent:(id) content {
     self = [super init];
@@ -29,12 +29,12 @@
 - (BOOL)isExpiration {
     NSTimeInterval currentTimestamp = [NSDate date].timeIntervalSince1970;
     NSTimeInterval timeInterval = currentTimestamp - _lastUpdateTimestamp;
-    return (timeInterval > [ACNetworkConfig config].cacheExpirationTimeInterval);
+    return (timeInterval > [ACNetworkConfig sharedConfig].cacheExpirationTimeInterval);
 }
 
 @end
 
-@implementation ACNetworkCache
+@implementation ACMemoryCache
 
 UIKIT_STATIC_INLINE NSString * ACCacheKeyForURL(NSURL *URL) {
     const char *str = [URL.absoluteString UTF8String];
@@ -67,9 +67,14 @@ UIKIT_STATIC_INLINE NSString * ACCacheKeyForURL(NSURL *URL) {
     return self;
 }
 
-+ (instancetype)cache {
++ (instancetype)memoryCache {
+    ACMemoryCache *__autoreleasing cache = [[self alloc] init];
+    return cache;
+}
+
++ (instancetype)sharedCache {
     static dispatch_once_t onceToken;
-    static ACNetworkCache *networkCache = nil;
+    static ACMemoryCache *networkCache = nil;
     dispatch_once(&onceToken, ^{
         networkCache = [[self alloc] init];
     });
@@ -97,7 +102,7 @@ UIKIT_STATIC_INLINE NSString * ACCacheKeyForURL(NSURL *URL) {
 }
 
 - (id)fetchCacheDataForURL:(NSURL *)URL {
-    ACNetworkCacheObject *cacheObject = [self objectForURL:URL];
+    ACMemoryCacheObject *cacheObject = [self objectForURL:URL];
     if (cacheObject.isExpiration) {
         return nil;
     }
@@ -106,9 +111,9 @@ UIKIT_STATIC_INLINE NSString * ACCacheKeyForURL(NSURL *URL) {
 }
 
 - (void)storeCacheData:(id)data forURL:(NSURL *)URL {
-    ACNetworkCacheObject *cacheObject = [self objectForURL:URL];
+    ACMemoryCacheObject *cacheObject = [self objectForURL:URL];
     if (!cacheObject) {
-        cacheObject = [[ACNetworkCacheObject alloc] init];
+        cacheObject = [[ACMemoryCacheObject alloc] init];
     }
     
     [cacheObject updateContent:data];

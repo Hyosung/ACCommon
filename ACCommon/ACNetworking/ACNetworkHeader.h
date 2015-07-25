@@ -9,48 +9,48 @@
 #ifndef ACCommon_ACNetworkHeader_h
 #define ACCommon_ACNetworkHeader_h
 
-typedef NS_ENUM(NSUInteger, ACNetworkMethod) {
-    ACNetworkMethodGET = 0  ,
-    ACNetworkMethodPOST     ,
-    ACNetworkMethodHEAD     ,
-    ACNetworkMethodPUT      ,
-    ACNetworkMethodPATCH    ,
-    ACNetworkMethodDELETE
+typedef NS_ENUM(NSUInteger, ACRequestMethod) {
+    ACRequestMethodGET = 0  ,
+    ACRequestMethodPOST     ,
+    ACRequestMethodHEAD     ,
+    ACRequestMethodPUT      ,
+    ACRequestMethodPATCH    ,
+    ACRequestMethodDELETE
 };
 
-UIKIT_STATIC_INLINE NSString * RequestMethod(ACNetworkMethod method) {
+UIKIT_STATIC_INLINE NSString * RequestMethod(ACRequestMethod method) {
     static dispatch_once_t onceToken;
     static NSDictionary *methods = nil;
     dispatch_once(&onceToken, ^{
         methods = @{
-                    @(ACNetworkMethodGET)   : @"GET",
-                    @(ACNetworkMethodPUT)   : @"PUT",
-                    @(ACNetworkMethodHEAD)  : @"HEAD",
-                    @(ACNetworkMethodPOST)  : @"POST",
-                    @(ACNetworkMethodPATCH) : @"PATCH",
-                    @(ACNetworkMethodDELETE): @"DELETE"
+                    @(ACRequestMethodGET)   : @"GET",
+                    @(ACRequestMethodPUT)   : @"PUT",
+                    @(ACRequestMethodHEAD)  : @"HEAD",
+                    @(ACRequestMethodPOST)  : @"POST",
+                    @(ACRequestMethodPATCH) : @"PATCH",
+                    @(ACRequestMethodDELETE): @"DELETE"
                     };
     });
     return methods[@(method)];
 }
 
-typedef struct ACNetworkProgress {
+typedef struct ACRequestProgress {
     NSUInteger bytes;
     long long totalBytes, totalBytesExpected;
-} ACNetworkProgress;
+} ACRequestProgress;
 
-UIKIT_STATIC_INLINE ACNetworkProgress ACNetworkProgressMake(NSUInteger bytes, long long totalBytes, long long totalBytesExpected) {
-    ACNetworkProgress progress = {bytes, totalBytes, totalBytesExpected};
+UIKIT_STATIC_INLINE ACRequestProgress ACRequestProgressMake(NSUInteger bytes, long long totalBytes, long long totalBytesExpected) {
+    ACRequestProgress progress = {bytes, totalBytes, totalBytesExpected};
     return progress;
 }
 
-UIKIT_STATIC_INLINE bool ACNetworkProgressIsEmpty(ACNetworkProgress progress) {
+UIKIT_STATIC_INLINE bool ACRequestProgressIsEmpty(ACRequestProgress progress) {
     return progress.bytes <= 0 && progress.totalBytes <= 0 && progress.totalBytesExpected <= 0;
 }
 
-#define ACNetworkProgressZero (ACNetworkProgress){0, 0, 0}
+#define ACRequestProgressZero (ACRequestProgress){0, 0, 0}
 
-typedef void(^ACNetworkCompletionHandler)(id result, NSError *error);
-typedef void(^ACNetworkProgressHandler)(ACNetworkProgress progress, id result, NSError *error);
+typedef void(^ACRequestCompletionHandler)(id result, NSError *error);
+typedef void(^ACRequestProgressHandler)(ACRequestProgress progress, id result, NSError *error);
 
 #endif

@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ACNetworkRequest.h"
-#import "ACNetworkUploadRequest.h"
-#import "ACNetworkDownloadRequest.h"
+#import "ACHTTPRequest.h"
+#import "ACFileUploadRequest.h"
+#import "ACFileDownloadRequest.h"
 
 @interface ACNetworking : NSObject
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 
-+ (instancetype)network;
++ (instancetype)sharedNetwork;
 
 - (void)cancelAllOperations;
 - (void)cancelOperationWithIdentifier:(NSString *) identifier;
@@ -30,7 +30,7 @@
  *
  *  @return operation identifier
  */
-- (NSString *)fetchDataFromRequest:(ACNetworkRequest *) request;
+- (NSString *)fetchDataFromRequest:(ACHTTPRequest *) request;
 
 /**
  *  @author Stoney, 15-07-22 17:07:54
@@ -41,7 +41,7 @@
  *
  *  @return operation identifier
  */
-- (NSString *)uploadFileFromRequest:(ACNetworkUploadRequest *) request;
+- (NSString *)uploadFileFromRequest:(ACFileUploadRequest *) request;
 
 /**
  *  @author Stoney, 15-07-22 17:07:29
@@ -52,45 +52,45 @@
  *
  *  @return operation identifier
  */
-- (NSString *)downloadFileFromRequest:(ACNetworkDownloadRequest *) request;
+- (NSString *)downloadFileFromRequest:(ACFileDownloadRequest *) request;
 
 #pragma mark - 默认的baseURL
 
 - (NSString *)fetchDataFromPath:(NSString *) path
-                         method:(ACNetworkMethod) method
+                         method:(ACRequestMethod) method
                      parameters:(NSDictionary *) parameters
-                     completion:(ACNetworkCompletionHandler) completionBlock;
+                     completion:(ACRequestCompletionHandler) completionBlock;
 
 - (NSString *)GET_fetchDataFromPath:(NSString *) path
                          parameters:(NSDictionary *) parameters
-                         completion:(ACNetworkCompletionHandler) completionBlock;
+                         completion:(ACRequestCompletionHandler) completionBlock;
 
 - (NSString *)POST_fetchDataFromPath:(NSString *) path
                           parameters:(NSDictionary *) parameters
-                          completion:(ACNetworkCompletionHandler) completionBlock;
+                          completion:(ACRequestCompletionHandler) completionBlock;
 
 - (NSString *)uploadFileFromPath:(NSString *) path
                         fileInfo:(NSDictionary *) fileInfo
                       parameters:(NSDictionary *) parameters
-                        progress:(ACNetworkProgressHandler) progressBlock;
+                        progress:(ACRequestProgressHandler) progressBlock;
 
 - (NSString *)downloadFileFromPath:(NSString *) path
-                          progress:(ACNetworkProgressHandler) progressBlock;
+                          progress:(ACRequestProgressHandler) progressBlock;
 
 #pragma mark - 自定义请求链接
 
 - (NSString *)fetchDataFromURLString:(NSString *) URLString
-                              method:(ACNetworkMethod) method
+                              method:(ACRequestMethod) method
                           parameters:(NSDictionary *) parameters
-                          completion:(ACNetworkCompletionHandler) completionBlock;
+                          completion:(ACRequestCompletionHandler) completionBlock;
 
 - (NSString *)uploadFileFromURLString:(NSString *) URLString
                              fileInfo:(NSDictionary *) fileInfo
                            parameters:(NSDictionary *) parameters
-                             progress:(ACNetworkProgressHandler) progressBlock;
+                             progress:(ACRequestProgressHandler) progressBlock;
 
 - (NSString *)downloadFileFromURLString:(NSString *) URLString
-                               progress:(ACNetworkProgressHandler) progressBlock;
+                               progress:(ACRequestProgressHandler) progressBlock;
 
 #endif
 
