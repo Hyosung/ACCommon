@@ -19,7 +19,11 @@
 
 @end
 
-UIKIT_EXTERN ACHTTPRequest * ACHTTPRequestPath(ACRequestMethod method, NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
-UIKIT_EXTERN ACHTTPRequest * ACHTTPRequestURL(ACRequestMethod method, NSURL *URL, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
-UIKIT_EXTERN ACHTTPRequest * ACPOSTRequestPath(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
-UIKIT_EXTERN ACHTTPRequest * ACGETRequestPath(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
+extern __attribute__((overloadable)) ACHTTPRequest * ACCreateRequest(NSString *path, ACRequestMethod method, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
+extern __attribute__((overloadable)) ACHTTPRequest * ACCreateRequest(NSURL *URL, ACRequestMethod method, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
+
+extern __attribute__((overloadable)) ACHTTPRequest * ACCreatePOSTRequest(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
+extern __attribute__((overloadable)) ACHTTPRequest * ACCreatePOSTRequest(NSURL *URL, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
+
+extern __attribute__((overloadable)) ACHTTPRequest * ACCreateGETRequest(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);
+extern __attribute__((overloadable)) ACHTTPRequest * ACCreateGETRequest(NSURL *URL, NSDictionary *parameters, ACRequestCompletionHandler completionBlock);

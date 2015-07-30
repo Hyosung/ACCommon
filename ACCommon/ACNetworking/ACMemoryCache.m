@@ -29,7 +29,7 @@
 - (BOOL)isExpiration {
     NSTimeInterval currentTimestamp = [NSDate date].timeIntervalSince1970;
     NSTimeInterval timeInterval = currentTimestamp - _lastUpdateTimestamp;
-    return (timeInterval > [ACNetworkConfig sharedConfig].cacheExpirationTimeInterval);
+    return (timeInterval > [ACNetworkConfig defaultConfig].cacheExpirationTimeInterval);
 }
 
 @end

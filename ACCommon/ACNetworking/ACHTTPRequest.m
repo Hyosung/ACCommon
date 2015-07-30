@@ -15,7 +15,7 @@
 @synthesize method;
 
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *)operationManager {
-    NSURL *tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
+    NSURL *__weak tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
     self.URL = tempURL;
     return [operationManager.requestSerializer requestWithMethod:RequestMethod(self.method)
                                                        URLString:URL.absoluteString
@@ -25,7 +25,7 @@
 
 @end
 
-ACHTTPRequest * ACHTTPRequestPath(ACRequestMethod method, NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
+__attribute__((overloadable)) ACHTTPRequest * ACCreateRequest(NSString *path, ACRequestMethod method, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
     ACHTTPRequest *content = [[ACHTTPRequest alloc] init];
     content.path = path;
     content.method = method;
@@ -35,7 +35,7 @@ ACHTTPRequest * ACHTTPRequestPath(ACRequestMethod method, NSString *path, NSDict
     return content;
 }
 
-ACHTTPRequest * ACHTTPRequestURL(ACRequestMethod method, NSURL *URL, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
+__attribute__((overloadable)) ACHTTPRequest * ACCreateRequest(NSURL *URL, ACRequestMethod method, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
     ACHTTPRequest *content = [[ACHTTPRequest alloc] init];
     content.URL = URL;
     content.method = method;
@@ -45,7 +45,7 @@ ACHTTPRequest * ACHTTPRequestURL(ACRequestMethod method, NSURL *URL, NSDictionar
     return content;
 }
 
-ACHTTPRequest * ACPOSTRequestPath(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
+__attribute__((overloadable)) ACHTTPRequest * ACCreatePOSTRequest(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
     ACHTTPRequest *content = [[ACHTTPRequest alloc] init];
     content.path = path;
     content.method = ACRequestMethodPOST;
@@ -55,9 +55,29 @@ ACHTTPRequest * ACPOSTRequestPath(NSString *path, NSDictionary *parameters, ACRe
     return content;
 }
 
-ACHTTPRequest * ACGETRequestPath(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
+__attribute__((overloadable)) ACHTTPRequest * ACCreatePOSTRequest(NSURL *URL, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
+    ACHTTPRequest *content = [[ACHTTPRequest alloc] init];
+    content.URL = URL;
+    content.method = ACRequestMethodPOST;
+    content.parameters = parameters;
+    content.responseJSON = YES;
+    content.completionBlock = completionBlock;
+    return content;
+}
+
+__attribute__((overloadable)) ACHTTPRequest * ACCreateGETRequest(NSString *path, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
     ACHTTPRequest *content = [[ACHTTPRequest alloc] init];
     content.path = path;
+    content.method = ACRequestMethodGET;
+    content.parameters = parameters;
+    content.responseJSON = YES;
+    content.completionBlock = completionBlock;
+    return content;
+}
+
+__attribute__((overloadable)) ACHTTPRequest * ACCreateGETRequest(NSURL *URL, NSDictionary *parameters, ACRequestCompletionHandler completionBlock) {
+    ACHTTPRequest *content = [[ACHTTPRequest alloc] init];
+    content.URL = URL;
     content.method = ACRequestMethodGET;
     content.parameters = parameters;
     content.responseJSON = YES;

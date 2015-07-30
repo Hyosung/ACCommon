@@ -123,8 +123,8 @@ CGFloat ACVCGetHeight(UIViewController *self) {
     return self.view.bounds.size.height;
 }
 
-bool ACSystemVersionLessThan(NSString *version) {
-    return ([[[UIDevice currentDevice] systemVersion] compare:version options:NSNumericSearch] == NSOrderedDescending);
+bool ACSystemVersionLessThanEqual(NSString *version) {
+    return ([[[UIDevice currentDevice] systemVersion] compare:version options:NSNumericSearch] != NSOrderedAscending);
 }
 
 bool ACSystemVersionEqualTo(NSString *version) {
@@ -132,8 +132,8 @@ bool ACSystemVersionEqualTo(NSString *version) {
     return ([[[UIDevice currentDevice] systemVersion] compare:version options:NSNumericSearch] == NSOrderedSame);
 }
 
-bool ACSystemVersionGreaterThan(NSString *version) {
+bool ACSystemVersionGreaterThanEqual(NSString *version) {
     
-    return ([[[UIDevice currentDevice] systemVersion] compare:version options:NSNumericSearch] == NSOrderedAscending);
+    return ([[[UIDevice currentDevice] systemVersion] compare:version options:NSNumericSearch] != NSOrderedDescending);
 }
 

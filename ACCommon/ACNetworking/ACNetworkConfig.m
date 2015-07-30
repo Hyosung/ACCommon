@@ -10,7 +10,7 @@
 
 @implementation ACNetworkConfig
 
-+ (instancetype)sharedConfig {
++ (instancetype)defaultConfig {
     static dispatch_once_t onceToken;
     static ACNetworkConfig *networkConfig = nil;
     dispatch_once(&onceToken, ^{

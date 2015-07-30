@@ -14,5 +14,5 @@
 
 @end
 
-UIKIT_EXTERN ACFileDownloadRequest * ACDownloadRequestPath(NSString *path, ACRequestProgressHandler progressBlock);
-UIKIT_EXTERN ACFileDownloadRequest * ACDownloadRequestURL(NSURL *URL, ACRequestProgressHandler progressBlock);
+extern __attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSString *path, ACRequestProgressHandler progressBlock);
+extern __attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSURL *URL, ACRequestProgressHandler progressBlock);

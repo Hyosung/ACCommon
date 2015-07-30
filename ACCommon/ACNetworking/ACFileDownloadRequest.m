@@ -33,14 +33,14 @@
 
 @end
 
-ACFileDownloadRequest * ACDownloadRequestPath(NSString *path, ACRequestProgressHandler progressBlock) {
+__attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSString *path, ACRequestProgressHandler progressBlock) {
     ACFileDownloadRequest *content = [[ACFileDownloadRequest alloc] init];
     content.path = path;
     content.progressBlock = progressBlock;
     return content;
 }
 
-ACFileDownloadRequest * ACDownloadRequestURL(NSURL *URL, ACRequestProgressHandler progressBlock) {
+__attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSURL *URL, ACRequestProgressHandler progressBlock) {
     ACFileDownloadRequest *content = [[ACFileDownloadRequest alloc] init];
     content.URL = URL;
     content.progressBlock = progressBlock;

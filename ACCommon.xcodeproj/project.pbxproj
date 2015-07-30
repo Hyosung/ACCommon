@@ -31,7 +31,7 @@
 		04853AD819116F7E000853EB /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AA319116F7E000853EB /* SVProgressHUD.m */; };
 		04853ADB19116F7E000853EB /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AAC19116F7E000853EB /* TTTAttributedLabel.m */; };
 		04853AF01912AF7E000853EB /* ACTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04853AEF1912AF7E000853EB /* ACTextField.m */; };
-		048EAAA3192671C20030B406 /* ACNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAAA2192671C00030B406 /* ACNetworking.m */; };
+		048EAAA3192671C20030B406 /* ACRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAAA2192671C00030B406 /* ACRequestManager.m */; };
 		048EAAA7192676DD0030B406 /* ACAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAAA6192676DD0030B406 /* ACAnimation.m */; };
 		2B3966A484426C0038D7C5A5 /* libPods-ACCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05BBE94E708FF063D7B7C065 /* libPods-ACCommon.a */; };
 		DD02EA9C1B589A0800418650 /* CTAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD37E87C19EFB0DE00B942CF /* CTAssetsPickerController.m */; };
@@ -181,8 +181,8 @@
 		04853AEE1912AF7E000853EB /* ACTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTextField.h; sourceTree = "<group>"; };
 		04853AEF1912AF7E000853EB /* ACTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACTextField.m; sourceTree = "<group>"; };
 		04853AF11912B22B000853EB /* ACControls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACControls.h; sourceTree = "<group>"; };
-		048EAAA1192671BF0030B406 /* ACNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworking.h; sourceTree = "<group>"; };
-		048EAAA2192671C00030B406 /* ACNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACNetworking.m; sourceTree = "<group>"; };
+		048EAAA1192671BF0030B406 /* ACRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACRequestManager.h; sourceTree = "<group>"; };
+		048EAAA2192671C00030B406 /* ACRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACRequestManager.m; sourceTree = "<group>"; };
 		048EAAA5192676DD0030B406 /* ACAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAnimation.h; sourceTree = "<group>"; };
 		048EAAA6192676DD0030B406 /* ACAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAnimation.m; sourceTree = "<group>"; };
 		05BBE94E708FF063D7B7C065 /* libPods-ACCommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ACCommon.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -192,6 +192,7 @@
 		DD02EAA11B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+ACMultipartForm.h"; sourceTree = "<group>"; };
 		DD02EAA21B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+ACMultipartForm.m"; sourceTree = "<group>"; };
 		DD02EAA71B59011E00418650 /* ACNetworkHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACNetworkHeader.h; sourceTree = "<group>"; };
+		DD0699921B65D7940041AE16 /* ACNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworking.h; sourceTree = "<group>"; };
 		DD0B00E31B5E4D9C00B43F0A /* ACHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACHTTPRequest.h; sourceTree = "<group>"; };
 		DD0B00E41B5E4D9C00B43F0A /* ACHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACHTTPRequest.m; sourceTree = "<group>"; };
 		DD0B00E61B5E501C00B43F0A /* ACFileDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACFileDownloadRequest.h; sourceTree = "<group>"; };
@@ -512,10 +513,11 @@
 				DDF5C1B61B5F2A8D00B4632E /* ACRequestProtocol.h */,
 				DDF5C1B71B5F8FF300B4632E /* ACRequestProgressProtocol.h */,
 				DD02EAA71B59011E00418650 /* ACNetworkHeader.h */,
-				048EAAA1192671BF0030B406 /* ACNetworking.h */,
-				048EAAA2192671C00030B406 /* ACNetworking.m */,
+				048EAAA1192671BF0030B406 /* ACRequestManager.h */,
+				048EAAA2192671C00030B406 /* ACRequestManager.m */,
 				DDEBCB671B157992002E365E /* ACNetworkReachabilityManager.h */,
 				DDEBCB681B157992002E365E /* ACNetworkReachabilityManager.m */,
+				DD0699921B65D7940041AE16 /* ACNetworking.h */,
 			);
 			path = ACNetworking;
 			sourceTree = "<group>";
@@ -832,7 +834,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD02EA9C1B589A0800418650 /* CTAssetsPickerController.m in Sources */,
-				048EAAA3192671C20030B406 /* ACNetworking.m in Sources */,
+				048EAAA3192671C20030B406 /* ACRequestManager.m in Sources */,
 				045CC25319D4598D0073EAC7 /* ACBaseController.m in Sources */,
 				04853A32191165C6000853EB /* ACUtilitys.m in Sources */,
 				DD705C0F1957CEE6007DAE8C /* NSDictionary+ACAdditions.m in Sources */,

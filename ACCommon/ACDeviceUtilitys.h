@@ -53,8 +53,34 @@ __ACSizeNoLessThanSize(CGSize size1, CGSize size2) {
 
 #define ACSizeNoLessThanSize __ACSizeNoLessThanSize
 
-CG_EXTERN bool ACSystemVersionLessThan(NSString *version);
+/**
+ *  @author Stoney, 15-07-28 13:07:08
+ *
+ *  @brief  版本号不大于当前版本
+ *
+ *  @param version 版本号
+ *
+ */
+CG_EXTERN bool ACSystemVersionLessThanEqual(NSString *version);
+
+/**
+ *  @author Stoney, 15-07-28 13:07:34
+ *
+ *  @brief  版本号等于当前版本
+ *
+ *  @param version 版本号
+ *
+ */
 CG_EXTERN bool ACSystemVersionEqualTo(NSString *version);
-CG_EXTERN bool ACSystemVersionGreaterThan(NSString *version);
+
+/**
+ *  @author Stoney, 15-07-28 13:07:48
+ *
+ *  @brief  版本号不小于当前版本
+ *
+ *  @param version 版本号
+ *
+ */
+CG_EXTERN bool ACSystemVersionGreaterThanEqual(NSString *version);
 
 #endif

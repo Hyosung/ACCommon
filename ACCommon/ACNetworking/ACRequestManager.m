@@ -1,18 +1,17 @@
 //
-//  ACNetworking.m
+//  ACRequestManager.m
 //  ACCommon
 //
 //  Created by 曉星 on 14-5-17.
 //  Copyright (c) 2014年 Crazy Stone. All rights reserved.
 //
 
-#import "ACNetworking.h"
+#import "ACRequestManager.h"
 
-#import "AFNetworking.h"
 #import "ACNetworkConfig.h"
 #import "ACMemoryCache.h"
 
-@interface ACNetworking ()
+@interface ACRequestManager ()
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 
@@ -27,20 +26,20 @@
 
 @end
 
-@implementation ACNetworking
+@implementation ACRequestManager
 
 #if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 
 #pragma mark - Static inline
 
-UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
+UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
     return [NSString stringWithFormat:@"%08x%08x", arc4random(), arc4random()];
 }
 
 #pragma mark - Lifecycle
 
-+ (instancetype)sharedNetwork {
-    static ACNetworking *network = nil;
++ (instancetype)sharedManager {
+    static ACRequestManager *network = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         network = [[self alloc] init];
@@ -51,7 +50,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.config = [ACNetworkConfig sharedConfig];
+        self.config = [ACNetworkConfig defaultConfig];
         self.manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.config.baseURL];
         self.manager.requestSerializer.timeoutInterval = self.config.timeoutInterval;
         self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -97,7 +96,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
                                                                               failure:[self requestFailure:request]];
     [self.manager.operationQueue addOperation:operation];
     
-    NSString *operationIdentifier = ACOperationIdentifier();
+    NSString *operationIdentifier = ACGenerateOperationIdentifier();
     [self.operations setObject:operation forKey:operationIdentifier];
     
     return operationIdentifier;
@@ -124,7 +123,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
     }
     
     [self.manager.operationQueue addOperation:operation];
-    NSString *operationIdentifier = ACOperationIdentifier();
+    NSString *operationIdentifier = ACGenerateOperationIdentifier();
     [self.operations setObject:operation forKey:operationIdentifier];
     
     return operationIdentifier;
@@ -151,7 +150,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
     }
     
     [self.manager.operationQueue addOperation:operation];
-    NSString *operationIdentifier = ACOperationIdentifier();
+    NSString *operationIdentifier = ACGenerateOperationIdentifier();
     [self.operations setObject:operation forKey:operationIdentifier];
     
     return operationIdentifier;
@@ -214,7 +213,7 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
                           parameters:(NSDictionary *)parameters
                           completion:(ACRequestCompletionHandler)completionBlock {
     
-    ACHTTPRequest *request = ACHTTPRequestURL(method, [NSURL URLWithString:URLString], parameters, completionBlock);
+    ACHTTPRequest *request = ACCreateRequest([NSURL URLWithString:URLString], method, parameters, completionBlock);
     return [self fetchDataFromRequest:request];
 }
 
@@ -222,14 +221,14 @@ UIKIT_STATIC_INLINE NSString * ACOperationIdentifier() {
                              fileInfo:(NSDictionary *)fileInfo
                            parameters:(NSDictionary *)parameters
                              progress:(ACRequestProgressHandler)progressBlock {
-    ACFileUploadRequest *uploadRequest = ACUploadRequestURL([NSURL URLWithString:URLString], fileInfo, progressBlock);
+    ACFileUploadRequest *uploadRequest = ACUploadRequest([NSURL URLWithString:URLString], fileInfo, progressBlock);
     uploadRequest.parameters = parameters;
     return [self uploadFileFromRequest:uploadRequest];
 }
 
 - (NSString *)downloadFileFromURLString:(NSString *)URLString
                                progress:(ACRequestProgressHandler)progressBlock{
-    ACFileDownloadRequest *downloadRequest = ACDownloadRequestURL([NSURL URLWithString:URLString], progressBlock);
+    ACFileDownloadRequest *downloadRequest = ACDownloadRequest([NSURL URLWithString:URLString], progressBlock);
     return [self downloadFileFromRequest:downloadRequest];
 }
 

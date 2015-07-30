@@ -46,7 +46,7 @@
 
 @end
 
-ACFileUploadRequest * ACUploadRequestPath(NSString *path, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock) {
+__attribute__((overloadable)) ACFileUploadRequest * ACUploadRequest(NSString *path, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock) {
     ACFileUploadRequest *content = [[ACFileUploadRequest alloc] init];
     content.path = path;
     content.fileInfo = fileInfo;
@@ -54,7 +54,7 @@ ACFileUploadRequest * ACUploadRequestPath(NSString *path, NSDictionary *fileInfo
     return content;
 }
 
-ACFileUploadRequest * ACUploadRequestURL(NSURL *URL, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock) {
+__attribute__((overloadable)) ACFileUploadRequest * ACUploadRequest(NSURL *URL, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock) {
     ACFileUploadRequest *content = [[ACFileUploadRequest alloc] init];
     content.URL = URL;
     content.fileInfo = fileInfo;

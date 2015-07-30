@@ -18,5 +18,5 @@
 
 @end
 
-UIKIT_EXTERN ACFileUploadRequest * ACUploadRequestPath(NSString *path, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock);
-UIKIT_EXTERN ACFileUploadRequest * ACUploadRequestURL(NSURL *URL, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock);
+extern __attribute__((overloadable)) ACFileUploadRequest * ACUploadRequest(NSString *path, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock);
+extern __attribute__((overloadable)) ACFileUploadRequest * ACUploadRequest(NSURL *URL, NSDictionary *fileInfo, ACRequestProgressHandler progressBlock);
