@@ -12,5 +12,6 @@
 @protocol ACRequestProgressProtocol <ACRequestProtocol>
 
 @property (nonatomic, copy) ACRequestProgressHandler progressBlock;
+@property (nonatomic, copy) NSDictionary *parameters;
 
 @end

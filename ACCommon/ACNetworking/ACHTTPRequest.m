@@ -10,15 +10,15 @@
 
 @implementation ACHTTPRequest
 
-@synthesize URL;
-@synthesize path;
-@synthesize method;
+@synthesize URL = _URL;
+@synthesize path = _path;
+@synthesize method = _method;
 
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *)operationManager {
     NSURL *__weak tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
     self.URL = tempURL;
     return [operationManager.requestSerializer requestWithMethod:RequestMethod(self.method)
-                                                       URLString:URL.absoluteString
+                                                       URLString:self.URL.absoluteString
                                                       parameters:self.parameters
                                                            error:nil];
 }

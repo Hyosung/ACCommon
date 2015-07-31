@@ -6,8 +6,18 @@
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
-#ifndef ACCommon_ACNetworking_h
-#define ACCommon_ACNetworking_h
+#ifndef __ACNetworking__
+#define __ACNetworking__
 
+#import "ACNetworkHeader.h"
+
+#import "ACMemoryCache.h"
+#import "ACNetworkConfig.h"
+#import "ACNetworkReachabilityManager.h"
+
+#import "ACHTTPRequest.h"
+#import "ACFileUploadRequest.h"
+#import "ACFileDownloadRequest.h"
+#import "ACRequestManager.h"
 
 #endif

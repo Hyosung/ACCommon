@@ -6,8 +6,22 @@
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
+#if __has_include(<AFNetworking.h>)
+#import <AFNetworking.h>
+#else
+#error "请导入 #import <AFNetworking.h>"
+#endif
+
 #ifndef ACCommon_ACNetworkHeader_h
 #define ACCommon_ACNetworkHeader_h
+
+#ifdef __cplusplus
+#define ACCommon_EXTERN		extern "C" __attribute__((visibility ("default")))
+#else
+#define ACCommon_EXTERN	        extern __attribute__((visibility ("default")))
+#endif
+
+#define ACCommon_STATIC_INLINE	static inline
 
 typedef NS_ENUM(NSUInteger, ACRequestMethod) {
     ACRequestMethodGET = 0  ,
@@ -18,7 +32,7 @@ typedef NS_ENUM(NSUInteger, ACRequestMethod) {
     ACRequestMethodDELETE
 };
 
-UIKIT_STATIC_INLINE NSString * RequestMethod(ACRequestMethod method) {
+ACCommon_STATIC_INLINE NSString * RequestMethod(ACRequestMethod method) {
     static dispatch_once_t onceToken;
     static NSDictionary *methods = nil;
     dispatch_once(&onceToken, ^{
@@ -39,12 +53,12 @@ typedef struct ACRequestProgress {
     long long totalBytes, totalBytesExpected;
 } ACRequestProgress;
 
-UIKIT_STATIC_INLINE ACRequestProgress ACRequestProgressMake(NSUInteger bytes, long long totalBytes, long long totalBytesExpected) {
+ACCommon_STATIC_INLINE ACRequestProgress ACRequestProgressMake(NSUInteger bytes, long long totalBytes, long long totalBytesExpected) {
     ACRequestProgress progress = {bytes, totalBytes, totalBytesExpected};
     return progress;
 }
 
-UIKIT_STATIC_INLINE bool ACRequestProgressIsEmpty(ACRequestProgress progress) {
+ACCommon_STATIC_INLINE bool ACRequestProgressIsEmpty(ACRequestProgress progress) {
     return progress.bytes <= 0 && progress.totalBytes <= 0 && progress.totalBytesExpected <= 0;
 }
 

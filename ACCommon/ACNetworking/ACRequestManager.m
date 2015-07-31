@@ -10,10 +10,10 @@
 
 #import "ACNetworkConfig.h"
 #import "ACMemoryCache.h"
+#import <CommonCrypto/CommonDigest.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface ACRequestManager ()
-
-#if defined(__USE_AFNetworking__) && __USE_AFNetworking__
 
 @property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
 @property (nonatomic, strong) ACNetworkConfig *config;
@@ -22,18 +22,72 @@
 
 - (void (^)(AFHTTPRequestOperation *, id))requestSuccess:(id <ACRequestProtocol>) request;
 - (void (^)(AFHTTPRequestOperation *, NSError *))requestFailure:(id <ACRequestProtocol>) request;
-#endif
 
 @end
 
 @implementation ACRequestManager
 
-#if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-
 #pragma mark - Static inline
 
-UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
+/**
+ *  @author Stoney, 15-07-31 09:07:27
+ *
+ *  @brief  生成请求的标识
+ *
+ */
+ACCommon_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
     return [NSString stringWithFormat:@"%08x%08x", arc4random(), arc4random()];
+}
+
+ACCommon_STATIC_INLINE NSString * ACFileNameForURL(NSURL *URL) {
+    const char *str = [URL.absoluteString UTF8String];
+    if (str == NULL) {
+        str = "";
+    }
+    unsigned char r[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), r);
+    NSMutableString *md5Ciphertext = [NSMutableString stringWithString:@""];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [md5Ciphertext appendFormat:@"%02x",r[i]];
+    }
+    return [md5Ciphertext copy];
+}
+
+ACCommon_STATIC_INLINE NSString * ACFilePathFromURL(NSURL *URL, NSString *folderPath, NSString *extension) {
+    
+    assert(URL);
+    assert(folderPath);
+    
+    NSString *pathExtension = extension ? [NSString stringWithFormat:@".%@", [extension lowercaseString]] : @"";
+    NSString *fileName = [NSString stringWithFormat:@"%@%@", ACFileNameForURL(URL), pathExtension];
+    NSString *filePath = [folderPath stringByAppendingPathComponent:fileName];
+    return filePath;
+}
+
+ACCommon_STATIC_INLINE NSData * ACFileDataFromPath(NSString *path) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return nil;
+    }
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    if (fileAttributes) {
+        //判断文件是否过期
+        NSTimeInterval timeDifference = [[NSDate date] timeIntervalSinceDate:[fileAttributes fileModificationDate]];
+        if (timeDifference > [ACNetworkConfig defaultConfig].downloadExpirationTimeInterval) {
+            return nil;
+        }
+    }
+    return [[NSFileManager defaultManager] contentsAtPath:path];
+}
+
+ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)MIMEType, NULL);
+    CFStringRef filenameExtension = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassFilenameExtension);
+    CFRelease(UTI);
+    if (!filenameExtension) {
+        return @"";
+    }
+    return CFBridgingRelease(filenameExtension);
 }
 
 #pragma mark - Lifecycle
@@ -63,16 +117,62 @@ UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
 #pragma mark - Request Operation
 
 - (void)cancelAllOperations {
-    [self.operations removeAllObjects];
     [self.manager.operationQueue cancelAllOperations];
+    [self.operations removeAllObjects];
 }
 
 - (void)cancelOperationWithIdentifier:(NSString *) identifier {
-    NSOperation *operation = [self.operations objectForKey:identifier];
-    if (operation) {
-        [operation cancel];
-        [self.operations removeObjectForKey:identifier];
+    if (identifier) {
+        NSOperation *operation = [self.operations objectForKey:identifier];
+        if (operation) {
+            [operation cancel];
+            [self.operations removeObjectForKey:identifier];
+        }
     }
+}
+
+- (void)pauseOperationWithIdentifier:(NSString *) identifier {
+    if (identifier) {
+        AFHTTPRequestOperation *operation = [self.operations objectForKey:identifier];
+        if (operation && ![operation isPaused]) {
+            [operation pause];
+        }
+    }
+}
+
+- (void)resumeOperationWithIdentifier:(NSString *) identifier {
+    if (identifier) {
+        AFHTTPRequestOperation *operation = [self.operations objectForKey:identifier];
+        if (operation && [operation isPaused]) {
+            [operation resume];
+        }
+    }
+}
+
+- (BOOL)isPausedOperationWithIdentifier:(NSString *) identifier {
+    if (!identifier) {
+        return NO;
+    }
+    
+    AFHTTPRequestOperation *operation = [self.operations objectForKey:identifier];
+    if (!operation) {
+        return NO;
+    }
+    
+    return [operation isPaused];
+}
+
+- (BOOL)isExecutingOperationWithIdentifier:(NSString *)identifier {
+    if (!identifier) {
+        return NO;
+    }
+    
+    AFHTTPRequestOperation *operation = [self.operations objectForKey:identifier];
+    if (!operation) {
+        return NO;
+    }
+    
+    return [operation isExecuting];
 }
 
 #pragma mark - Request Methods
@@ -83,6 +183,7 @@ UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
     
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
     
+    //取本地缓存
     id resultObject = [[ACMemoryCache sharedCache] fetchCacheDataForURL:URLRequest.URL];
     if (resultObject) {
         if (request.completionBlock) {
@@ -134,6 +235,14 @@ UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
     NSAssert(request.path || request.URL, @"path与URL只能填写其中一个");
     
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
+    NSString *filePath = [[ACMemoryCache sharedCache] objectForURL:URLRequest.URL];
+    NSData *fileData = ACFileDataFromPath(filePath);
+    if (fileData) {
+        if (request.progressBlock) {
+            request.progressBlock(ACRequestProgressZero, fileData, nil);
+        }
+        return nil;
+    }
     
     AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:URLRequest
                                                                               success:[self requestSuccess:request]
@@ -239,7 +348,7 @@ UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
                                                             id responseObject) {
         
         if (operation.isCancelled) {
-            return ;
+            return;
         }
         
         if ([request isKindOfClass:[ACHTTPRequest class]]) {
@@ -264,6 +373,32 @@ UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
             }
         }
         else if ([request isKindOfClass:[ACFileDownloadRequest class]]) {
+            //获取后缀
+            NSString *extension = ACExtensionFromMIMEType(operation.response.MIMEType);
+            //下载路径
+            NSString *filePath = ACFilePathFromURL(request.URL, [ACNetworkConfig defaultConfig].downloadFolder, extension);
+            
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                
+                //文件存在就直接写入数据
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    
+                    //创建一个用于写入的文件句柄
+                    NSFileHandle *writeFileHanle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+                    //写入最新的数据
+                    [writeFileHanle writeData:responseObject];
+                    //关闭文件句柄
+                    [writeFileHanle closeFile];
+                }
+                else {
+                    //不存在就创建
+                    [[NSFileManager defaultManager] createFileAtPath:filePath
+                                                            contents:responseObject
+                                                          attributes:nil];
+                }
+                [[ACMemoryCache sharedCache] setObject:filePath forURL:request.URL];
+            }
+            
             if (((ACFileDownloadRequest *)request).progressBlock) {
                 ((ACFileDownloadRequest *)request).progressBlock(ACRequestProgressZero, responseObject, nil);
             }
@@ -319,7 +454,5 @@ UIKIT_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
     };
     return failureBlock;
 }
-
-#endif
 
 @end

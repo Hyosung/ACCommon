@@ -19,7 +19,21 @@
  *
  *  @brief  下载文件的存放文件夹 默认 ~Document/Download
  */
-@property (nonatomic, copy) NSString *downloadFolder;
+@property (nonatomic, copy, readonly) NSString *downloadFolder;
+
+/**
+ *  @author Stoney, 15-07-31 11:07:57
+ *
+ *  @brief  下载文件的存放文件夹的名称 默认 Download
+ */
+@property (nonatomic, copy) NSString *downloadFolderName;
+
+/**
+ *  @author Stoney, 15-07-31 11:07:37
+ *
+ *  @brief  下载文件的过期时间 默认一周 (60.0 * 60.0 * 24.0 * 7)s
+ */
+@property (nonatomic) NSTimeInterval downloadExpirationTimeInterval;
 
 /**
  *  @author Stoney, 15-07-22 10:07:10

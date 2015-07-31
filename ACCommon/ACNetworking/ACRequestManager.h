@@ -14,12 +14,14 @@
 
 @interface ACRequestManager : NSObject
 
-#if defined(__USE_AFNetworking__) && __USE_AFNetworking__
-
 + (instancetype)sharedManager;
 
 - (void)cancelAllOperations;
 - (void)cancelOperationWithIdentifier:(NSString *) identifier;
+- (void)pauseOperationWithIdentifier:(NSString *) identifier;
+- (void)resumeOperationWithIdentifier:(NSString *) identifier;
+- (BOOL)isPausedOperationWithIdentifier:(NSString *) identifier;
+- (BOOL)isExecutingOperationWithIdentifier:(NSString *) identifier;
 
 /**
  *  @author Stoney, 15-07-22 17:07:44
@@ -28,7 +30,7 @@
  *
  *  @param request 封装的请求对象
  *
- *  @return operation identifier
+ *  @return operation identifier 当返回nil时，说明有缓存可用
  */
 - (NSString *)fetchDataFromRequest:(ACHTTPRequest *) request;
 
@@ -50,7 +52,7 @@
  *
  *  @param request 封装的下载文件的请求对象
  *
- *  @return operation identifier
+ *  @return operation identifier 当返回nil时，说明有缓存可用
  */
 - (NSString *)downloadFileFromRequest:(ACFileDownloadRequest *) request;
 
@@ -91,7 +93,5 @@
 
 - (NSString *)downloadFileFromURLString:(NSString *) URLString
                                progress:(ACRequestProgressHandler) progressBlock;
-
-#endif
 
 @end

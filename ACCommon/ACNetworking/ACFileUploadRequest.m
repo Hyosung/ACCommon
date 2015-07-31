@@ -10,24 +10,26 @@
 
 @implementation ACFileUploadRequest
 
-@synthesize URL;
-@synthesize path;
-@synthesize method;
-@synthesize progressBlock;
+@synthesize URL = _URL;
+@synthesize path = _path;
+@synthesize method = _method;
+@synthesize parameters = _parameters;
+@synthesize progressBlock = _progressBlock;
 
 - (ACRequestMethod)method {
-    if (method == ACRequestMethodGET || method == ACRequestMethodHEAD) {
-        method = ACRequestMethodPOST;
+    if (_method == ACRequestMethodGET || _method == ACRequestMethodHEAD) {
+        _method = ACRequestMethodPOST;
     }
-    return method;
+    return _method;
 }
 
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *)operationManager {
-    NSURL *tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
+    NSURL *__weak tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @""
+                                               relativeToURL:operationManager.baseURL];
     self.URL = tempURL;
     __weak __typeof__(self) weakSelf = self;
     return [operationManager.requestSerializer multipartFormRequestWithMethod:@"POST"
-                                                                    URLString:URL.absoluteString
+                                                                    URLString:self.URL.absoluteString
                                                                    parameters:self.parameters
                                                     constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
                                                         __strong __typeof__(weakSelf) self = weakSelf;

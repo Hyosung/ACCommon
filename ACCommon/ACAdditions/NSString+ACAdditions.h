@@ -160,7 +160,15 @@
 /**
  返回指定路径下文件的MIME
  */
-- (NSString*)fileMIMEType;
+- (NSString *)fileMIMEType;
+
+/**
+ *  @author Stoney, 15-07-31 14:07:14
+ *
+ *  @brief  返回文件后缀 当前字符串要为MIMEType
+ *
+ */
+- (NSString *)filenameExtension;
 
 #pragma mark - JSON
 - (id)JSON;

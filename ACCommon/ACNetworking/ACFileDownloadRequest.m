@@ -10,10 +10,11 @@
 
 @implementation ACFileDownloadRequest
 
-@synthesize URL;
-@synthesize path;
-@synthesize method;
-@synthesize progressBlock;
+@synthesize URL = _URL;
+@synthesize path = _path;
+@synthesize method = _method;
+@synthesize parameters = _parameters;
+@synthesize progressBlock = _progressBlock;
 
 /**
  *  @author Stoney, 15-07-25 14:07:17
@@ -26,11 +27,14 @@
 }
 
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *)operationManager {
-    NSURL *tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
+    NSURL *__weak tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @""
+                                               relativeToURL:operationManager.baseURL];
     self.URL = tempURL;
-    return [operationManager.requestSerializer requestWithMethod:@"GET" URLString:URL.absoluteString parameters:nil error:nil];
+    return [operationManager.requestSerializer requestWithMethod:@"GET"
+                                                       URLString:_URL.absoluteString
+                                                      parameters:self.parameters
+                                                           error:nil];
 }
-
 @end
 
 __attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSString *path, ACRequestProgressHandler progressBlock) {

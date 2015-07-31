@@ -7,6 +7,9 @@
 //
 
 #import "ACMemoryCache.h"
+
+#import <UIKit/UIApplication.h>
+#import "ACNetworkHeader.h"
 #import "ACNetworkConfig.h"
 #import <CommonCrypto/CommonDigest.h>
 
@@ -16,19 +19,18 @@
     self = [super init];
     if (self) {
         _content = content;
-        _lastUpdateTimestamp = [NSDate date].timeIntervalSince1970;
+        _modificationDate = [NSDate date];
     }
     return self;
 }
 
 - (void)updateContent:(id) content {
     _content = content;
-    _lastUpdateTimestamp = [NSDate date].timeIntervalSince1970;
+    _modificationDate = [NSDate date];
 }
 
 - (BOOL)isExpiration {
-    NSTimeInterval currentTimestamp = [NSDate date].timeIntervalSince1970;
-    NSTimeInterval timeInterval = currentTimestamp - _lastUpdateTimestamp;
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.modificationDate];
     return (timeInterval > [ACNetworkConfig defaultConfig].cacheExpirationTimeInterval);
 }
 
@@ -36,7 +38,7 @@
 
 @implementation ACMemoryCache
 
-UIKIT_STATIC_INLINE NSString * ACCacheKeyForURL(NSURL *URL) {
+ACCommon_STATIC_INLINE NSString * ACCacheKeyForURL(NSURL *URL) {
     const char *str = [URL.absoluteString UTF8String];
     if (str == NULL) {
         str = "";

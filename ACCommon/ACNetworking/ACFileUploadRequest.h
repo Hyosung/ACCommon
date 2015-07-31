@@ -14,7 +14,6 @@
 
 @property BOOL responseJSON;
 @property (nonatomic, copy) NSDictionary *fileInfo;
-@property (nonatomic, copy) NSDictionary *parameters;
 
 @end
 

@@ -12,7 +12,18 @@
 
 @interface ACHTTPRequest : NSObject <ACRequestProtocol>
 
+/**
+ *  @author Stoney, 15-07-31 09:07:48
+ *
+ *  @brief  响应的结果是否是JSON格式
+ */
 @property BOOL responseJSON;
+
+/**
+ *  @author Stoney, 15-07-31 09:07:31
+ *
+ *  @brief  是否缓存响应的数据
+ */
 @property BOOL cacheResponseData;
 @property (nonatomic, copy) NSDictionary *parameters;
 @property (nonatomic, copy) ACRequestCompletionHandler completionBlock;

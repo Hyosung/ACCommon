@@ -301,6 +301,16 @@
     return CFBridgingRelease(MIMEType);
 }
 
+- (NSString *)filenameExtension {
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self, NULL);
+    CFStringRef filenameExtension = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassFilenameExtension);
+    CFRelease(UTI);
+    if (!filenameExtension) {
+        return @"";
+    }
+    return CFBridgingRelease(filenameExtension);
+}
+
 #pragma mark - JSON
 - (id)JSON {
     return [self JSON:nil];

@@ -8,6 +8,7 @@
 
 #import "ACNetworkReachabilityManager.h"
 
+#import <UIKit/UIDevice.h>
 #import <netinet/in.h>
 #import <netinet6/in6.h>
 #import <arpa/inet.h>
