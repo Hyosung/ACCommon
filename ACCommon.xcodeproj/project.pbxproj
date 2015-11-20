@@ -56,7 +56,7 @@
 		DD705C481957F85F007DAE8C /* SVWebViewControllerActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C3A1957F85F007DAE8C /* SVWebViewControllerActivityChrome.m */; };
 		DD705C491957F85F007DAE8C /* SVWebViewControllerActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C401957F85F007DAE8C /* SVWebViewControllerActivitySafari.m */; };
 		DD705C4A1957F85F007DAE8C /* SVWebViewControllerActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */; };
-		DDAA39171B5CE9EC00FF2BC9 /* ACMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAA39161B5CE9EC00FF2BC9 /* ACMemoryCache.m */; };
+		DDAA39171B5CE9EC00FF2BC9 /* ACCache.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAA39161B5CE9EC00FF2BC9 /* ACCache.m */; };
 		DDAF425919F8AF5200F49232 /* AnimatedGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425819F8AF5200F49232 /* AnimatedGIFImageSerialization.m */; };
 		DDAF425D19F8B36B00F49232 /* WebPImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAF425C19F8B36B00F49232 /* WebPImageSerialization.m */; };
 		DDAF425F19F8B37400F49232 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAF425E19F8B37400F49232 /* WebP.framework */; };
@@ -68,7 +68,7 @@
 		DDEBCB691B157992002E365E /* ACNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEBCB681B157992002E365E /* ACNetworkReachabilityManager.m */; };
 		DDF611631B57854C005331B1 /* ACAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF611621B57854C005331B1 /* ACAlertManager.m */; };
 		DDF611661B578DA3005331B1 /* UINavigationBar+ACAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF611651B578DA3005331B1 /* UINavigationBar+ACAdditions.m */; };
-		DDF6116F1B57AB0C005331B1 /* ACNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF6116E1B57AB0C005331B1 /* ACNetworkConfig.m */; };
+		DDF6116F1B57AB0C005331B1 /* ACNetworkConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF6116E1B57AB0C005331B1 /* ACNetworkConfiguration.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -254,8 +254,8 @@
 		DD705C431957F85F007DAE8C /* SVWebViewControllerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivity.m; sourceTree = "<group>"; };
 		DD705C441957F85F007DAE8C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		DD705C451957F85F007DAE8C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
-		DDAA39151B5CE9EC00FF2BC9 /* ACMemoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACMemoryCache.h; sourceTree = "<group>"; };
-		DDAA39161B5CE9EC00FF2BC9 /* ACMemoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACMemoryCache.m; sourceTree = "<group>"; };
+		DDAA39151B5CE9EC00FF2BC9 /* ACCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACCache.h; sourceTree = "<group>"; };
+		DDAA39161B5CE9EC00FF2BC9 /* ACCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACCache.m; sourceTree = "<group>"; };
 		DDAF425719F8AF5200F49232 /* AnimatedGIFImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedGIFImageSerialization.h; sourceTree = "<group>"; };
 		DDAF425819F8AF5200F49232 /* AnimatedGIFImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedGIFImageSerialization.m; sourceTree = "<group>"; };
 		DDAF425B19F8B36B00F49232 /* WebPImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebPImageSerialization.h; sourceTree = "<group>"; };
@@ -278,8 +278,8 @@
 		DDF611621B57854C005331B1 /* ACAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAlertManager.m; sourceTree = "<group>"; };
 		DDF611641B578DA3005331B1 /* UINavigationBar+ACAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+ACAdditions.h"; sourceTree = "<group>"; };
 		DDF611651B578DA3005331B1 /* UINavigationBar+ACAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+ACAdditions.m"; sourceTree = "<group>"; };
-		DDF6116D1B57AB0C005331B1 /* ACNetworkConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworkConfig.h; sourceTree = "<group>"; };
-		DDF6116E1B57AB0C005331B1 /* ACNetworkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACNetworkConfig.m; sourceTree = "<group>"; };
+		DDF6116D1B57AB0C005331B1 /* ACNetworkConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACNetworkConfiguration.h; sourceTree = "<group>"; };
+		DDF6116E1B57AB0C005331B1 /* ACNetworkConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACNetworkConfiguration.m; sourceTree = "<group>"; };
 		DDFE274119A5D395003C25E5 /* 代码片段收藏.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "代码片段收藏.rtf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -500,10 +500,10 @@
 		048EAAA0192671040030B406 /* ACNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				DDAA39151B5CE9EC00FF2BC9 /* ACMemoryCache.h */,
-				DDAA39161B5CE9EC00FF2BC9 /* ACMemoryCache.m */,
-				DDF6116D1B57AB0C005331B1 /* ACNetworkConfig.h */,
-				DDF6116E1B57AB0C005331B1 /* ACNetworkConfig.m */,
+				DDAA39151B5CE9EC00FF2BC9 /* ACCache.h */,
+				DDAA39161B5CE9EC00FF2BC9 /* ACCache.m */,
+				DDF6116D1B57AB0C005331B1 /* ACNetworkConfiguration.h */,
+				DDF6116E1B57AB0C005331B1 /* ACNetworkConfiguration.m */,
 				DD0B00E31B5E4D9C00B43F0A /* ACHTTPRequest.h */,
 				DD0B00E41B5E4D9C00B43F0A /* ACHTTPRequest.m */,
 				DD0B00E61B5E501C00B43F0A /* ACFileDownloadRequest.h */,
@@ -731,7 +731,7 @@
 		04853884191157DF000853EB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = Stone.y;
 			};
 			buildConfigurationList = 04853887191157DF000853EB /* Build configuration list for PBXProject "ACCommon" */;
@@ -853,7 +853,7 @@
 				DDD8811E1B4CEFD300C38922 /* UIViewController+ACSideslip.m in Sources */,
 				DD0B00E81B5E501C00B43F0A /* ACFileDownloadRequest.m in Sources */,
 				045CC27A19D459CF0073EAC7 /* UIViewController+ACAdditions.m in Sources */,
-				DDF6116F1B57AB0C005331B1 /* ACNetworkConfig.m in Sources */,
+				DDF6116F1B57AB0C005331B1 /* ACNetworkConfiguration.m in Sources */,
 				DD705C131957CEE6007DAE8C /* UIButton+ACAdditions.m in Sources */,
 				DD02EAA31B58F0D700418650 /* NSMutableURLRequest+ACMultipartForm.m in Sources */,
 				04853AD819116F7E000853EB /* SVProgressHUD.m in Sources */,
@@ -869,7 +869,7 @@
 				04853AF01912AF7E000853EB /* ACTextField.m in Sources */,
 				DDC3A2441B563F2300C2CD50 /* ACColorUtilitys.m in Sources */,
 				DD0B00EB1B5E502D00B43F0A /* ACFileUploadRequest.m in Sources */,
-				DDAA39171B5CE9EC00FF2BC9 /* ACMemoryCache.m in Sources */,
+				DDAA39171B5CE9EC00FF2BC9 /* ACCache.m in Sources */,
 				0480A7F01912D8D40048880A /* ACTableViewCell.m in Sources */,
 				045CC25419D4598D0073EAC7 /* ACBaseTableController.m in Sources */,
 				045CC2A419D45A1E0073EAC7 /* Appirater.m in Sources */,
@@ -999,6 +999,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1102,6 +1103,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "ACCommonTests/ACCommonTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ac.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1119,6 +1121,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ACCommon/ACCommon-Prefix.pch";
 				INFOPLIST_FILE = "ACCommonTests/ACCommonTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ac.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};

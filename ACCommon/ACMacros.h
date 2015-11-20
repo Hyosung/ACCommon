@@ -290,7 +290,7 @@ do { \
 #ifdef DEBUG
 #define ACLog(fmt, ...)                     NSLog((@"[%s] [%s] [i雲] [%d] " fmt),__TIME__, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
-#define ACLog(...)                          do{ } while(0);
+#define ACLog(...)                          do{ } while(0)
 #endif
 
 #if TARGET_OS_IPHONE

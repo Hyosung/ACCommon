@@ -83,4 +83,11 @@ CG_EXTERN bool ACSystemVersionEqualTo(NSString *version);
  */
 CG_EXTERN bool ACSystemVersionGreaterThanEqual(NSString *version);
 
+/**
+ 打印代码运行时间
+ 
+ @param ^codeBlock 代码块
+ */
+CG_EXTERN void ACPrintRunTime(void (^codeBlock)(void));
+
 #endif

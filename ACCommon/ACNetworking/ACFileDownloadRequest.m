@@ -14,6 +14,7 @@
 @synthesize path = _path;
 @synthesize method = _method;
 @synthesize parameters = _parameters;
+@synthesize responseType = _responseType;
 @synthesize progressBlock = _progressBlock;
 
 /**
@@ -40,6 +41,7 @@
 __attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSString *path, ACRequestProgressHandler progressBlock) {
     ACFileDownloadRequest *content = [[ACFileDownloadRequest alloc] init];
     content.path = path;
+    content.responseType = ACResponseTypeFilePath;
     content.progressBlock = progressBlock;
     return content;
 }
@@ -47,6 +49,7 @@ __attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSString
 __attribute__((overloadable)) ACFileDownloadRequest * ACDownloadRequest(NSURL *URL, ACRequestProgressHandler progressBlock) {
     ACFileDownloadRequest *content = [[ACFileDownloadRequest alloc] init];
     content.URL = URL;
+    content.responseType = ACResponseTypeFilePath;
     content.progressBlock = progressBlock;
     return content;
 }

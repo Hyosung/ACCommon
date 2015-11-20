@@ -12,16 +12,25 @@
 #error "请导入 #import <AFNetworking.h>"
 #endif
 
-#ifndef ACCommon_ACNetworkHeader_h
-#define ACCommon_ACNetworkHeader_h
+#ifndef __ACNETWORK_HEADER__
+#define __ACNETWORK_HEADER__
 
 #ifdef __cplusplus
-#define ACCommon_EXTERN		extern "C" __attribute__((visibility ("default")))
+#define ACNETWORK_EXTERN        extern "C" __attribute__((visibility ("default")))
 #else
-#define ACCommon_EXTERN	        extern __attribute__((visibility ("default")))
+#define ACNETWORK_EXTERN        extern __attribute__((visibility ("default")))
 #endif
 
-#define ACCommon_STATIC_INLINE	static inline
+#define ACNETWORK_STATIC_INLINE	static inline
+
+typedef NS_ENUM(NSUInteger, ACResponseType) {
+    //上传文件与普通的GET/POST请求
+    ACResponseTypeData = 0  ,
+    ACResponseTypeJSON      ,
+    //下载文件
+    ACResponseTypeImage     ,
+    ACResponseTypeFilePath
+};
 
 typedef NS_ENUM(NSUInteger, ACRequestMethod) {
     ACRequestMethodGET = 0  ,
@@ -32,7 +41,7 @@ typedef NS_ENUM(NSUInteger, ACRequestMethod) {
     ACRequestMethodDELETE
 };
 
-ACCommon_STATIC_INLINE NSString * RequestMethod(ACRequestMethod method) {
+ACNETWORK_STATIC_INLINE NSString * RequestMethod(ACRequestMethod method) {
     static dispatch_once_t onceToken;
     static NSDictionary *methods = nil;
     dispatch_once(&onceToken, ^{
@@ -53,12 +62,12 @@ typedef struct ACRequestProgress {
     long long totalBytes, totalBytesExpected;
 } ACRequestProgress;
 
-ACCommon_STATIC_INLINE ACRequestProgress ACRequestProgressMake(NSUInteger bytes, long long totalBytes, long long totalBytesExpected) {
+ACNETWORK_STATIC_INLINE ACRequestProgress ACRequestProgressMake(NSUInteger bytes, long long totalBytes, long long totalBytesExpected) {
     ACRequestProgress progress = {bytes, totalBytes, totalBytesExpected};
     return progress;
 }
 
-ACCommon_STATIC_INLINE bool ACRequestProgressIsEmpty(ACRequestProgress progress) {
+ACNETWORK_STATIC_INLINE bool ACRequestProgressIsEmpty(ACRequestProgress progress) {
     return progress.bytes <= 0 && progress.totalBytes <= 0 && progress.totalBytesExpected <= 0;
 }
 

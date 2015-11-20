@@ -13,6 +13,7 @@
 @synthesize URL = _URL;
 @synthesize path = _path;
 @synthesize method = _method;
+@synthesize responseType = _responseType;
 
 - (NSMutableURLRequest *)URLRequestFormOperationManager:(AFHTTPRequestOperationManager *)operationManager {
     NSURL *__weak tempURL = self.URL ?: [NSURL URLWithString:self.path ?: @"" relativeToURL:operationManager.baseURL];
@@ -30,7 +31,7 @@ __attribute__((overloadable)) ACHTTPRequest * ACCreateRequest(NSString *path, AC
     content.path = path;
     content.method = method;
     content.parameters = parameters;
-    content.responseJSON = YES;
+    content.responseType = ACResponseTypeJSON;
     content.completionBlock = completionBlock;
     return content;
 }
@@ -40,7 +41,7 @@ __attribute__((overloadable)) ACHTTPRequest * ACCreateRequest(NSURL *URL, ACRequ
     content.URL = URL;
     content.method = method;
     content.parameters = parameters;
-    content.responseJSON = YES;
+    content.responseType = ACResponseTypeJSON;
     content.completionBlock = completionBlock;
     return content;
 }
@@ -50,7 +51,7 @@ __attribute__((overloadable)) ACHTTPRequest * ACCreatePOSTRequest(NSString *path
     content.path = path;
     content.method = ACRequestMethodPOST;
     content.parameters = parameters;
-    content.responseJSON = YES;
+    content.responseType = ACResponseTypeJSON;
     content.completionBlock = completionBlock;
     return content;
 }
@@ -60,7 +61,7 @@ __attribute__((overloadable)) ACHTTPRequest * ACCreatePOSTRequest(NSURL *URL, NS
     content.URL = URL;
     content.method = ACRequestMethodPOST;
     content.parameters = parameters;
-    content.responseJSON = YES;
+    content.responseType = ACResponseTypeJSON;
     content.completionBlock = completionBlock;
     return content;
 }
@@ -70,7 +71,7 @@ __attribute__((overloadable)) ACHTTPRequest * ACCreateGETRequest(NSString *path,
     content.path = path;
     content.method = ACRequestMethodGET;
     content.parameters = parameters;
-    content.responseJSON = YES;
+    content.responseType = ACResponseTypeJSON;
     content.completionBlock = completionBlock;
     return content;
 }
@@ -80,7 +81,7 @@ __attribute__((overloadable)) ACHTTPRequest * ACCreateGETRequest(NSURL *URL, NSD
     content.URL = URL;
     content.method = ACRequestMethodGET;
     content.parameters = parameters;
-    content.responseJSON = YES;
+    content.responseType = ACResponseTypeJSON;
     content.completionBlock = completionBlock;
     return content;
 }

@@ -137,3 +137,12 @@ bool ACSystemVersionGreaterThanEqual(NSString *version) {
     return ([[[UIDevice currentDevice] systemVersion] compare:version options:NSNumericSearch] != NSOrderedDescending);
 }
 
+void ACPrintRunTime(void (^codeBlock)(void)) {
+    assert(codeBlock);
+    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+    codeBlock();
+    NSLog(@"运行时间：%f", CFAbsoluteTimeGetCurrent() - startTime);
+//    CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
+//    CFAbsoluteTime runningTime = endTime - startTime;
+}
+

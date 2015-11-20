@@ -11,6 +11,13 @@
 @protocol ACRequestProtocol <NSObject>
 
 /**
+ *  @author Stoney, 15-07-31 09:07:48
+ *
+ *  @brief  响应的结果的类型 默认data
+ */
+@property ACResponseType responseType;
+
+/**
  *  @author Stoney, 15-07-31 09:07:46
  *
  *  @brief  请求的URL

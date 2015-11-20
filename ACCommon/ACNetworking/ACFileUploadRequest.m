@@ -14,6 +14,7 @@
 @synthesize path = _path;
 @synthesize method = _method;
 @synthesize parameters = _parameters;
+@synthesize responseType = _responseType;
 @synthesize progressBlock = _progressBlock;
 
 - (ACRequestMethod)method {

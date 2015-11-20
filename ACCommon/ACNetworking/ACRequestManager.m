@@ -8,15 +8,15 @@
 
 #import "ACRequestManager.h"
 
-#import "ACNetworkConfig.h"
-#import "ACMemoryCache.h"
+#import "ACNetworkConfiguration.h"
+#import "ACCache.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface ACRequestManager ()
 
 @property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
-@property (nonatomic, strong) ACNetworkConfig *config;
+@property (nonatomic, strong) ACNetworkConfiguration *configuration;
 @property (nonatomic, weak  ) AFHTTPRequestSerializer <AFURLRequestSerialization> *rs;
 @property (nonatomic, strong) NSMapTable *operations;
 
@@ -35,11 +35,11 @@
  *  @brief  生成请求的标识
  *
  */
-ACCommon_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
+ACNETWORK_STATIC_INLINE NSString * ACGenerateOperationIdentifier() {
     return [NSString stringWithFormat:@"%08x%08x", arc4random(), arc4random()];
 }
 
-ACCommon_STATIC_INLINE NSString * ACFileNameForURL(NSURL *URL) {
+ACNETWORK_STATIC_INLINE NSString * ACFileNameForURL(NSURL *URL) {
     const char *str = [URL.absoluteString UTF8String];
     if (str == NULL) {
         str = "";
@@ -53,7 +53,7 @@ ACCommon_STATIC_INLINE NSString * ACFileNameForURL(NSURL *URL) {
     return [md5Ciphertext copy];
 }
 
-ACCommon_STATIC_INLINE NSString * ACFilePathFromURL(NSURL *URL, NSString *folderPath, NSString *extension) {
+ACNETWORK_STATIC_INLINE NSString * ACFilePathFromURL(NSURL *URL, NSString *folderPath, NSString *extension) {
     
     assert(URL);
     assert(folderPath);
@@ -64,7 +64,7 @@ ACCommon_STATIC_INLINE NSString * ACFilePathFromURL(NSURL *URL, NSString *folder
     return filePath;
 }
 
-ACCommon_STATIC_INLINE NSData * ACFileDataFromPath(NSString *path) {
+ACNETWORK_STATIC_INLINE NSData * ACFileDataFromPath(NSString *path) {
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return nil;
     }
@@ -73,14 +73,14 @@ ACCommon_STATIC_INLINE NSData * ACFileDataFromPath(NSString *path) {
     if (fileAttributes) {
         //判断文件是否过期
         NSTimeInterval timeDifference = [[NSDate date] timeIntervalSinceDate:[fileAttributes fileModificationDate]];
-        if (timeDifference > [ACNetworkConfig defaultConfig].downloadExpirationTimeInterval) {
+        if (timeDifference > [ACNetworkConfiguration defaultConfiguration].downloadExpirationTimeInterval) {
             return nil;
         }
     }
     return [[NSFileManager defaultManager] contentsAtPath:path];
 }
 
-ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
+ACNETWORK_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)MIMEType, NULL);
     CFStringRef filenameExtension = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassFilenameExtension);
     CFRelease(UTI);
@@ -104,9 +104,10 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.config = [ACNetworkConfig defaultConfig];
-        self.manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.config.baseURL];
-        self.manager.requestSerializer.timeoutInterval = self.config.timeoutInterval;
+        self.configuration = [ACNetworkConfiguration defaultConfiguration];
+        
+        self.manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.configuration.baseURL];
+        self.manager.requestSerializer.timeoutInterval = self.configuration.timeoutInterval;
         self.manager.responseSerializer = [AFHTTPResponseSerializer serializer];
         self.rs = self.manager.requestSerializer;
         self.operations = [NSMapTable strongToWeakObjectsMapTable];
@@ -122,22 +123,27 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
 }
 
 - (void)cancelOperationWithIdentifier:(NSString *) identifier {
-    if (identifier) {
-        NSOperation *operation = [self.operations objectForKey:identifier];
-        if (operation) {
-            [operation cancel];
-            [self.operations removeObjectForKey:identifier];
-        }
+    if (!identifier) {
+        return;
     }
+    NSOperation *operation = [self.operations objectForKey:identifier];
+    if (!operation) {
+        return;
+    }
+    
+    [operation cancel];
+    [self.operations removeObjectForKey:identifier];
 }
 
 - (void)pauseOperationWithIdentifier:(NSString *) identifier {
-    if (identifier) {
-        AFHTTPRequestOperation *operation = [self.operations objectForKey:identifier];
-        if (operation && ![operation isPaused]) {
-            [operation pause];
-        }
+    if (!identifier) {
+        return;
     }
+    AFHTTPRequestOperation *operation = [self.operations objectForKey:identifier];
+    if (!(operation && ![operation isPaused])) {
+        return;
+    }
+    [operation pause];
 }
 
 - (void)resumeOperationWithIdentifier:(NSString *) identifier {
@@ -184,7 +190,7 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
     
     //取本地缓存
-    id resultObject = [[ACMemoryCache sharedCache] fetchCacheDataForURL:URLRequest.URL];
+    id resultObject = [[ACCache sharedCache] fetchDataFromDiskCacheForURL:URLRequest.URL];
     if (resultObject) {
         if (request.completionBlock) {
             request.completionBlock(resultObject, nil);
@@ -235,11 +241,21 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
     NSAssert(request.path || request.URL, @"path与URL只能填写其中一个");
     
     NSMutableURLRequest *URLRequest = [request URLRequestFormOperationManager:self.manager];
-    NSString *filePath = [[ACMemoryCache sharedCache] objectForURL:URLRequest.URL];
+    NSString *filePath = [[ACCache sharedCache] fetchAbsolutePathforURL:URLRequest.URL];
     NSData *fileData = ACFileDataFromPath(filePath);
     if (fileData) {
+        id resultData = nil;
+        if (request.responseType == ACResponseTypeFilePath) {
+            resultData = filePath;
+        }
+        else if (request.responseType == ACResponseTypeImage) {
+            resultData = [UIImage imageWithData:fileData];
+        }
+        else if (request.responseType == ACResponseTypeData) {
+            resultData = fileData;
+        }
         if (request.progressBlock) {
-            request.progressBlock(ACRequestProgressZero, fileData, nil);
+            request.progressBlock(ACRequestProgressZero, resultData, nil);
         }
         return nil;
     }
@@ -247,6 +263,10 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
     AFHTTPRequestOperation *operation = [self.manager HTTPRequestOperationWithRequest:URLRequest
                                                                               success:[self requestSuccess:request]
                                                                               failure:[self requestFailure:request]];
+    
+    filePath = ACFilePathFromURL(URLRequest.URL, [ACNetworkConfiguration defaultConfiguration].downloadFolder, nil);
+    
+    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
     
     if (request.progressBlock) {
         [operation setDownloadProgressBlock:^(NSUInteger bytesRead,
@@ -354,7 +374,7 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
         if ([request isKindOfClass:[ACHTTPRequest class]]) {
             NSError *error = nil;
             id resultObject = responseObject;
-            if (((ACHTTPRequest *)request).responseJSON) {
+            if (((ACHTTPRequest *)request).responseType == ACResponseTypeJSON) {
                 
                 resultObject  = [NSJSONSerialization JSONObjectWithData:responseObject
                                                                 options:NSJSONReadingAllowFragments
@@ -365,7 +385,7 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
                 ((ACHTTPRequest *)request).method == ACRequestMethodGET &&
                 resultObject) {
                 
-                [[ACMemoryCache sharedCache] storeCacheData:resultObject forURL:request.URL];
+                [[ACCache sharedCache] storeCacheData:resultObject forURL:request.URL];
             }
             
             if (((ACHTTPRequest *)request).completionBlock) {
@@ -376,37 +396,40 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
             //获取后缀
             NSString *extension = ACExtensionFromMIMEType(operation.response.MIMEType);
             //下载路径
-            NSString *filePath = ACFilePathFromURL(request.URL, [ACNetworkConfig defaultConfig].downloadFolder, extension);
+            NSString *filePath = ACFilePathFromURL(request.URL, [ACNetworkConfiguration defaultConfiguration].downloadFolder, extension);
+            NSString *srcFilePath = [filePath stringByDeletingPathExtension];
             
-            if ([responseObject isKindOfClass:[NSData class]]) {
-                
-                //文件存在就直接写入数据
-                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-                    
-                    //创建一个用于写入的文件句柄
-                    NSFileHandle *writeFileHanle = [NSFileHandle fileHandleForWritingAtPath:filePath];
-                    //写入最新的数据
-                    [writeFileHanle writeData:responseObject];
-                    //关闭文件句柄
-                    [writeFileHanle closeFile];
+            //删除已存在的文件以便于后面的移动操作
+            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+            }
+            //移动
+            if ([[NSFileManager defaultManager] moveItemAtPath:srcFilePath toPath:filePath error:nil]) {
+                [[ACCache sharedCache] storeAbsolutePath:filePath forURL:request.URL];
+            }
+            
+            NSData *fileData = [[NSFileManager defaultManager] contentsAtPath:filePath];
+            id resultData = nil;
+            if (fileData) {
+                if (request.responseType == ACResponseTypeFilePath) {
+                    resultData = filePath;
                 }
-                else {
-                    //不存在就创建
-                    [[NSFileManager defaultManager] createFileAtPath:filePath
-                                                            contents:responseObject
-                                                          attributes:nil];
+                else if (request.responseType == ACResponseTypeImage) {
+                    resultData = [UIImage imageWithData:fileData];
                 }
-                [[ACMemoryCache sharedCache] setObject:filePath forURL:request.URL];
+                else if (request.responseType == ACResponseTypeData) {
+                    resultData = fileData;
+                }
             }
             
             if (((ACFileDownloadRequest *)request).progressBlock) {
-                ((ACFileDownloadRequest *)request).progressBlock(ACRequestProgressZero, responseObject, nil);
+                ((ACFileDownloadRequest *)request).progressBlock(ACRequestProgressZero, resultData, nil);
             }
         }
         else if ([request isKindOfClass:[ACFileUploadRequest class]]) {
             NSError *error = nil;
             id resultObject = responseObject;
-            if (((ACFileUploadRequest *)request).responseJSON) {
+            if (((ACFileUploadRequest *)request).responseType == ACResponseTypeJSON) {
                 
                 resultObject  = [NSJSONSerialization JSONObjectWithData:responseObject
                                                                 options:NSJSONReadingAllowFragments
@@ -414,7 +437,7 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
             }
             
             if (((ACFileUploadRequest *)request).progressBlock) {
-                ((ACFileUploadRequest *)request).progressBlock(ACRequestProgressZero, resultObject, nil);
+                ((ACFileUploadRequest *)request).progressBlock(ACRequestProgressZero, resultObject, error);
             }
         }
     };
@@ -435,14 +458,9 @@ ACCommon_STATIC_INLINE NSString * ACExtensionFromMIMEType(NSString *MIMEType) {
                 id resultObject = nil;
                 if (((ACHTTPRequest *)request).cacheResponseData &&
                     ((ACHTTPRequest *)request).method == ACRequestMethodGET) {
-                    resultObject = [[ACMemoryCache sharedCache] fetchCacheDataForURL:request.URL];
+                    resultObject = [[ACCache sharedCache] fetchDataFromDiskCacheForURL:request.URL];
                 }
-                if (resultObject) {
-                    ((ACHTTPRequest *)request).completionBlock(resultObject, nil);
-                }
-                else {
-                    ((ACHTTPRequest *)request).completionBlock(nil, error);
-                }
+                ((ACHTTPRequest *)request).completionBlock(resultObject, resultObject ? nil : error);
             }
         }
         else if ([request isKindOfClass:[ACFileDownloadRequest class]] ||

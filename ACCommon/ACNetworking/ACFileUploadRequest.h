@@ -12,7 +12,6 @@
 
 @interface ACFileUploadRequest : NSObject <ACRequestProgressProtocol>
 
-@property BOOL responseJSON;
 @property (nonatomic, copy) NSDictionary *fileInfo;
 
 @end

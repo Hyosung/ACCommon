@@ -2,16 +2,16 @@
 //  ACNetworking.h
 //  ACCommon
 //
-//  Created by 上海易凡 on 15/7/27.
+//  Created by 暁星 on 15/7/27.
 //  Copyright (c) 2015年 Stone.y. All rights reserved.
 //
 
-#ifndef __ACNetworking__
-#define __ACNetworking__
+#ifndef __ACNETWORKING__
+#define __ACNETWORKING__
 
 #import "ACNetworkHeader.h"
 
-#import "ACMemoryCache.h"
+#import "ACCache.h"
 #import "ACNetworkConfig.h"
 #import "ACNetworkReachabilityManager.h"
 
